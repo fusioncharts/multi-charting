@@ -1,0 +1,25 @@
+{
+  "name": "multi-charting",
+  "version": "1.0.0",
+  "description": "Data visualisation that deals with multiple charts",
+  "main": "fusioncharts.multicharting.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fusioncharts/multi-charting.git"
+  },
+  "keywords": [
+    "FusionCharts",
+    "Multi-Charts",
+    "Multi-Charting",
+    "Charts"
+  ],
+  "author": "FusionCharts Technologies <support@fusioncharts.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fusioncharts/multi-charting/issues"
+  },
+  "homepage": "https://github.com/fusioncharts/multi-charting"
+}
