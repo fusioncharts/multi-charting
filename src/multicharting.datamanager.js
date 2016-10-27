@@ -7,6 +7,8 @@ var	dataStore = {},
     	manager.addData(JSONData, id);
 	},
 	proto = dataManager.prototype,
+
+	//Function to update all the linked child data
 	updataData = function (id) {
 		var i,
 			linkData = linkStore[id],
@@ -39,19 +41,9 @@ proto.addData = function (JSONData, id) {
 		oldId = data.id,
 		oldJSONData = dataStore[oldId] || [];
 
-	if (oldId && id) {
-		dataStore[id] = oldJSONData.concat(JSONData || []);
-		delete dataStore[oldId];
+	id = oldId || id || 'dataStore' + idCount ++;
+	dataStore[id] = oldJSONData.concat(JSONData || []);
 
-		if (linkStore[oldId]) {
-			linkStore[id] = linkStore[oldId];
-			delete linkStore[oldId];
-		}
-	}
-	else {
-		id = oldId ? oldId : (id || 'dataStore' + idCount ++);
-		dataStore[id] = oldJSONData.concat(JSONData || []);
-	}
 	data.id = id;
 
 	if (linkStore[id]) {
