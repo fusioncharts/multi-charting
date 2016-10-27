@@ -49,6 +49,10 @@ proto.addData = function (JSONData, id) {
 	if (linkStore[id]) {
 		updataData(id)
 	}
+	dispatchEvent(new CustomEvent('dataAdded', {'detail' : {
+		'id': id,
+		'data' : JSONData
+	}}));
 };
 
 // Function to get data from the data store after applying filters
@@ -95,7 +99,8 @@ proto.getData = function (filters) {
 proto.deleteData = function (optionalId) {
 	var data = this,
 		id = optionalId || data.id,
-		linkData = linkStore[id];
+		linkData = linkStore[id],
+		flag;
 
 	if (linkData) {
 		let i,
@@ -106,7 +111,12 @@ proto.deleteData = function (optionalId) {
 		}
 		delete linkStore[id];
 	}
-	return (delete dataStore[id]);
+
+	flag = delete dataStore[id];
+	dispatchEvent(new CustomEvent('dataDeleted', {'detail' : {
+		'id': id,
+	}}));
+	return flag;
 };
 
 // Function to get the id of the current data
@@ -121,4 +131,8 @@ proto.modifyData = function (JSONData, id) {
 
 	dataStore[id] = [];
 	data.addData(JSONData, id);
+	dispatchEvent(new CustomEvent('dataModified', {'detail' : {
+		'id': id,
+		'data' : JSONData
+	}}));
 };
