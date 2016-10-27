@@ -10,17 +10,22 @@ var	dataStore = {},
 	updataData = function (id) {
 		var i,
 			linkData = linkStore[id],
-			parentData = datastore[id],
-			len = linkData.length,
+			parentData = dataStore[id],
+			len,
+			linkIds,
+			filters,
+			linkId,
+			filter,
 			info;
 
+		linkIds = linkData.link;
+		filters = linkData.filter;
+		len = linkIds.length;
+
 		for (i = 0; i < len; i++) {
-			info = linkData[i];
-
-			linkId = info.link;
-			filter = info.filter;
-
-			datastore[linkId] = filter(parentData);
+			linkId = linkIds[i];
+			filter = filters[i];
+			dataStore[linkId] = filter(parentData);
 
 			if (linkStore[linkId]) {
 				updataData(linkId);
@@ -72,11 +77,12 @@ proto.getData = function (filters) {
 			len = filters.length;
 
 		for (i = 0; i < len; i++) {
-			newData = new dataManager(filters[i](dataStore[id]));
-			newId = newData.id;
+			newData = filters[i](dataStore[id]);
+			newDataObj = new dataManager(newData);
+			newId = newDataObj.id;
 
 			dataStore[newId] = newData;
-			result.push(newData);
+			result.push(newDataObj);
 
 			//Pushing the id of child class in the parent classes.
 			linkData = linkStore[id] || (linkStore[id] = {
@@ -94,16 +100,17 @@ proto.getData = function (filters) {
 };
 
 // Function to delete the current data from the datastore and also all its childs recursively
-proto.deleteData = function () {
-	var data = this;
-		id = data.id;
+proto.deleteData = function (optionalId) {
+	var data = this,
+		id = optionalId || data.id,
 		linkData = linkStore[id];
 
 	if (linkData) {
 		let i,
-			len = linkData.length;
+			link = linkData.link,
+			len = link.length;
 		for (i = 0; i < len; i ++) {
-			data.deleteData(linkData[i]);
+			data.deleteData(link[i]);
 		}
 		delete linkStore[id];
 	}
