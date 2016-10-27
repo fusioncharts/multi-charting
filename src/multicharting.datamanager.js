@@ -1,4 +1,3 @@
-
 var	dataStore = {},
 	idCount = 0,
 	// Constructor class for dataManager.
@@ -11,27 +10,29 @@ var	dataStore = {},
 // Function to add data in the data store
 proto.addData = function (JSONData, id) {
 	var manager = this,
-		oldId = manager.id;
+		oldId = manager.id,
+		oldJSONData = dataStore[oldId] || [];
 
-	id = oldId ? oldId : (id || 'dataStore' + idCount ++);
-	dataStore[id] = JSONData;
-	manager.id = id;
+	if (oldId && id) {
+		dataStore[id] = oldJSONData.concat(JSONData || []);
+		manager.deleteData();
+		manager.id = id;
+	}
+	else {
+		id = oldId ? oldId : (id || 'dataStore' + idCount ++);
+		dataStore[id] = oldJSONData.concat(JSONData || []);
+		manager.id = id;
+	}
 };
 
 // Function to get data from the data store after applying filters
 proto.getData = function (filters) {
-	var data,
-		result = [];
-
-	for (data in dataStore) {
-		result.push(filters(dataStore[data]));
-	}
-	return result;
+	return (filters && filters(dataStore[this.id]));
 };
 
 // Function to delete the current data from the datastore
 proto.deleteData = function () {
-	delete dataStore[this.id];
+	return (delete dataStore[this.id]);
 };
 
 // Function to get the id of the current data
@@ -39,4 +40,9 @@ proto.getID = function () {
 	return this.id;
 };
 
-
+// Function to modify data
+proto.modifyData = function (JSONData, id) {
+	var manager = this;
+	manager.deleteData();
+	manager.addData(JSONData, id);
+};
