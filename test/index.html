@@ -1,0 +1,122 @@
+<DOCTYPE !html>
+<html>
+    <head>
+        <script type='text/javascript' src='../src/multicharting.ajax.js'></script>
+        <script type='text/javascript' src='../src/multicharting.csv.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+        <script type='text/javascript' src='../src/multicharting.datamanager.js'></script>
+    </head>
+    <body>
+        <div id='chart-container'></div>
+        <script type='text/javascript'>
+
+        var startTime = new Date().getTime(),
+        	globalData = new dataManager(),
+        	_getCanceledFlight = function (year, month) {
+        		return function (data) {
+					c = 1,
+					arr_cancelled = 0,
+					carrier_name ='',
+					dataArr = [['Carrier Name', 'Canceled']],
+					filterObj = {
+					};
+
+					for (row of data) {
+						if (row[0] == year && row[1] == month) {
+							carrier_name = row[3];
+							arr_cancelled = Number(row[13]);
+							if (!filterObj[carrier_name]) {
+								filterObj[carrier_name] = {
+									key: c,
+									'Flight Canceled': arr_cancelled
+								};
+								dataArr[c] = [carrier_name, arr_cancelled];
+								c++;
+							}
+							dataArr[filterObj[carrier_name]['key']][1] +=  arr_cancelled;
+							filterObj[carrier_name]['Flight Canceled'] += arr_cancelled;
+						}
+					}
+
+					return dataArr;
+				}
+			},
+			getCanceledFlight = function (data) {
+					var c = 1,
+					arr_cancelled = 0,
+					carrier_name ='',
+					dataArr = [['Carrier Name', 'Canceled']],
+					year = 2007,
+					month = 3,
+					filterObj = {
+					};
+
+					for (row of data) {
+						if (row[0] == year && row[1] == month) {
+							carrier_name = row[3];
+							arr_cancelled = Number(row[13]);
+							if (!filterObj[carrier_name]) {
+								filterObj[carrier_name] = {
+									key: c,
+									'Flight Canceled': arr_cancelled
+								};
+								dataArr[c] = [carrier_name, arr_cancelled];
+								c++;
+							}
+							dataArr[filterObj[carrier_name]['key']][1] +=  arr_cancelled;
+							filterObj[carrier_name]['Flight Canceled'] += arr_cancelled;
+						}
+					}
+
+					return dataArr;
+				},
+        	dataObj,
+        	endTime;
+
+        
+        ajax('airline.csv', function (data) {
+        // ajax('test.csv', function (data) {
+
+        	// Converts CSV data to Array
+			dataObj = CSVToArray(data)
+			
+			// Store the converted data in data manager
+			globalData.addData(dataObj);
+
+			// Get the filtered data
+			dataObj = globalData.getData([getCanceledFlight]);
+
+	    	console.log(dataObj[0]);
+
+
+			// Convert the filtered data to FusionCharts multi-series data			
+			dataObj = convertData(dataObj, {
+				dimension: ['Carrier Name'], 
+				measure: ['Canceled'],
+				seriesType: 'ms'
+			});
+	        
+	        endTime = new Date().getTime();
+	    	
+	    	console.log('Time taken in ms: ', endTime - startTime);
+        	// alert('done');
+
+        });
+
+
+
+
+
+        </script>
+
+
+        <div style='margin: 10px'>
+
+
+
+
+ 		</div>
+    </body>
+
+
+</html>
