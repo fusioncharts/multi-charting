@@ -7,6 +7,8 @@ var	dataStore = {},
     	manager.addData(JSONData, id);
 	},
 	proto = dataManager.prototype,
+
+	//Function to update all the linked child data
 	updataData = function (id) {
 		var i,
 			linkData = linkStore[id],
@@ -39,24 +41,18 @@ proto.addData = function (JSONData, id) {
 		oldId = data.id,
 		oldJSONData = dataStore[oldId] || [];
 
-	if (oldId && id) {
-		dataStore[id] = oldJSONData.concat(JSONData || []);
-		delete dataStore[oldId];
+	id = oldId || id || 'dataStore' + idCount ++;
+	dataStore[id] = oldJSONData.concat(JSONData || []);
 
-		if (linkStore[oldId]) {
-			linkStore[id] = linkStore[oldId];
-			delete linkStore[oldId];
-		}
-	}
-	else {
-		id = oldId ? oldId : (id || 'dataStore' + idCount ++);
-		dataStore[id] = oldJSONData.concat(JSONData || []);
-	}
 	data.id = id;
 
 	if (linkStore[id]) {
 		updataData(id)
 	}
+	dispatchEvent(new CustomEvent('dataAdded', {'detail' : {
+		'id': id,
+		'data' : JSONData
+	}}));
 };
 
 // Function to get data from the data store after applying filters
@@ -103,7 +99,8 @@ proto.getData = function (filters) {
 proto.deleteData = function (optionalId) {
 	var data = this,
 		id = optionalId || data.id,
-		linkData = linkStore[id];
+		linkData = linkStore[id],
+		flag;
 
 	if (linkData) {
 		let i,
@@ -114,7 +111,12 @@ proto.deleteData = function (optionalId) {
 		}
 		delete linkStore[id];
 	}
-	return (delete dataStore[id]);
+
+	flag = delete dataStore[id];
+	dispatchEvent(new CustomEvent('dataDeleted', {'detail' : {
+		'id': id,
+	}}));
+	return flag;
 };
 
 // Function to get the id of the current data
@@ -129,4 +131,8 @@ proto.modifyData = function (JSONData, id) {
 
 	dataStore[id] = [];
 	data.addData(JSONData, id);
+	dispatchEvent(new CustomEvent('dataModified', {'detail' : {
+		'id': id,
+		'data' : JSONData
+	}}));
 };
