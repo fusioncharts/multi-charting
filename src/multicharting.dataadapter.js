@@ -2,7 +2,7 @@
 function convertData(DATA, configuration, callbackFN) {
 	var jsonCreator = function(DATA, configuration) {
 		var conf = configuration,
-			seriesType = conf && conf.seriesType.toLowerCase(),
+			seriesType = conf && conf.seriesType,
 			series = {
 			'ms' : function(DATA, configuration) {
 				var json = {},
@@ -36,7 +36,9 @@ function convertData(DATA, configuration, callbackFN) {
 	           				'data': []
 	           			};
 	           			for(j = 1, lenData = DATA.length; j < lenData; j++) {
-	           				json.dataset[i].data.push({'value' : DATA[j][indexMatch]});
+	           				json.dataset[i].data.push({
+	           					'value' : DATA[j][indexMatch]
+	           				});
 	           			}
 	           		}
 	           	}
@@ -54,14 +56,13 @@ function convertData(DATA, configuration, callbackFN) {
 					label,
 					value;
 	            json.data = [];
-	            
-        		for (j = 1, lenData = DATA.length; j < lenData; j++) {
-        			indexMatchLabel = DATA[0].indexOf(configuration.dimension[0]);
-            		label = DATA[j][indexMatchLabel]; 
-            		label = label ? label : '';
-            		indexMatchValue = DATA[0].indexOf(configuration.measure[0]);
+	            indexMatchLabel = DATA[0].indexOf(configuration.dimension[0]);
+	            indexMatchValue = DATA[0].indexOf(configuration.measure[0]);
+        		for (j = 1, lenData = DATA.length; j < lenData; j++) {        			
+            		label = DATA[j][indexMatchLabel];             		
+            		label = label || '';          		
             		value = DATA[j][indexMatchValue]; 
-            		value = value ? value : '';
+            		value = value || '';
         			json.data.push({
         				'label' : label,
         				'value' : value
@@ -70,8 +71,8 @@ function convertData(DATA, configuration, callbackFN) {
 	            return json;
 			}
 		};
-		seriesType = seriesType ? seriesType : 'ms';
-		return series[seriesType] && series[seriesType](DATA, conf);
+		seriesType = seriesType ? (series[seriesType] ? seriesType.toLowerCase() : 'ms')  : 'ms';		
+		return series[seriesType](DATA, conf);
 	},
 	generalDataFormat = function(DATA, configuration) {
 		var isArray = Array.isArray(DATA[0]),
