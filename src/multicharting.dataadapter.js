@@ -23,7 +23,9 @@ function convertData(DATA, configuration, callbackFN) {
 	            	indexMatch = DATA[0].indexOf(configuration.dimension[i]);
 	            	if (indexMatch != -1) {
 	            		for (j = 1, lenData = DATA.length; j < lenData; j++) {
-	            			json.categories[0].category.push({'label' : DATA[j][indexMatch]});
+	            			json.categories[0].category.push({
+	            				'label' : DATA[j][indexMatch]
+	            			});
 	            		}
 	            	}
 	            }
@@ -109,8 +111,8 @@ function convertData(DATA, configuration, callbackFN) {
 	if (DATA && configuration) {
 		dataArray = generalDataFormat(DATA, configuration);
 		json = jsonCreator(dataArray, configuration);
-		json = predefinedJson ? extend2(json,predefinedJson) : json;		
-		return json;
+		json = predefinedJson ? extend2(json,predefinedJson) : json;	
+		return callbackFN ? callbackFN(json) : json;	
 	}
 }
 
