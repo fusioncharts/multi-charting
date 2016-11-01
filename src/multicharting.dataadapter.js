@@ -70,8 +70,9 @@ function convertData(DATA, configuration, callbackFN) {
 	        		}	            	
 		            return json;
 				}
-			};		
-		seriesType = (series[seriesType] && seriesType.toLowerCase()) || 'ms';
+			};
+		seriesType = seriesType && seriesType.toLowerCase();
+		seriesType = (series[seriesType] && seriesType) || 'ms';
 		return series[seriesType](DATA, conf);
 	},
 	generalDataFormat = function(DATA, configuration) {
