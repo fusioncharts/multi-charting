@@ -61,13 +61,11 @@ function convertData(DATA, configuration, callbackFN) {
 	            indexMatchLabel = DATA[0].indexOf(configuration.dimension[0]);
 	            indexMatchValue = DATA[0].indexOf(configuration.measure[0]);
         		for (j = 1, lenData = DATA.length; j < lenData; j++) {        			
-            		label = DATA[j][indexMatchLabel];             		
-            		label = label || '';          		
+            		label = DATA[j][indexMatchLabel];             		 		
             		value = DATA[j][indexMatchValue]; 
-            		value = value || '';
         			json.data.push({
-        				'label' : label,
-        				'value' : value
+        				'label' : label || '',
+        				'value' : value || ''
         			});
         		}	            	
 	            return json;
@@ -92,11 +90,7 @@ function convertData(DATA, configuration, callbackFN) {
 				generalDataArray[i+1] = [];
 				for (j = 0, lenGeneralDataArray = generalDataArray[0].length; j < lenGeneralDataArray; j++) {
 					value = DATA[i][generalDataArray[0][j]];					
-					if(value){						
-						generalDataArray[i+1][j] = value;
-					} else {
-						generalDataArray[i+1][j] = '';
-					}					
+					generalDataArray[i+1][j] = value || '';				
 				}
 			}
 		} else {
@@ -111,8 +105,8 @@ function convertData(DATA, configuration, callbackFN) {
 	if (DATA && configuration) {
 		dataArray = generalDataFormat(DATA, configuration);
 		json = jsonCreator(dataArray, configuration);
-		json = predefinedJson ? extend2(json,predefinedJson) : json;	
-		return callbackFN ? callbackFN(json) : json;	
+		json = (predefinedJson && extend2(json,predefinedJson)) || json;	
+		return (callbackFN && callbackFN(json)) || json;	
 	}
 }
 
