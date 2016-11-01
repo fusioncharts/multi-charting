@@ -4,74 +4,74 @@ function convertData(DATA, configuration, callbackFN) {
 		var conf = configuration,
 			seriesType = conf && conf.seriesType,
 			series = {
-			'ms' : function(DATA, configuration) {
-				var json = {},
-					indexMatch,
-					lenDimension,
-					lenMeasure,
-					lenData,
-					i,
-					j;
-				json.categories = [
-	                {
-	                    "category": [                        
-	                    ]
-	                }
-	            ];
-	            json.dataset = [];
-	            for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
-	            	indexMatch = DATA[0].indexOf(configuration.dimension[i]);
-	            	if (indexMatch != -1) {
-	            		for (j = 1, lenData = DATA.length; j < lenData; j++) {
-	            			json.categories[0].category.push({
-	            				'label' : DATA[j][indexMatch]
-	            			});
-	            		}
-	            	}
-	            }
-	           	json.dataset = [];
-	           	for (i = 0, lenMeasure = configuration.measure.length; i < lenMeasure; i++) {
-	           		indexMatch = DATA[0].indexOf(configuration.measure[i]);
-	           		if (indexMatch != -1) {
-	           			json.dataset[i] = {
-	           				'seriesname' : configuration.measure[i],
-	           				'data': []
-	           			};
-	           			for(j = 1, lenData = DATA.length; j < lenData; j++) {
-	           				json.dataset[i].data.push({
-	           					'value' : DATA[j][indexMatch]
-	           				});
-	           			}
-	           		}
-	           	}
-	            return json;
-			},
-			'ss' : function(DATA, configuration) {
-				var json = {},
-					indexMatchLabel,
-					indexMatchValue,
-					lenDimension,
-					lenMeasure,
-					lenData,
-					i,
-					j,
-					label,
-					value;
-	            json.data = [];
-	            indexMatchLabel = DATA[0].indexOf(configuration.dimension[0]);
-	            indexMatchValue = DATA[0].indexOf(configuration.measure[0]);
-        		for (j = 1, lenData = DATA.length; j < lenData; j++) {        			
-            		label = DATA[j][indexMatchLabel];             		 		
-            		value = DATA[j][indexMatchValue]; 
-        			json.data.push({
-        				'label' : label || '',
-        				'value' : value || ''
-        			});
-        		}	            	
-	            return json;
-			}
-		};
-		seriesType = seriesType ? (series[seriesType] ? seriesType.toLowerCase() : 'ms')  : 'ms';		
+				'ms' : function(DATA, configuration) {
+					var json = {},
+						indexMatch,
+						lenDimension,
+						lenMeasure,
+						lenData,
+						i,
+						j;
+					json.categories = [
+		                {
+		                    "category": [                        
+		                    ]
+		                }
+		            ];
+		            json.dataset = [];
+		            for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
+		            	indexMatch = DATA[0].indexOf(configuration.dimension[i]);
+		            	if (indexMatch != -1) {
+		            		for (j = 1, lenData = DATA.length; j < lenData; j++) {
+		            			json.categories[0].category.push({
+		            				'label' : DATA[j][indexMatch]
+		            			});
+		            		}
+		            	}
+		            }
+		           	json.dataset = [];
+		           	for (i = 0, lenMeasure = configuration.measure.length; i < lenMeasure; i++) {
+		           		indexMatch = DATA[0].indexOf(configuration.measure[i]);
+		           		if (indexMatch != -1) {
+		           			json.dataset[i] = {
+		           				'seriesname' : configuration.measure[i],
+		           				'data': []
+		           			};
+		           			for(j = 1, lenData = DATA.length; j < lenData; j++) {
+		           				json.dataset[i].data.push({
+		           					'value' : DATA[j][indexMatch]
+		           				});
+		           			}
+		           		}
+		           	}
+		            return json;
+				},
+				'ss' : function(DATA, configuration) {
+					var json = {},
+						indexMatchLabel,
+						indexMatchValue,
+						lenDimension,
+						lenMeasure,
+						lenData,
+						i,
+						j,
+						label,
+						value;
+		            json.data = [];
+		            indexMatchLabel = DATA[0].indexOf(configuration.dimension[0]);
+		            indexMatchValue = DATA[0].indexOf(configuration.measure[0]);
+	        		for (j = 1, lenData = DATA.length; j < lenData; j++) {        			
+	            		label = DATA[j][indexMatchLabel];             		 		
+	            		value = DATA[j][indexMatchValue]; 
+	        			json.data.push({
+	        				'label' : label || '',
+	        				'value' : value || ''
+	        			});
+	        		}	            	
+		            return json;
+				}
+			};		
+		seriesType = (series[seriesType] && seriesType.toLowerCase()) || 'ms';
 		return series[seriesType](DATA, conf);
 	},
 	generalDataFormat = function(DATA, configuration) {
