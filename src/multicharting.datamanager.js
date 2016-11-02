@@ -26,9 +26,12 @@ var	dataStore = {},
 
 		for (i = 0; i < len; i++) {
 			linkId = linkIds[i];
-			filter = filters[i];
-			dataStore[linkId] = filter(parentData);
+			filter = filters[i].getFilter();
 
+			if (typeof filter === 'function') {
+				dataStore[linkId] = filter(parentData);
+			}
+			
 			if (linkStore[linkId]) {
 				updataData(linkId);
 			}
@@ -70,26 +73,31 @@ proto.getData = function (filters) {
 			newData,
 			linkData,
 			newId,
+			filter,
 			len = filters.length;
 
 		for (i = 0; i < len; i++) {
-			newData = filters[i](dataStore[id]);
-			newDataObj = new dataManager(newData);
-			newId = newDataObj.id;
+			filter = filters[i].getFilter();
 
-			dataStore[newId] = newData;
-			result.push(newDataObj);
+			if (typeof filter === 'function') {
+				newData = filters[i](dataStore[id]);
+				newDataObj = new dataManager(newData);
+				newId = newDataObj.id;
 
-			//Pushing the id of child class in the parent classes.
-			linkData = linkStore[id] || (linkStore[id] = {
-				link : [],
-				filter : []
-			});
-			linkData.link.push(newId);
-			linkData.filter.push(filters[i]);
+				dataStore[newId] = newData;
+				result.push(newDataObj);
 
-			// setting the current id as the newID so that the next filter is applied on the child data;
-			id = newId;
+				//Pushing the id of child class in the parent classes.
+				linkData = linkStore[id] || (linkStore[id] = {
+					link : [],
+					filter : []
+				});
+				linkData.link.push(newId);
+				linkData.filter.push(filters[i]);
+
+				// setting the current id as the newID so that the next filter is applied on the child data;
+				id = newId;
+			}
 		}
 		return result;
 	}
@@ -125,7 +133,7 @@ proto.getID = function () {
 };
 
 // Function to modify data
-proto.modifyData = function (JSONData, id) {
+proto.modifyData = function (JSONData) {
 	var data = this,
 		id = data.id;
 
