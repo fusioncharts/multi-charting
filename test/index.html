@@ -3,21 +3,24 @@
     <head>
         <script type='text/javascript' src='../src/multicharting.ajax.js'></script>
         <script type='text/javascript' src='../src/multicharting.csv.js'></script>
-        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
         <script type='text/javascript' src='../src/multicharting.datamanager.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+
+        <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
+        <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.zune.js'></script>
     </head>
+
     <body>
-        <div id='chart-container'></div>
+
         <script type='text/javascript'>
 
-        var startTime = new Date().getTime(),
-        	globalData = new dataManager(),
-        	_getCanceledFlight = function (year, month) {
+        var globalData = new dataManager(),
+        	getCanceledFlight = function (year, month) {
         		return function (data) {
 					c = 1,
 					arr_cancelled = 0,
 					carrier_name ='',
-					dataArr = [['Carrier Name', 'Canceled']],
+					dataArr = [['Carrier Name', 'Flight Canceled']],
 					filterObj = {
 					};
 
@@ -41,81 +44,125 @@
 					return dataArr;
 				}
 			},
-			getCanceledFlight = function (data) {
-					var c = 1,
-					arr_cancelled = 0,
-					carrier_name ='',
-					dataArr = [['Carrier Name', 'Canceled']],
-					year = 2007,
-					month = 3,
-					filterObj = {
-					};
+			sortData = function (data) {
+				var arr = data.splice(1, data.length),
+					key = 1;
 
-					for (row of data) {
-						if (row[0] == year && row[1] == month) {
-							carrier_name = row[3];
-							arr_cancelled = Number(row[13]);
-							if (!filterObj[carrier_name]) {
-								filterObj[carrier_name] = {
-									key: c,
-									'Flight Canceled': arr_cancelled
-								};
-								dataArr[c] = [carrier_name, arr_cancelled];
-								c++;
-							}
-							dataArr[filterObj[carrier_name]['key']][1] +=  arr_cancelled;
-							filterObj[carrier_name]['Flight Canceled'] += arr_cancelled;
-						}
-					}
+				function sort(a, b) {
+				    if (a[key] === b[key]) {
+				        return 0;
+				    }
+				    else {
+				        return (a[key] < b[key]) ? -1 : 1;
+				    }
+				}
+				arr = arr.sort(sort);
+				arr.unshift(data[0]);
 
-					return dataArr;
-				},
+				return arr;
+			},
+			startTime = new Date().getTime(),
+        	totalStartTime = startTime,
         	dataObj,
         	endTime;
 
         
         ajax('airline.csv', function (data) {
-        // ajax('test.csv', function (data) {
+
+	        endTime = totalTime = new Date().getTime();
+	    	console.log('Time taken to load the file: ', endTime - startTime);
+
+	    	// reset time for next process
+			startTime = new Date().getTime();
 
         	// Converts CSV data to Array
 			dataObj = CSVToArray(data)
-			
+
+	        endTime = new Date().getTime();
+	    	console.log('Time taken to convert in JSON : ', endTime - startTime);
+
+	    	// reset time for next process
+			startTime = new Date().getTime();
 			// Store the converted data in data manager
 			globalData.addData(dataObj);
 
+	        endTime = new Date().getTime();
+	    	console.log('Time taken to store in database: ', endTime - startTime);
+
+
+	    	// reset time for next process
+			startTime = new Date().getTime();
+
+			// Apply filter on global data
+			// dataObj = globalData.getData().filter();
+			dataObj = globalData.getData([getCanceledFlight(2007, 4), sortData]);
+			// dataObj = globalData.getData([getCanceledFlight(2007, 4), sortData]);
+
+	        endTime = new Date().getTime();
+	    	console.log('Time taken to filter the data: ', endTime - startTime);
+
+	    	// reset time for next process
+			startTime = new Date().getTime();
+
 			// Get the filtered data
-			dataObj = globalData.getData([getCanceledFlight]);
+			dataObj = dataObj[1].getData();
 
-	    	console.log(dataObj[0]);
-
-
-			// Convert the filtered data to FusionCharts multi-series data			
+			// Convert the filtered data to FusionCharts multi-series data
 			dataObj = convertData(dataObj, {
 				dimension: ['Carrier Name'], 
-				measure: ['Canceled'],
-				seriesType: 'ms'
+				measure: ['Flight Canceled'],
+				seriesType: 'ss',
+				config: {
+					chart: {
+						caption: "Flight Canceled",
+						paletteColors: '#579809',
+						theme: 'zune',
+					},
+					dataset: [{
+						seriesName: '',
+						data: [{}]
+					}]
+				}
+			}, function (data) {
+				// console.log(data.chart);
+				data.chart.caption = "Modified Caption";
+				return data;
 			});
-	        
+
 	        endTime = new Date().getTime();
-	    	
-	    	console.log('Time taken in ms: ', endTime - startTime);
-        	// alert('done');
+
+	    	console.log('Time taken to convert the data: ', endTime - startTime);
+
+
+	    	// reset time for next process
+			startTime = new Date().getTime();
+
+	    	// Render chart using the filtered data
+            FusionCharts.ready(function () {
+                var chartObj = new FusionCharts({
+                    type: 'Column2D',
+                    width: 700,
+                    height: 400,
+                    id: "chart1",
+                    dataFormat: 'json',
+                    dataSource: dataObj,
+                    renderAt: 'chart-container'
+                });
+                chartObj.render();
+			});
+
+	    	console.log('Time taken to render the chart: ', endTime - startTime);
+	    	console.log('Total time taken: ', endTime - totalStartTime);
 
         });
-
-
-
 
 
         </script>
 
 
-        <div style='margin: 10px'>
-
-
-
-
- 		</div>
+        <center style='margin: 10px'>
+        	<div id='chart-container'> Chart will render here </div>
+ 		</cneter>
     </body>
 
 
