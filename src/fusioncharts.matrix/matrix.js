@@ -63,17 +63,18 @@ protoGrid.calcRowHeight = function() {
 			row = config[i].row;
 			currHeight = config[i].height;
 			isRowArray = Array.isArray(row);
-			if (currHeight){
-				rowNo = (isRowArray && row.length) || 1;				
-				startRow = (isRowArray && row[0] || row) - 1;
-				if (startRow === k && rowNo === 1){
+			if(currHeight) {
+				rowNo = isRowArray && row.length || 1;
+				startRow = ((isRowArray && row[0]) || row) - 1;
+				if(startRow == k && rowNo === 1) {
 					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;
 				}
-				endRow = (isRowArray && row[row.length - 1] || row) - 1;
-				if(endRow === k && heightArr[endRow - rowNo -1]) {
-					currHeight = grid.getDiff(heightArr, k, currHeight);
-					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;				
+				endRow = ((isRowArray && row[rowNo - 1]) || row) - 1;
+				if(endRow == k && heightArr[endRow - 1]) {
+					currHeight = grid.getDiff(heightArr, (k - 1), currHeight);
+					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;	
 				}
+
 			}
 		}
 		heightArr[k] = (maxHeight != 0) ? maxHeight : defaultH;
@@ -112,15 +113,15 @@ protoGrid.calcColWidth = function() {
 					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
 				}
 				endCol = (isColArray && col[col.length - 1] || col) - 1;
-				if(endCol === k && widthArr[endCol - colNo -1]) {
-					currWidth = grid.getDiff(widthArr, k, currWidth);
-					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
+				if(endCol == k && widthArr[endCol - 1]) {
+					currWidth = grid.getDiff(widthArr, k - 1, currWidth);
+					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;				
 				}
+
 			}
 		}
 		widthArr[k] = (maxWidth != 0) ? maxWidth : defaultW;
 	}
-	console.log(widthArr)
 	return widthArr;	
 };
 
