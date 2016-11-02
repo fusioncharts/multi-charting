@@ -1,10 +1,11 @@
 #grid {
-  
+  display: block;
+  position: relative;
 }
 
 .cell {
     outline: 1px solid black;
-    float: left;
+    position: absolute;
 /*    height: 100px;
     width: 100px;*/    
 }
