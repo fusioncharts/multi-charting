@@ -14,22 +14,26 @@ var filterStore = {},
 			data = filterLink[id],
 			JSONData,
 			datum,
-			len = filters.length;
+			dataId,
+			len = data.length;
 
 		for (i = 0; i < len; i ++) {
 			datum = data[i];
-			JSONData = datum.getData();
-			datum.modifyData(filterStore[id](JSONData));
+			dataId = datum.id;
+			if (!tempDataUpdated[dataId]) {
+				JSONData = parentStore[dataId].getData();
+				datum.modifyData(filterStore[id](JSONData));
+			}
 		}
 	};
 
 // Function to add filter in the filter store
-filterProto.addFilter = function (filter, id) {
+filterProto.addFilter = function (filterFn, id) {
 	var filter = this,
 		oldId = filter.id;
 
 	id = oldId || id || 'filterStore' + filterIdCount ++;
-	filterStore[id] = filter;
+	filterStore[id] = filterFn;
 
 	filter.id = id;
 
@@ -40,7 +44,7 @@ filterProto.addFilter = function (filter, id) {
 
 	dispatchEvent(new CustomEvent('filterAdded', {'detail' : {
 		'id': id,
-		'filter' : filter
+		'filter' : filterFn
 	}}));
 };
 
@@ -56,24 +60,27 @@ filterProto.getID = function () {
 
 //Function to get data after applying filter.
 filterProto.getFilterData = function (data) {
-	var this = filter,
+	var filter = this,
 		i,
 		id = filter.id,
 		len = data.length,
 		datum,
 		result = [],
+		newData,
 		datalinks = filterLink[id] || (filterLink[id] = []);
 
 	for (i = 0; i < len; i++) {
 		datum = data[i];
-		datalinks.push(datum)
-		result.push(datum.getData([filter]));
+		newData = datum.getData([filter])[0];
+		datalinks.push(newData);
+		result.push(newData);
 	}
 	return result;
 };
 
 filterProto.deleteFilter = function () {
-	var this = filter;
+	var filter = this;
+
 	delete filterStore[filter.id];
 	delete filterLink[filter.id];
 };

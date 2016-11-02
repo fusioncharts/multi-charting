@@ -1,5 +1,10 @@
 var	dataStore = {},
+	// For storing the child of a parent
 	linkStore = {},
+	//For storing the parent of a child
+	parentStore = {},
+	// Store all the dataObjs that are updated.
+	tempDataUpdated = {},
 	idCount = 0,
 	// Constructor class for dataManager.
 	dataManager = function (JSONData, id) {
@@ -26,6 +31,8 @@ var	dataStore = {},
 
 		for (i = 0; i < len; i++) {
 			linkId = linkIds[i];
+
+			tempDataUpdated[linkId] = true;
 			filter = filters[i].getFilter();
 
 			if (typeof filter === 'function') {
@@ -74,29 +81,41 @@ proto.getData = function (filters) {
 			linkData,
 			newId,
 			filter,
+			filterFn,
+			datalinks,
+			filterID,
 			len = filters.length;
 
 		for (i = 0; i < len; i++) {
-			filter = filters[i].getFilter();
+			filter = filters[i];
+			filterFn = filter.getFilter();
 
-			if (typeof filter === 'function') {
-				newData = filters[i](dataStore[id]);
+			if (typeof filterFn === 'function') {
+				newData = filterFn(dataStore[id]);
+
 				newDataObj = new dataManager(newData);
 				newId = newDataObj.id;
+				parentStore[newId] = data;
 
 				dataStore[newId] = newData;
 				result.push(newDataObj);
 
-				//Pushing the id of child class in the parent classes.
+				//Pushing the id and filter of child class under the parent classes id.
 				linkData = linkStore[id] || (linkStore[id] = {
 					link : [],
 					filter : []
 				});
 				linkData.link.push(newId);
-				linkData.filter.push(filters[i]);
+				linkData.filter.push(filter);
+
+				// Storing the data on which the filter is applied under the filter id.
+				filterID = filter.getID();
+				datalinks = filterLink[filterID] || (filterLink[filterID] = []);
+				datalinks.push(newDataObj)
 
 				// setting the current id as the newID so that the next filter is applied on the child data;
 				id = newId;
+				//data = newDataObj;
 			}
 		}
 		return result;
