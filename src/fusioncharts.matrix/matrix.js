@@ -152,12 +152,15 @@ protoGrid.gridManager = function(){
 		lenConf = config && config.length,
 		cellH = configuration.height / configuration.dimension[1],
 		cellW = configuration.width / configuration.dimension[0],
+		dimensionX = configuration.dimension[0],
+		dimensionY = configuration.dimension[1],
 		gridHeightArr = grid && grid.calcRowHeight(),
 		gridWidhtArr = grid && grid.calcColWidth(),
 		managerObj = [],
 		gridPosX = grid.gridPosX = grid.getPos(gridWidhtArr),
 		gridPosY = grid.gridPosY = grid.getPos(gridHeightArr),
 		i = 0,
+		j,
 		isRowArr,
 		isColArr,
 		col,
@@ -166,7 +169,27 @@ protoGrid.gridManager = function(){
 		left,
 		height,
 		width;
-		
+
+		if(typeof config === 'undefined'){//if config isn't defined
+			for(i = 0; i < dimensionY; i++){
+				for(j = 0; j < dimensionX; j++){
+					
+					top = i * cellH;
+					left = j * cellW;
+					height = cellH;
+					width = cellW;
+					
+					managerObj.push({
+						top : top,
+						left : left,
+						height : height,
+						width : width
+					});
+				}
+			}
+			return managerObj;
+		}
+
 		for(i; i < lenConf; i++){
 			row = config[i].row;
 			col = config[i].col;
