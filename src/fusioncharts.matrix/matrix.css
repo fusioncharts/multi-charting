@@ -1,0 +1,10 @@
+#grid {
+  
+}
+
+.cell {
+    outline: 1px solid black;
+    float: left;
+/*    height: 100px;
+    width: 100px;*/    
+}
