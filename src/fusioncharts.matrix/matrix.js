@@ -1,7 +1,9 @@
 var Grid = function (selector, configuration) {
 	var grid = this;
 	grid.configuration = configuration;
-	grid.gridDiv = document.getElementById(selector);	
+	grid.gridDiv = document.getElementById(selector);
+	grid.gridDiv.style.height = configuration.height + 'px';
+	grid.gridDiv.style.width = configuration.width + 'px';	
 	grid.gridDiv.style.display = 'block';
 	grid.gridDiv.style.position = 'relative';
 	grid.gridDiv.style.outline = '2px solid red';
@@ -46,10 +48,8 @@ protoGrid.calcRowHeight = function() {
 		config = configuration && configuration.config,
 		lenConf = config && config.length,
 		height = configuration && configuration.height,
-		width = configuration && configuration.width,
 		dimension = configuration && configuration.dimension,
 		defaultH = height / dimension[1],
-		defaultW = width / dimension[0],
 		i,
 		j,
 		row,
@@ -59,7 +59,8 @@ protoGrid.calcRowHeight = function() {
 		endRow,
 		startRow,
 		currHeight,
-		isRowArray;
+		isRowArray,
+		gridCurrH = 0;
 	for(k = 0; k < dimension[1]; k++) {
 		maxHeight = 0;
 		for(i = 0; i < lenConf; i++) {
@@ -80,8 +81,10 @@ protoGrid.calcRowHeight = function() {
 
 			}
 		}
-		heightArr[k] = (maxHeight != 0) ? maxHeight : defaultH;
+		heightArr[k] = maxHeight ? maxHeight : ((height - gridCurrH) / (dimension[1] - k));
+		gridCurrH += heightArr[k]
 	}
+	heightArr = ratioEquilizer(heightArr, height);
 	return heightArr;	
 };
 
@@ -102,7 +105,8 @@ protoGrid.calcColWidth = function() {
 		endCol,
 		startCol,
 		currWidth,
-		isColArray;
+		isColArray,
+		gridCurrW = 0;
 	for(k = 0; k < dimension[0]; k++) {
 		maxWidth = 0;
 		for(i = 0; i < lenConf; i++) {
@@ -123,8 +127,10 @@ protoGrid.calcColWidth = function() {
 
 			}
 		}
-		widthArr[k] = (maxWidth != 0) ? maxWidth : defaultW;
+		widthArr[k] = maxWidth ? maxWidth : ((width - gridCurrW) / (dimension[0] - k));
+		gridCurrW += widthArr[k];
 	}
+	widthArr = ratioEquilizer(widthArr, width);
 	return widthArr;	
 };
 
@@ -212,10 +218,7 @@ protoGrid.gridManager = function(){
 					width : width
 				});
 			}
-		}
-		grid.gridDiv.style.height = getArrSum(gridHeightArr) + 'px';
-		grid.gridDiv.style.width = getArrSum(gridWidhtArr) + 'px';
-		
+		}	
 		return configManager;
 };
 
@@ -226,8 +229,21 @@ function getArrSum(arr) {
 	for(; i < len; i++){
 		sum += arr[i];
 	}
-	console
 	return sum;
+}
+
+function ratioEquilizer(arr, value) {
+	var i = 0,
+		lenArr = arr && arr.length,
+		sum = 0,
+		diff;
+	for(;i < lenArr; i++) {
+		sum += arr[i];
+	}
+	for(i = 0; i < lenArr; i++){		
+		arr[i] = (arr[i] / sum) * value;
+	}
+	return arr;
 }
 
 Array.prototype.max = function() {
