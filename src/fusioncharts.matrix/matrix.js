@@ -2,8 +2,9 @@ var Grid = function (selector, configuration) {
 	var grid = this;
 	grid.configuration = configuration;
 	grid.gridDiv = document.getElementById(selector);	
-	grid.gridDiv.style.height = configuration.height + 'px';
-	grid.gridDiv.style.width = configuration.width + 'px';
+	grid.gridDiv.style.display = 'block';
+	grid.gridDiv.style.position = 'relative';
+	grid.gridDiv.style.outline = '2px solid red';
 }
 
 var protoGrid = Grid.prototype;
@@ -33,7 +34,9 @@ protoGrid.drawDiv = function(configuration,className) {
 	cell.style.height = configuration &&  configuration.height + 'px';
 	cell.style.width = configuration &&  configuration.width + 'px';
 	cell.style.top = configuration && configuration.top + 'px';
-	cell.style.left = configuration &&  configuration.left + 'px';	
+	cell.style.left = configuration &&  configuration.left + 'px';
+	cell.style.position = 'absolute';
+	cell.style.outline = '1px solid black';
 	gridDiv.appendChild(cell);
 };
 
@@ -63,17 +66,18 @@ protoGrid.calcRowHeight = function() {
 			row = config[i].row;
 			currHeight = config[i].height;
 			isRowArray = Array.isArray(row);
-			if (currHeight){
-				rowNo = (isRowArray && row.length) || 1;				
-				startRow = (isRowArray && row[0] || row) - 1;
-				if (startRow === k && rowNo === 1){
+			if(currHeight) {
+				rowNo = isRowArray && row.length || 1;
+				startRow = ((isRowArray && row[0]) || row) - 1;
+				if(startRow == k && rowNo === 1) {
 					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;
 				}
-				endRow = (isRowArray && row[row.length - 1] || row) - 1;
-				if(endRow === k && heightArr[endRow - rowNo -1]) {
-					currHeight = grid.getDiff(heightArr, k, currHeight);
-					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;				
+				endRow = ((isRowArray && row[rowNo - 1]) || row) - 1;
+				if(endRow == k && heightArr[endRow - 1]) {
+					currHeight = grid.getDiff(heightArr, (k - 1), currHeight);
+					maxHeight = maxHeight < currHeight ? currHeight : maxHeight;	
 				}
+
 			}
 		}
 		heightArr[k] = (maxHeight != 0) ? maxHeight : defaultH;
@@ -112,15 +116,15 @@ protoGrid.calcColWidth = function() {
 					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
 				}
 				endCol = (isColArray && col[col.length - 1] || col) - 1;
-				if(endCol === k && widthArr[endCol - colNo -1]) {
-					currWidth = grid.getDiff(widthArr, k, currWidth);
-					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
+				if(endCol == k && widthArr[endCol - 1]) {
+					currWidth = grid.getDiff(widthArr, k - 1, currWidth);
+					maxWidth = maxWidth < currWidth ? currWidth : maxWidth;				
 				}
+
 			}
 		}
 		widthArr[k] = (maxWidth != 0) ? maxWidth : defaultW;
 	}
-	console.log(widthArr)
 	return widthArr;	
 };
 
@@ -134,16 +138,13 @@ protoGrid.getDiff = function(arr, index, value){
 };
 
 protoGrid.getPos =  function(src){
-		var arr = [],
-			i;
-		for(i = 0; i <= src.length; i++){
-			if(i == 0){
-				arr.push(0);
-			}else{
-				arr.push(src[i-1]+arr[i-1]);
-			}
-		}
-		return arr;
+	var arr = [],
+		i = 0,
+		len = src && src.length;
+	for(; i <= len; i++){
+		arr.push(i ? (src[i-1]+arr[i-1]) : 0);
+	}
+	return arr;
 };
 
 protoGrid.gridManager = function(){
@@ -151,14 +152,17 @@ protoGrid.gridManager = function(){
 		configuration = grid && grid.configuration,
 		config = configuration && configuration.config,
 		lenConf = config && config.length,
-		cellH = configuration.height / configuration.dimension[1],
-		cellW = configuration.width / configuration.dimension[0],
+		dimensionX = configuration.dimension[0],
+		dimensionY = configuration.dimension[1],
+		cellH = configuration.height / dimensionY,
+		cellW = configuration.width / dimensionX,
 		gridHeightArr = grid && grid.calcRowHeight(),
 		gridWidhtArr = grid && grid.calcColWidth(),
-		managerObj = [],
+		configManager = [],
 		gridPosX = grid.gridPosX = grid.getPos(gridWidhtArr),
 		gridPosY = grid.gridPosY = grid.getPos(gridHeightArr),
 		i = 0,
+		j,
 		isRowArr,
 		isColArr,
 		col,
@@ -167,29 +171,59 @@ protoGrid.gridManager = function(){
 		left,
 		height,
 		width;
-		
-		for(i; i < lenConf; i++){
-			row = config[i].row;
-			col = config[i].col;
-			
-			isColArr = Array.isArray(col);
-			isRowArr = Array.isArray(row);
-			
-			top = gridPosY[(isRowArr ? Math.min.apply(null,row) : row)-1];
-			left = gridPosX[(isColArr ? Math.min.apply(null,col) : col)-1];
-			height = gridPosY[(isRowArr ? Math.max.apply(null,row) : row)] - top;
-			width = gridPosX[(isColArr ? Math.max.apply(null,col) : col)] - left;
-			
-			managerObj.push({
-				top : top,
-				left : left,
-				height : height,
-				width : width
-			});
-		}
 
-		return managerObj;
+		if(!config || !lenConf){//if config isn't defined or empty
+			for(i = 0; i < dimensionY; i++){
+				for(j = 0; j < dimensionX; j++){				
+					top = i * cellH;
+					left = j * cellW;
+					height = cellH;
+					width = cellW;
+					
+					configManager.push({
+						top : top,
+						left : left,
+						height : height,
+						width : width
+					});
+				}
+			}
+		} else {
+			for(i; i < lenConf; i++){
+				row = config[i].row;
+				col = config[i].col;
+				
+				isColArr = Array.isArray(col);
+				isRowArr = Array.isArray(row);
+				//generating div position
+				top = gridPosY[(isRowArr ? Math.min.apply(null,row) : row)-1];
+				left = gridPosX[(isColArr ? Math.min.apply(null,col) : col)-1];
+				height = gridPosY[(isRowArr ? Math.max.apply(null,row) : row)] - top;
+				width = gridPosX[(isColArr ? Math.max.apply(null,col) : col)] - left;
+				
+				configManager.push({
+					top : top,
+					left : left,
+					height : height,
+					width : width
+				});
+			}
+		}
+		grid.gridDiv.style.height = getArrSum(gridHeightArr) + 'px';
+		grid.gridDiv.style.width = getArrSum(gridWidhtArr) + 'px';
+		
+		return configManager;
 };
+
+function getArrSum(arr) {
+	var i = 0,
+		len = arr && arr.length,
+		sum = 0;
+	for(; i < len; i++){
+		sum += arr[i];
+	}
+	return sum;
+}
 
 Array.prototype.max = function() {
   return Math.max.apply(null, this);
