@@ -138,16 +138,13 @@ protoGrid.getDiff = function(arr, index, value){
 };
 
 protoGrid.getPos =  function(src){
-		var arr = [],
-			i;
-		for(i = 0; i <= src.length; i++){
-			if(i == 0){
-				arr.push(0);
-			}else{
-				arr.push(src[i-1]+arr[i-1]);
-			}
-		}
-		return arr;
+	var arr = [],
+		i = 0,
+		len = src && src.length;
+	for(; i <= len; i++){
+		arr.push(i ? (src[i-1]+arr[i-1]) : 0);
+	}
+	return arr;
 };
 
 protoGrid.gridManager = function(){
@@ -177,8 +174,7 @@ protoGrid.gridManager = function(){
 
 		if(!config || !lenConf){//if config isn't defined or empty
 			for(i = 0; i < dimensionY; i++){
-				for(j = 0; j < dimensionX; j++){
-					
+				for(j = 0; j < dimensionX; j++){				
 					top = i * cellH;
 					left = j * cellW;
 					height = cellH;
@@ -199,7 +195,7 @@ protoGrid.gridManager = function(){
 				
 				isColArr = Array.isArray(col);
 				isRowArr = Array.isArray(row);
-				
+				//generating div position
 				top = gridPosY[(isRowArr ? Math.min.apply(null,row) : row)-1];
 				left = gridPosX[(isColArr ? Math.min.apply(null,col) : col)-1];
 				height = gridPosY[(isRowArr ? Math.max.apply(null,row) : row)] - top;
@@ -226,7 +222,6 @@ function getArrSum(arr) {
 	for(; i < len; i++){
 		sum += arr[i];
 	}
-	console
 	return sum;
 }
 
