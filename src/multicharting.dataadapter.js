@@ -69,7 +69,44 @@ function convertData(DATA, configuration, callbackFN) {
 	        			});
 	        		}	            	
 		            return json;
-				}
+				},
+                'ts' : function(DATA, configuration) {
+                    var json = {},
+                        indexMatch,
+                        lenDimension,
+                        lenMeasure,
+                        lenData,
+                        i,
+                        j;
+                    json.datasets = [];
+                    json.datasets[0] = {};
+                    json.datasets[0].category = {};
+                    json.datasets[0].category.data = [];
+                    for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
+                        indexMatch = DATA[0].indexOf(configuration.dimension[i]);
+                        if (indexMatch != -1) {
+                            for (j = 1, lenData = DATA.length; j < lenData; j++) {
+                                json.datasets[0].category.data.push(DATA[j][indexMatch]);
+                            }
+                        }
+                    }
+                    json.datasets[0].dataset = [];
+                    json.datasets[0].dataset[0] = {};
+                    json.datasets[0].dataset[0].series = [];
+                    for (i = 0, lenMeasure = configuration.measure.length; i < lenMeasure; i++) {
+                        indexMatch = DATA[0].indexOf(configuration.measure[i]);
+                        if (indexMatch != -1) {
+                            json.datasets[0].dataset[0].series[i] = {  
+                                'name' : configuration.measure[i],                              
+                                'data': []
+                            };
+                            for(j = 1, lenData = DATA.length; j < lenData; j++) {
+                                json.datasets[0].dataset[0].series[i].data.push(DATA[j][indexMatch]);
+                            }
+                        }
+                    }
+                    return json;
+                }
 			};
 		seriesType = seriesType && seriesType.toLowerCase();
 		seriesType = (series[seriesType] && seriesType) || 'ms';
