@@ -25,6 +25,7 @@ var filterStore = {},
 				datum.modifyData(filterStore[id](JSONData));
 			}
 		}
+		tempDataUpdated = {};
 	};
 
 // Function to add filter in the filter store
@@ -58,25 +59,6 @@ filterProto.getID = function () {
 	return this.id;
 };
 
-//Function to get data after applying filter.
-filterProto.getFilterData = function (data) {
-	var filter = this,
-		i,
-		id = filter.id,
-		len = data.length,
-		datum,
-		result = [],
-		newData,
-		datalinks = filterLink[id] || (filterLink[id] = []);
-
-	for (i = 0; i < len; i++) {
-		datum = data[i];
-		newData = datum.getData([filter])[0];
-		datalinks.push(newData);
-		result.push(newData);
-	}
-	return result;
-};
 
 filterProto.deleteFilter = function () {
 	var filter = this;
