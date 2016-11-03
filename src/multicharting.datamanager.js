@@ -115,7 +115,7 @@ proto.getData = function (filters) {
 
 				// setting the current id as the newID so that the next filter is applied on the child data;
 				id = newId;
-				//data = newDataObj;
+				data = newDataObj;
 			}
 		}
 		return result;
