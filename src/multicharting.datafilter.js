@@ -9,7 +9,7 @@ var filterStore = {},
 	filterProto = dataFilter.prototype,
 
 	// Function to update data on change of filter.
-	updataFilterData = function (id) {
+	updataFilterData = function (id, copyParentToChild) {
 		var i,
 			data = filterLink[id],
 			JSONData,
@@ -21,8 +21,13 @@ var filterStore = {},
 			datum = data[i];
 			dataId = datum.id;
 			if (!tempDataUpdated[dataId]) {
-				JSONData = parentStore[dataId].getData();
-				datum.modifyData(filterStore[id](JSONData));
+				if (parentStore[dataId] && dataStore[dataId]) {
+					JSONData = parentStore[dataId].getData();
+					datum.modifyData(copyParentToChild ? JSONData : filterStore[id](JSONData));
+				}
+				else {
+					delete parentStore[dataId];
+				}
 			}
 		}
 		tempDataUpdated = {};
@@ -61,8 +66,11 @@ filterProto.getID = function () {
 
 
 filterProto.deleteFilter = function () {
-	var filter = this;
+	var filter = this,
+		id = filter.id;
 
-	delete filterStore[filter.id];
-	delete filterLink[filter.id];
+	filterLink[id] && updataFilterData(id, true);
+
+	delete filterStore[id];
+	delete filterLink[id];
 };

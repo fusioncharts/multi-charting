@@ -23,6 +23,7 @@ var	dataStore = {},
 			filters,
 			linkId,
 			filter,
+			filterFn,
 			info;
 
 		linkIds = linkData.link;
@@ -33,10 +34,18 @@ var	dataStore = {},
 			linkId = linkIds[i];
 
 			tempDataUpdated[linkId] = true;
-			filter = filters[i].getFilter();
+			filter = filters[i];
+			filterFn = filter.getFilter();
 
-			if (typeof filter === 'function') {
-				dataStore[linkId] = filter(parentData);
+			if (typeof filterFn === 'function') {
+				if (filterStore[filter.id]) {
+					dataStore[linkId] = filterFn(parentData);
+				}
+				else {
+					dataStore[linkId] = parentData;
+					filter.splice(i, 1);
+					i -= 1;
+				}
 			}
 			
 			if (linkStore[linkId]) {
