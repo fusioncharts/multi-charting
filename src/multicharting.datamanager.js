@@ -74,7 +74,13 @@ proto.addData = function (JSONData, id) {
 	}}));
 };
 
-// Function to get data from the data store after applying filters
+// Function to get the jsondata of the data object
+proto.getJSON = function () {
+	return dataStore[this.id];
+};
+
+// Function to get child data object after applying filter on the parent data.
+// @params {filters} - This can be a filter function or an array of filter functions.
 proto.getData = function (filters) {
 	var data = this,
 		id = data.id;
@@ -83,7 +89,7 @@ proto.getData = function (filters) {
 		return dataStore[id];
 	}
 	// If parameter is an array of filter then return the filtered data after applying the filter over the data.
-	else if (filters instanceof Array) {
+	else {
 		let result = [],
 			i,
 			newData,
@@ -93,10 +99,11 @@ proto.getData = function (filters) {
 			filterFn,
 			datalinks,
 			filterID,
-			len = filters.length;
+			isFilterArray = filters instanceof Array,
+			len = isFilterArray ? filters.length : 1;
 
 		for (i = 0; i < len; i++) {
-			filter = filters[i];
+			filter = filters[i] || filters;
 			filterFn = filter.getFilter();
 
 			if (typeof filterFn === 'function') {
@@ -127,7 +134,7 @@ proto.getData = function (filters) {
 				data = newDataObj;
 			}
 		}
-		return result;
+		return (isFilterArray ? result : result[0]);
 	}
 };
 
