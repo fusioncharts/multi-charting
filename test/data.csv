@@ -1,0 +1,721 @@
+Product,State,Months,Year,Sales
+Tea,New York,Jan,2013,9550
+Tea,New York,Feb,2013,12446
+Tea,New York,Mar,2013,16939
+Tea,New York,Apr,2013,9886
+Tea,New York,May,2013,15317
+Tea,New York,Jun,2013,12651
+Tea,New York,Jul,2013,16486
+Tea,New York,Aug,2013,12501
+Tea,New York,Sep,2013,12863
+Tea,New York,Oct,2013,16924
+Tea,New York,Nov,2013,14885
+Tea,New York,Dec,2013,9504
+Espresso,New York,Jan,2013,12451
+Espresso,New York,Feb,2013,14763
+Espresso,New York,Mar,2013,11748
+Espresso,New York,Apr,2013,13067
+Espresso,New York,May,2013,15864
+Espresso,New York,Jun,2013,12687
+Espresso,New York,Jul,2013,9911
+Espresso,New York,Aug,2013,12935
+Espresso,New York,Sep,2013,10759
+Espresso,New York,Oct,2013,9050
+Espresso,New York,Nov,2013,12860
+Espresso,New York,Dec,2013,13947
+Latte,New York,Jan,2013,14256
+Latte,New York,Feb,2013,14309
+Latte,New York,Mar,2013,13195
+Latte,New York,Apr,2013,15543
+Latte,New York,May,2013,14082
+Latte,New York,Jun,2013,15020
+Latte,New York,Jul,2013,10948
+Latte,New York,Aug,2013,9463
+Latte,New York,Sep,2013,9253
+Latte,New York,Oct,2013,11651
+Latte,New York,Nov,2013,13814
+Latte,New York,Dec,2013,12712
+Green Tea,New York,Jan,2013,9532
+Green Tea,New York,Feb,2013,9664
+Green Tea,New York,Mar,2013,16394
+Green Tea,New York,Apr,2013,13978
+Green Tea,New York,May,2013,9269
+Green Tea,New York,Jun,2013,13214
+Green Tea,New York,Jul,2013,9903
+Green Tea,New York,Aug,2013,12623
+Green Tea,New York,Sep,2013,16382
+Green Tea,New York,Oct,2013,14298
+Green Tea,New York,Nov,2013,14893
+Green Tea,New York,Dec,2013,13641
+Tea,Washington,Jan,2013,15693
+Tea,Washington,Feb,2013,14341
+Tea,Washington,Mar,2013,15631
+Tea,Washington,Apr,2013,14261
+Tea,Washington,May,2013,10408
+Tea,Washington,Jun,2013,13345
+Tea,Washington,Jul,2013,15410
+Tea,Washington,Aug,2013,12911
+Tea,Washington,Sep,2013,15684
+Tea,Washington,Oct,2013,16477
+Tea,Washington,Nov,2013,15462
+Tea,Washington,Dec,2013,10966
+Espresso,Washington,Jan,2013,10116
+Espresso,Washington,Feb,2013,12623
+Espresso,Washington,Mar,2013,12842
+Espresso,Washington,Apr,2013,12197
+Espresso,Washington,May,2013,14555
+Espresso,Washington,Jun,2013,11900
+Espresso,Washington,Jul,2013,13567
+Espresso,Washington,Aug,2013,10504
+Espresso,Washington,Sep,2013,12289
+Espresso,Washington,Oct,2013,10809
+Espresso,Washington,Nov,2013,15252
+Espresso,Washington,Dec,2013,12213
+Latte,Washington,Jan,2013,10334
+Latte,Washington,Feb,2013,10024
+Latte,Washington,Mar,2013,14749
+Latte,Washington,Apr,2013,13973
+Latte,Washington,May,2013,14578
+Latte,Washington,Jun,2013,12364
+Latte,Washington,Jul,2013,11299
+Latte,Washington,Aug,2013,10600
+Latte,Washington,Sep,2013,13594
+Latte,Washington,Oct,2013,11557
+Latte,Washington,Nov,2013,14093
+Latte,Washington,Dec,2013,12007
+Green Tea,Washington,Jan,2013,9050
+Green Tea,Washington,Feb,2013,10409
+Green Tea,Washington,Mar,2013,11318
+Green Tea,Washington,Apr,2013,10804
+Green Tea,Washington,May,2013,11350
+Green Tea,Washington,Jun,2013,12953
+Green Tea,Washington,Jul,2013,16892
+Green Tea,Washington,Aug,2013,14267
+Green Tea,Washington,Sep,2013,13796
+Green Tea,Washington,Oct,2013,9301
+Green Tea,Washington,Nov,2013,12410
+Green Tea,Washington,Dec,2013,14200
+Tea,Texas,Jan,2013,15259
+Tea,Texas,Feb,2013,14197
+Tea,Texas,Mar,2013,14015
+Tea,Texas,Apr,2013,14340
+Tea,Texas,May,2013,9963
+Tea,Texas,Jun,2013,9990
+Tea,Texas,Jul,2013,16588
+Tea,Texas,Aug,2013,13141
+Tea,Texas,Sep,2013,11360
+Tea,Texas,Oct,2013,16675
+Tea,Texas,Nov,2013,16981
+Tea,Texas,Dec,2013,10963
+Espresso,Texas,Jan,2013,12314
+Espresso,Texas,Feb,2013,9130
+Espresso,Texas,Mar,2013,15699
+Espresso,Texas,Apr,2013,15548
+Espresso,Texas,May,2013,12607
+Espresso,Texas,Jun,2013,13211
+Espresso,Texas,Jul,2013,11798
+Espresso,Texas,Aug,2013,11824
+Espresso,Texas,Sep,2013,16233
+Espresso,Texas,Oct,2013,11147
+Espresso,Texas,Nov,2013,16907
+Espresso,Texas,Dec,2013,10283
+Latte,Texas,Jan,2013,10524
+Latte,Texas,Feb,2013,13735
+Latte,Texas,Mar,2013,16803
+Latte,Texas,Apr,2013,14407
+Latte,Texas,May,2013,11040
+Latte,Texas,Jun,2013,11990
+Latte,Texas,Jul,2013,15085
+Latte,Texas,Aug,2013,11869
+Latte,Texas,Sep,2013,13280
+Latte,Texas,Oct,2013,9914
+Latte,Texas,Nov,2013,14322
+Latte,Texas,Dec,2013,11902
+Green Tea,Texas,Jan,2013,12316
+Green Tea,Texas,Feb,2013,13196
+Green Tea,Texas,Mar,2013,15205
+Green Tea,Texas,Apr,2013,11311
+Green Tea,Texas,May,2013,16872
+Green Tea,Texas,Jun,2013,10662
+Green Tea,Texas,Jul,2013,10194
+Green Tea,Texas,Aug,2013,16731
+Green Tea,Texas,Sep,2013,13087
+Green Tea,Texas,Oct,2013,9384
+Green Tea,Texas,Nov,2013,9841
+Green Tea,Texas,Dec,2013,13498
+Tea,Ohio,Jan,2013,14414
+Tea,Ohio,Feb,2013,11181
+Tea,Ohio,Mar,2013,13068
+Tea,Ohio,Apr,2013,11517
+Tea,Ohio,May,2013,12847
+Tea,Ohio,Jun,2013,14131
+Tea,Ohio,Jul,2013,15453
+Tea,Ohio,Aug,2013,11853
+Tea,Ohio,Sep,2013,9461
+Tea,Ohio,Oct,2013,10689
+Tea,Ohio,Nov,2013,15364
+Tea,Ohio,Dec,2013,14430
+Espresso,Ohio,Jan,2013,12820
+Espresso,Ohio,Feb,2013,14326
+Espresso,Ohio,Mar,2013,13332
+Espresso,Ohio,Apr,2013,14386
+Espresso,Ohio,May,2013,15525
+Espresso,Ohio,Jun,2013,10873
+Espresso,Ohio,Jul,2013,9429
+Espresso,Ohio,Aug,2013,14772
+Espresso,Ohio,Sep,2013,15182
+Espresso,Ohio,Oct,2013,16171
+Espresso,Ohio,Nov,2013,16201
+Espresso,Ohio,Dec,2013,10896
+Latte,Ohio,Jan,2013,13992
+Latte,Ohio,Feb,2013,13457
+Latte,Ohio,Mar,2013,12044
+Latte,Ohio,Apr,2013,10359
+Latte,Ohio,May,2013,10967
+Latte,Ohio,Jun,2013,14722
+Latte,Ohio,Jul,2013,9225
+Latte,Ohio,Aug,2013,16683
+Latte,Ohio,Sep,2013,13253
+Latte,Ohio,Oct,2013,10632
+Latte,Ohio,Nov,2013,14775
+Latte,Ohio,Dec,2013,14536
+Green Tea,Ohio,Jan,2013,15465
+Green Tea,Ohio,Feb,2013,16058
+Green Tea,Ohio,Mar,2013,13817
+Green Tea,Ohio,Apr,2013,12354
+Green Tea,Ohio,May,2013,14614
+Green Tea,Ohio,Jun,2013,12388
+Green Tea,Ohio,Jul,2013,11495
+Green Tea,Ohio,Aug,2013,12091
+Green Tea,Ohio,Sep,2013,9980
+Green Tea,Ohio,Oct,2013,11300
+Green Tea,Ohio,Nov,2013,9351
+Green Tea,Ohio,Dec,2013,9300
+Tea,New Mexico,Jan,2013,10977
+Tea,New Mexico,Feb,2013,13107
+Tea,New Mexico,Mar,2013,13958
+Tea,New Mexico,Apr,2013,9614
+Tea,New Mexico,May,2013,16227
+Tea,New Mexico,Jun,2013,14693
+Tea,New Mexico,Jul,2013,14258
+Tea,New Mexico,Aug,2013,14725
+Tea,New Mexico,Sep,2013,11354
+Tea,New Mexico,Oct,2013,11868
+Tea,New Mexico,Nov,2013,10646
+Tea,New Mexico,Dec,2013,10697
+Espresso,New Mexico,Jan,2013,10348
+Espresso,New Mexico,Feb,2013,14714
+Espresso,New Mexico,Mar,2013,9994
+Espresso,New Mexico,Apr,2013,11329
+Espresso,New Mexico,May,2013,13176
+Espresso,New Mexico,Jun,2013,16776
+Espresso,New Mexico,Jul,2013,15044
+Espresso,New Mexico,Aug,2013,16277
+Espresso,New Mexico,Sep,2013,12367
+Espresso,New Mexico,Oct,2013,12991
+Espresso,New Mexico,Nov,2013,10656
+Espresso,New Mexico,Dec,2013,15482
+Latte,New Mexico,Jan,2013,10316
+Latte,New Mexico,Feb,2013,15387
+Latte,New Mexico,Mar,2013,14303
+Latte,New Mexico,Apr,2013,15460
+Latte,New Mexico,May,2013,15153
+Latte,New Mexico,Jun,2013,16138
+Latte,New Mexico,Jul,2013,15339
+Latte,New Mexico,Aug,2013,9141
+Latte,New Mexico,Sep,2013,14615
+Latte,New Mexico,Oct,2013,16710
+Latte,New Mexico,Nov,2013,10939
+Latte,New Mexico,Dec,2013,9260
+Green Tea,New Mexico,Jan,2013,9510
+Green Tea,New Mexico,Feb,2013,13945
+Green Tea,New Mexico,Mar,2013,12321
+Green Tea,New Mexico,Apr,2013,12398
+Green Tea,New Mexico,May,2013,11742
+Green Tea,New Mexico,Jun,2013,10772
+Green Tea,New Mexico,Jul,2013,12220
+Green Tea,New Mexico,Aug,2013,16162
+Green Tea,New Mexico,Sep,2013,12517
+Green Tea,New Mexico,Oct,2013,13899
+Green Tea,New Mexico,Nov,2013,16202
+Green Tea,New Mexico,Dec,2013,9084
+Tea,New York,Jan,2014,16322
+Tea,New York,Feb,2014,14196
+Tea,New York,Mar,2014,17106
+Tea,New York,Apr,2014,9948
+Tea,New York,May,2014,12238
+Tea,New York,Jun,2014,10880
+Tea,New York,Jul,2014,9903
+Tea,New York,Aug,2014,11878
+Tea,New York,Sep,2014,15570
+Tea,New York,Oct,2014,12932
+Tea,New York,Nov,2014,13663
+Tea,New York,Dec,2014,12336
+Espresso,New York,Jan,2014,17959
+Espresso,New York,Feb,2014,12303
+Espresso,New York,Mar,2014,10181
+Espresso,New York,Apr,2014,12467
+Espresso,New York,May,2014,10563
+Espresso,New York,Jun,2014,16061
+Espresso,New York,Jul,2014,13754
+Espresso,New York,Aug,2014,15798
+Espresso,New York,Sep,2014,11360
+Espresso,New York,Oct,2014,10279
+Espresso,New York,Nov,2014,11472
+Espresso,New York,Dec,2014,15567
+Latte,New York,Jan,2014,14712
+Latte,New York,Feb,2014,15718
+Latte,New York,Mar,2014,15262
+Latte,New York,Apr,2014,16116
+Latte,New York,May,2014,15888
+Latte,New York,Jun,2014,15242
+Latte,New York,Jul,2014,9843
+Latte,New York,Aug,2014,16874
+Latte,New York,Sep,2014,11877
+Latte,New York,Oct,2014,15780
+Latte,New York,Nov,2014,10278
+Latte,New York,Dec,2014,10980
+Green Tea,New York,Jan,2014,11190
+Green Tea,New York,Feb,2014,10215
+Green Tea,New York,Mar,2014,17521
+Green Tea,New York,Apr,2014,14346
+Green Tea,New York,May,2014,16872
+Green Tea,New York,Jun,2014,15007
+Green Tea,New York,Jul,2014,11309
+Green Tea,New York,Aug,2014,12860
+Green Tea,New York,Sep,2014,11309
+Green Tea,New York,Oct,2014,12269
+Green Tea,New York,Nov,2014,10006
+Green Tea,New York,Dec,2014,14533
+Tea,Washington,Jan,2014,10916
+Tea,Washington,Feb,2014,14633
+Tea,Washington,Mar,2014,14477
+Tea,Washington,Apr,2014,15802
+Tea,Washington,May,2014,17536
+Tea,Washington,Jun,2014,15147
+Tea,Washington,Jul,2014,16379
+Tea,Washington,Aug,2014,16159
+Tea,Washington,Sep,2014,11426
+Tea,Washington,Oct,2014,17684
+Tea,Washington,Nov,2014,13786
+Tea,Washington,Dec,2014,9689
+Espresso,Washington,Jan,2014,15514
+Espresso,Washington,Feb,2014,15312
+Espresso,Washington,Mar,2014,14523
+Espresso,Washington,Apr,2014,9958
+Espresso,Washington,May,2014,10752
+Espresso,Washington,Jun,2014,13190
+Espresso,Washington,Jul,2014,14940
+Espresso,Washington,Aug,2014,12122
+Espresso,Washington,Sep,2014,10308
+Espresso,Washington,Oct,2014,17003
+Espresso,Washington,Nov,2014,15106
+Espresso,Washington,Dec,2014,15917
+Latte,Washington,Jan,2014,11785
+Latte,Washington,Feb,2014,10353
+Latte,Washington,Mar,2014,17672
+Latte,Washington,Apr,2014,14043
+Latte,Washington,May,2014,17372
+Latte,Washington,Jun,2014,9802
+Latte,Washington,Jul,2014,13322
+Latte,Washington,Aug,2014,10580
+Latte,Washington,Sep,2014,11961
+Latte,Washington,Oct,2014,11710
+Latte,Washington,Nov,2014,11458
+Latte,Washington,Dec,2014,13727
+Green Tea,Washington,Jan,2014,16450
+Green Tea,Washington,Feb,2014,15243
+Green Tea,Washington,Mar,2014,10221
+Green Tea,Washington,Apr,2014,14222
+Green Tea,Washington,May,2014,13286
+Green Tea,Washington,Jun,2014,14713
+Green Tea,Washington,Jul,2014,9783
+Green Tea,Washington,Aug,2014,14995
+Green Tea,Washington,Sep,2014,15848
+Green Tea,Washington,Oct,2014,15695
+Green Tea,Washington,Nov,2014,16678
+Green Tea,Washington,Dec,2014,13696
+Tea,Texas,Jan,2014,12342
+Tea,Texas,Feb,2014,17377
+Tea,Texas,Mar,2014,14681
+Tea,Texas,Apr,2014,15979
+Tea,Texas,May,2014,9802
+Tea,Texas,Jun,2014,13793
+Tea,Texas,Jul,2014,13945
+Tea,Texas,Aug,2014,14925
+Tea,Texas,Sep,2014,13065
+Tea,Texas,Oct,2014,9611
+Tea,Texas,Nov,2014,12386
+Tea,Texas,Dec,2014,17015
+Espresso,Texas,Jan,2014,9818
+Espresso,Texas,Feb,2014,14196
+Espresso,Texas,Mar,2014,16801
+Espresso,Texas,Apr,2014,14007
+Espresso,Texas,May,2014,17710
+Espresso,Texas,Jun,2014,16401
+Espresso,Texas,Jul,2014,17245
+Espresso,Texas,Aug,2014,12250
+Espresso,Texas,Sep,2014,16382
+Espresso,Texas,Oct,2014,9647
+Espresso,Texas,Nov,2014,13575
+Espresso,Texas,Dec,2014,9908
+Latte,Texas,Jan,2014,10320
+Latte,Texas,Feb,2014,14357
+Latte,Texas,Mar,2014,12854
+Latte,Texas,Apr,2014,17416
+Latte,Texas,May,2014,10868
+Latte,Texas,Jun,2014,10171
+Latte,Texas,Jul,2014,13701
+Latte,Texas,Aug,2014,16752
+Latte,Texas,Sep,2014,16262
+Latte,Texas,Oct,2014,16771
+Latte,Texas,Nov,2014,13708
+Latte,Texas,Dec,2014,10331
+Green Tea,Texas,Jan,2014,16336
+Green Tea,Texas,Feb,2014,15780
+Green Tea,Texas,Mar,2014,16182
+Green Tea,Texas,Apr,2014,17173
+Green Tea,Texas,May,2014,14830
+Green Tea,Texas,Jun,2014,15359
+Green Tea,Texas,Jul,2014,10866
+Green Tea,Texas,Aug,2014,11720
+Green Tea,Texas,Sep,2014,15913
+Green Tea,Texas,Oct,2014,17199
+Green Tea,Texas,Nov,2014,11761
+Green Tea,Texas,Dec,2014,10101
+Tea,Ohio,Jan,2014,17665
+Tea,Ohio,Feb,2014,10518
+Tea,Ohio,Mar,2014,17359
+Tea,Ohio,Apr,2014,15322
+Tea,Ohio,May,2014,17448
+Tea,Ohio,Jun,2014,11153
+Tea,Ohio,Jul,2014,13833
+Tea,Ohio,Aug,2014,10585
+Tea,Ohio,Sep,2014,14479
+Tea,Ohio,Oct,2014,13427
+Tea,Ohio,Nov,2014,14363
+Tea,Ohio,Dec,2014,10779
+Espresso,Ohio,Jan,2014,14823
+Espresso,Ohio,Feb,2014,11629
+Espresso,Ohio,Mar,2014,15030
+Espresso,Ohio,Apr,2014,9617
+Espresso,Ohio,May,2014,13820
+Espresso,Ohio,Jun,2014,16653
+Espresso,Ohio,Jul,2014,13837
+Espresso,Ohio,Aug,2014,12769
+Espresso,Ohio,Sep,2014,14710
+Espresso,Ohio,Oct,2014,10048
+Espresso,Ohio,Nov,2014,13182
+Espresso,Ohio,Dec,2014,13406
+Latte,Ohio,Jan,2014,16187
+Latte,Ohio,Feb,2014,16560
+Latte,Ohio,Mar,2014,9956
+Latte,Ohio,Apr,2014,17881
+Latte,Ohio,May,2014,15734
+Latte,Ohio,Jun,2014,13283
+Latte,Ohio,Jul,2014,10005
+Latte,Ohio,Aug,2014,10766
+Latte,Ohio,Sep,2014,16921
+Latte,Ohio,Oct,2014,12485
+Latte,Ohio,Nov,2014,16806
+Latte,Ohio,Dec,2014,10383
+Green Tea,Ohio,Jan,2014,16098
+Green Tea,Ohio,Feb,2014,17173
+Green Tea,Ohio,Mar,2014,16292
+Green Tea,Ohio,Apr,2014,13077
+Green Tea,Ohio,May,2014,14966
+Green Tea,Ohio,Jun,2014,14626
+Green Tea,Ohio,Jul,2014,14475
+Green Tea,Ohio,Aug,2014,13868
+Green Tea,Ohio,Sep,2014,12406
+Green Tea,Ohio,Oct,2014,12813
+Green Tea,Ohio,Nov,2014,10402
+Green Tea,Ohio,Dec,2014,15564
+Tea,New Mexico,Jan,2014,10148
+Tea,New Mexico,Feb,2014,10566
+Tea,New Mexico,Mar,2014,11192
+Tea,New Mexico,Apr,2014,15855
+Tea,New Mexico,May,2014,17250
+Tea,New Mexico,Jun,2014,15962
+Tea,New Mexico,Jul,2014,17183
+Tea,New Mexico,Aug,2014,11656
+Tea,New Mexico,Sep,2014,9939
+Tea,New Mexico,Oct,2014,16191
+Tea,New Mexico,Nov,2014,14568
+Tea,New Mexico,Dec,2014,10332
+Espresso,New Mexico,Jan,2014,17426
+Espresso,New Mexico,Feb,2014,17268
+Espresso,New Mexico,Mar,2014,11429
+Espresso,New Mexico,Apr,2014,11420
+Espresso,New Mexico,May,2014,9958
+Espresso,New Mexico,Jun,2014,17544
+Espresso,New Mexico,Jul,2014,11687
+Espresso,New Mexico,Aug,2014,11759
+Espresso,New Mexico,Sep,2014,12185
+Espresso,New Mexico,Oct,2014,10760
+Espresso,New Mexico,Nov,2014,15143
+Espresso,New Mexico,Dec,2014,11506
+Latte,New Mexico,Jan,2014,17588
+Latte,New Mexico,Feb,2014,9683
+Latte,New Mexico,Mar,2014,17152
+Latte,New Mexico,Apr,2014,11177
+Latte,New Mexico,May,2014,15210
+Latte,New Mexico,Jun,2014,15957
+Latte,New Mexico,Jul,2014,13390
+Latte,New Mexico,Aug,2014,11301
+Latte,New Mexico,Sep,2014,11298
+Latte,New Mexico,Oct,2014,14100
+Latte,New Mexico,Nov,2014,14568
+Latte,New Mexico,Dec,2014,13579
+Green Tea,New Mexico,Jan,2014,12785
+Green Tea,New Mexico,Feb,2014,10304
+Green Tea,New Mexico,Mar,2014,14177
+Green Tea,New Mexico,Apr,2014,13178
+Green Tea,New Mexico,May,2014,10049
+Green Tea,New Mexico,Jun,2014,17660
+Green Tea,New Mexico,Jul,2014,13657
+Green Tea,New Mexico,Aug,2014,15712
+Green Tea,New Mexico,Sep,2014,12594
+Green Tea,New Mexico,Oct,2014,10286
+Green Tea,New Mexico,Nov,2014,9736
+Green Tea,New Mexico,Dec,2014,9599
+Tea,New York,Jan,2015,13338
+Tea,New York,Feb,2015,12223
+Tea,New York,Mar,2015,13638
+Tea,New York,Apr,2015,15533
+Tea,New York,May,2015,17278
+Tea,New York,Jun,2015,13506
+Tea,New York,Jul,2015,18398
+Tea,New York,Aug,2015,16513
+Tea,New York,Sep,2015,15683
+Tea,New York,Oct,2015,16956
+Tea,New York,Nov,2015,15605
+Tea,New York,Dec,2015,17161
+Espresso,New York,Jan,2015,15793
+Espresso,New York,Feb,2015,11446
+Espresso,New York,Mar,2015,10430
+Espresso,New York,Apr,2015,17938
+Espresso,New York,May,2015,13300
+Espresso,New York,Jun,2015,17466
+Espresso,New York,Jul,2015,12976
+Espresso,New York,Aug,2015,16445
+Espresso,New York,Sep,2015,15026
+Espresso,New York,Oct,2015,10592
+Espresso,New York,Nov,2015,16559
+Espresso,New York,Dec,2015,10962
+Latte,New York,Jan,2015,15967
+Latte,New York,Feb,2015,12411
+Latte,New York,Mar,2015,18493
+Latte,New York,Apr,2015,10634
+Latte,New York,May,2015,11754
+Latte,New York,Jun,2015,13157
+Latte,New York,Jul,2015,17823
+Latte,New York,Aug,2015,13174
+Latte,New York,Sep,2015,13998
+Latte,New York,Oct,2015,17409
+Latte,New York,Nov,2015,16562
+Latte,New York,Dec,2015,14883
+Green Tea,New York,Jan,2015,13587
+Green Tea,New York,Feb,2015,18129
+Green Tea,New York,Mar,2015,14490
+Green Tea,New York,Apr,2015,10581
+Green Tea,New York,May,2015,17900
+Green Tea,New York,Jun,2015,13050
+Green Tea,New York,Jul,2015,16676
+Green Tea,New York,Aug,2015,10275
+Green Tea,New York,Sep,2015,17304
+Green Tea,New York,Oct,2015,17888
+Green Tea,New York,Nov,2015,15484
+Green Tea,New York,Dec,2015,15595
+Tea,Washington,Jan,2015,18481
+Tea,Washington,Feb,2015,14570
+Tea,Washington,Mar,2015,15116
+Tea,Washington,Apr,2015,11885
+Tea,Washington,May,2015,16059
+Tea,Washington,Jun,2015,16519
+Tea,Washington,Jul,2015,13509
+Tea,Washington,Aug,2015,14614
+Tea,Washington,Sep,2015,16558
+Tea,Washington,Oct,2015,14308
+Tea,Washington,Nov,2015,17771
+Tea,Washington,Dec,2015,11070
+Espresso,Washington,Jan,2015,18470
+Espresso,Washington,Feb,2015,11670
+Espresso,Washington,Mar,2015,13546
+Espresso,Washington,Apr,2015,12432
+Espresso,Washington,May,2015,15281
+Espresso,Washington,Jun,2015,11882
+Espresso,Washington,Jul,2015,14728
+Espresso,Washington,Aug,2015,11798
+Espresso,Washington,Sep,2015,12141
+Espresso,Washington,Oct,2015,17540
+Espresso,Washington,Nov,2015,10292
+Espresso,Washington,Dec,2015,16095
+Latte,Washington,Jan,2015,10280
+Latte,Washington,Feb,2015,11330
+Latte,Washington,Mar,2015,14560
+Latte,Washington,Apr,2015,17349
+Latte,Washington,May,2015,16257
+Latte,Washington,Jun,2015,13001
+Latte,Washington,Jul,2015,10229
+Latte,Washington,Aug,2015,15486
+Latte,Washington,Sep,2015,18009
+Latte,Washington,Oct,2015,10950
+Latte,Washington,Nov,2015,18522
+Latte,Washington,Dec,2015,14725
+Green Tea,Washington,Jan,2015,18104
+Green Tea,Washington,Feb,2015,10115
+Green Tea,Washington,Mar,2015,18726
+Green Tea,Washington,Apr,2015,11324
+Green Tea,Washington,May,2015,11890
+Green Tea,Washington,Jun,2015,14154
+Green Tea,Washington,Jul,2015,14414
+Green Tea,Washington,Aug,2015,13187
+Green Tea,Washington,Sep,2015,12713
+Green Tea,Washington,Oct,2015,11692
+Green Tea,Washington,Nov,2015,17081
+Green Tea,Washington,Dec,2015,10279
+Tea,Texas,Jan,2015,13841
+Tea,Texas,Feb,2015,11591
+Tea,Texas,Mar,2015,10547
+Tea,Texas,Apr,2015,15044
+Tea,Texas,May,2015,11808
+Tea,Texas,Jun,2015,18599
+Tea,Texas,Jul,2015,11498
+Tea,Texas,Aug,2015,11146
+Tea,Texas,Sep,2015,11473
+Tea,Texas,Oct,2015,13408
+Tea,Texas,Nov,2015,12906
+Tea,Texas,Dec,2015,10070
+Espresso,Texas,Jan,2015,16058
+Espresso,Texas,Feb,2015,15783
+Espresso,Texas,Mar,2015,12867
+Espresso,Texas,Apr,2015,12003
+Espresso,Texas,May,2015,11838
+Espresso,Texas,Jun,2015,14396
+Espresso,Texas,Jul,2015,17141
+Espresso,Texas,Aug,2015,10578
+Espresso,Texas,Sep,2015,13204
+Espresso,Texas,Oct,2015,12687
+Espresso,Texas,Nov,2015,11725
+Espresso,Texas,Dec,2015,16420
+Latte,Texas,Jan,2015,11565
+Latte,Texas,Feb,2015,18712
+Latte,Texas,Mar,2015,16119
+Latte,Texas,Apr,2015,15476
+Latte,Texas,May,2015,13926
+Latte,Texas,Jun,2015,11644
+Latte,Texas,Jul,2015,12323
+Latte,Texas,Aug,2015,11684
+Latte,Texas,Sep,2015,16459
+Latte,Texas,Oct,2015,12750
+Latte,Texas,Nov,2015,11980
+Latte,Texas,Dec,2015,18831
+Green Tea,Texas,Jan,2015,11059
+Green Tea,Texas,Feb,2015,13726
+Green Tea,Texas,Mar,2015,12737
+Green Tea,Texas,Apr,2015,14052
+Green Tea,Texas,May,2015,18375
+Green Tea,Texas,Jun,2015,18736
+Green Tea,Texas,Jul,2015,15920
+Green Tea,Texas,Aug,2015,13743
+Green Tea,Texas,Sep,2015,16676
+Green Tea,Texas,Oct,2015,16990
+Green Tea,Texas,Nov,2015,15461
+Green Tea,Texas,Dec,2015,11801
+Tea,Ohio,Jan,2015,16864
+Tea,Ohio,Feb,2015,17208
+Tea,Ohio,Mar,2015,11090
+Tea,Ohio,Apr,2015,12390
+Tea,Ohio,May,2015,12936
+Tea,Ohio,Jun,2015,12948
+Tea,Ohio,Jul,2015,14086
+Tea,Ohio,Aug,2015,13063
+Tea,Ohio,Sep,2015,15279
+Tea,Ohio,Oct,2015,12487
+Tea,Ohio,Nov,2015,13700
+Tea,Ohio,Dec,2015,13825
+Espresso,Ohio,Jan,2015,14215
+Espresso,Ohio,Feb,2015,12262
+Espresso,Ohio,Mar,2015,10123
+Espresso,Ohio,Apr,2015,11110
+Espresso,Ohio,May,2015,15991
+Espresso,Ohio,Jun,2015,18712
+Espresso,Ohio,Jul,2015,13956
+Espresso,Ohio,Aug,2015,10740
+Espresso,Ohio,Sep,2015,18060
+Espresso,Ohio,Oct,2015,15208
+Espresso,Ohio,Nov,2015,10175
+Espresso,Ohio,Dec,2015,10960
+Latte,Ohio,Jan,2015,11498
+Latte,Ohio,Feb,2015,13997
+Latte,Ohio,Mar,2015,10188
+Latte,Ohio,Apr,2015,14327
+Latte,Ohio,May,2015,11665
+Latte,Ohio,Jun,2015,10792
+Latte,Ohio,Jul,2015,11754
+Latte,Ohio,Aug,2015,10724
+Latte,Ohio,Sep,2015,16661
+Latte,Ohio,Oct,2015,12223
+Latte,Ohio,Nov,2015,12076
+Latte,Ohio,Dec,2015,16488
+Green Tea,Ohio,Jan,2015,18256
+Green Tea,Ohio,Feb,2015,10628
+Green Tea,Ohio,Mar,2015,13219
+Green Tea,Ohio,Apr,2015,10113
+Green Tea,Ohio,May,2015,17146
+Green Tea,Ohio,Jun,2015,11013
+Green Tea,Ohio,Jul,2015,14264
+Green Tea,Ohio,Aug,2015,15912
+Green Tea,Ohio,Sep,2015,10426
+Green Tea,Ohio,Oct,2015,11266
+Green Tea,Ohio,Nov,2015,12764
+Green Tea,Ohio,Dec,2015,15156
+Tea,New Mexico,Jan,2015,10345
+Tea,New Mexico,Feb,2015,14716
+Tea,New Mexico,Mar,2015,12864
+Tea,New Mexico,Apr,2015,11237
+Tea,New Mexico,May,2015,17037
+Tea,New Mexico,Jun,2015,13200
+Tea,New Mexico,Jul,2015,11278
+Tea,New Mexico,Aug,2015,17895
+Tea,New Mexico,Sep,2015,14104
+Tea,New Mexico,Oct,2015,17262
+Tea,New Mexico,Nov,2015,12320
+Tea,New Mexico,Dec,2015,16804
+Espresso,New Mexico,Jan,2015,18699
+Espresso,New Mexico,Feb,2015,18812
+Espresso,New Mexico,Mar,2015,18166
+Espresso,New Mexico,Apr,2015,13507
+Espresso,New Mexico,May,2015,13022
+Espresso,New Mexico,Jun,2015,17735
+Espresso,New Mexico,Jul,2015,18089
+Espresso,New Mexico,Aug,2015,15102
+Espresso,New Mexico,Sep,2015,17249
+Espresso,New Mexico,Oct,2015,17894
+Espresso,New Mexico,Nov,2015,18890
+Espresso,New Mexico,Dec,2015,13813
+Latte,New Mexico,Jan,2015,15323
+Latte,New Mexico,Feb,2015,11455
+Latte,New Mexico,Mar,2015,16671
+Latte,New Mexico,Apr,2015,11603
+Latte,New Mexico,May,2015,18170
+Latte,New Mexico,Jun,2015,13805
+Latte,New Mexico,Jul,2015,13038
+Latte,New Mexico,Aug,2015,17038
+Latte,New Mexico,Sep,2015,16171
+Latte,New Mexico,Oct,2015,13388
+Latte,New Mexico,Nov,2015,12696
+Latte,New Mexico,Dec,2015,18146
+Green Tea,New Mexico,Jan,2015,11226
+Green Tea,New Mexico,Feb,2015,18407
+Green Tea,New Mexico,Mar,2015,13257
+Green Tea,New Mexico,Apr,2015,10737
+Green Tea,New Mexico,May,2015,18299
+Green Tea,New Mexico,Jun,2015,16571
+Green Tea,New Mexico,Jul,2015,10926
+Green Tea,New Mexico,Aug,2015,15247
+Green Tea,New Mexico,Sep,2015,17504
+Green Tea,New Mexico,Oct,2015,17851
+Green Tea,New Mexico,Nov,2015,11435
+Green Tea,New Mexico,Dec,2015,18341

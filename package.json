@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/fusioncharts/multi-charting/issues"
   },
-  "homepage": "https://github.com/fusioncharts/multi-charting"
+  "homepage": "https://github.com/fusioncharts/multi-charting",
+  "dependencies": {
+    "fusioncharts": "^3.11.2"
+  }
 }

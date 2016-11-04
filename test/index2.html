@@ -1,0 +1,122 @@
+<DOCTYPE !html>
+<html>
+    <head>
+        <script type='text/javascript' src='../src/multicharting.ajax.js'></script>
+        <script type='text/javascript' src='../src/multicharting.csv.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+        <script type='text/javascript' src='../src/multicharting.datamanager.js'></script>
+    </head>
+    <body>
+        <div id='chart-container'></div>
+        <script type='text/javascript'>
+
+        var startTime = new Date().getTime(),
+        	dataObj,
+        	endTime,
+        	globalData = new dataManager();
+
+        
+        ajax('airline.csv', function (data) {
+
+        	// Converts CSV data to Array
+			dataObj = CSVToArray(data)
+			
+			// Store the converted data in data manager
+			globalData.addData(dataObj);
+
+			// Get the filtered data
+			dataObj = globalData.getData([function (data) {
+				c = 0;
+				for (row of data) {
+					c++;
+				}
+					console.log(c);
+
+			}]);
+
+
+
+			// Convert the filtered data to FusionCharts multi-series data			
+			dataObj = convertData(dataObj, {
+				dimension: ['year'], 
+				measure: ['arr_delay', 'security_delay'],
+				seriesType: 'ms'
+			});
+	        
+	        endTime = new Date().getTime();
+	    	
+	    	console.log(dataObj);
+	    	console.log('Time taken in ms: ', endTime - startTime);
+        	alert('done');
+
+        });
+
+
+
+
+
+// return;
+
+
+		data = 'Product,State,Months,Year,Sales\n\
+Tea,"New, York",Jan,2013,9550\n\
+Tea,"New, York",Feb,2013,12446\n\
+Tea,"New, York",Mar,2013,16939\n\
+Tea,"New, York",Apr,2013,9886\n\
+Tea,"New, York",May,2013,15317\n\
+Latte,Washington,Jun,2013,12364\n\
+Latte,Washington,Jul,2013,11299\n\
+Latte,Washington,Aug,2013,10600\n\
+Latte,"Washington, New York",Sep,2013,13594\n\
+Latte,"Washington, New York",Oct,2013,11557\n\
+Latte,"Washington, New York",Nov,2013,14093\n\
+Green Tea,"Washington, New York",Jul,2013,16892\n\
+Green Tea,Washington,Aug,2013,14267\n\
+Tea,"Texas, Washington",Aug,2013,13141\n\
+Tea,"Texas, Washington",Sep,2013,11360\n\
+Tea,Texas,Oct,2013,16675\n\
+Espresso,Texas,May,2013,12607\n\
+Espresso,Texas,Jun,2013,13211';
+// Espresso,Texas,Jun,2013,13211\ra,c,b,d,e,f,r,e,d\n\rrohit,kumar,is,name,this';
+
+		var dataObj = "";
+
+		// dataObj = Papa.parse(data).data.join('<br/>');
+
+
+		// var csvToJSON = function  (csvStr, delimiter) {
+		// 	delimiter = delimiter || ',';
+		// 	csvStr = csvStr || '';
+		// 	var csvDataObj = csvStr.split(/\n\r|\r\n|\n|\r/g),
+		// 		dataArr = [];
+		// 	for (line of csvDataObj) {
+		// 		console.log(line.split(delimiter));
+		// 	}
+
+		// }
+
+		// csvToJSON(data);
+
+
+
+		// dataObj = CSVToArray(data)
+		// dataObj = convertData(dataObj, {dimension: ['Year'], measure: ['Sales', 'Year', 'Months'], seriesType: 'ms'});
+		// dataObj = JSON.stringify(dataObj, null, 4);
+
+		// console.log(dataObj);
+		// document.writeln(dataObj);
+
+
+        </script>
+
+
+        <div style='margin: 10px'>
+<!--
+	        <input style='margin:5px;padding:5px' type='button' value='Change URL (pushState)' id='changeUrl' />
+            <input style='margin:5px;padding:5px' type='button' value='Re-render' id='reRender' />
+ -->
+ 		</div>
+    </body>
+
+
+</html>
