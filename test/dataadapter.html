@@ -1,0 +1,34 @@
+<DOCTYPE !html>
+<html>
+    <head>
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+        <script type='text/javascript' src='../src/multicharting.ajax.js'></script>
+        <script type='text/javascript' src='../src/multicharting.csv.js'></script>
+        <script type='text/javascript' src='data.js'></script>
+       
+
+        <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
+        <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.zune.js'></script>
+    </head>
+
+    <body>
+
+        <script type='text/javascript'>
+            timeSeriesJSON = convertData(DATA, {
+                    dimension: ['date'], 
+                    measure: ['tea','coffee', 'milk'],
+                    seriesType: 'ts'                    
+                });
+document.writeln(JSON.stringify(timeSeriesJSON,null,2));
+console.log(JSON.stringify(timeSeriesJSON,null,2));
+
+        </script>
+
+
+        <center style='margin: 10px'>
+            <div id='chart-container'> Chart will render here </div>
+        </cneter>
+    </body>
+
+
+</html>
