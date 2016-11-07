@@ -4,15 +4,15 @@
 // 	}
 // })(MC)
 
-var multiCharting = fucntion () {
+var multiCharting = function () {
 	},
 
-	multiProto = multiCharting.proto;
+	multiProto = multiCharting.prototype;
 
-multiProto.createDataStore = fucntion () {
+multiProto.createDataStore = function () {
 	return new dataStorage(arguments);
 };
 
-multiProto.createDataProcessor = fucntion () {
+multiProto.createDataProcessor = function () {
 	return new dataProcessor(arguments);
 }
