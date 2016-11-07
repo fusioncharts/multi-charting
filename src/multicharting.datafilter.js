@@ -1,12 +1,12 @@
 var filterStore = {},
 	filterLink = {},
 	filterIdCount = 0,
-	// Constructor class for dataFilter.
-	dataFilter = function (filter, id) {
+	// Constructor class for dataProcessor.
+	dataProcessor = function (filter, id, type) {
     	var manager = this;
-    	manager.addFilter(filter, id);
+    	manager.addCustomFilter(filter, id, type);
 	},
-	filterProto = dataFilter.prototype,
+	filterProto = dataProcessor.prototype,
 
 	// Function to update data on change of filter.
 	updataFilterData = function (id, copyParentToChild) {
@@ -34,7 +34,7 @@ var filterStore = {},
 	};
 
 // Function to add filter in the filter store
-filterProto.addFilter = function (filterFn, id) {
+filterProto.addCustomFilter = function (filterFn, id, type) {
 	var filter = this,
 		oldId = filter.id;
 
@@ -42,6 +42,7 @@ filterProto.addFilter = function (filterFn, id) {
 	filterStore[id] = filterFn;
 
 	filter.id = id;
+	filter.type = type;
 
 	// Update the data on which the filter is applied and also on the child data.
 	if (filterLink[id]) {
@@ -74,3 +75,20 @@ filterProto.deleteFilter = function () {
 	delete filterStore[id];
 	delete filterLink[id];
 };
+
+filterProto.filter = function (filterFn, id) {
+	this.addCustomFilter(filterFn, id, 'filter');
+};
+
+filterProto.sort = function (filterFn, id) {
+	this.addCustomFilter(filterFn, id, 'sort');
+};
+
+filterProto.addInfo = function (filterFn, id) {
+	this.addCustomFilter(filterFn, id, 'addInfo');
+};
+
+filterProto.reExpress = function (filterFn, id) {
+	this.addCustomFilter(filterFn, id, 'reExpress');
+};
+

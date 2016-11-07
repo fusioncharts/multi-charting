@@ -6,12 +6,12 @@ var	dataStore = {},
 	// Store all the dataObjs that are updated.
 	tempDataUpdated = {},
 	idCount = 0,
-	// Constructor class for dataManager.
-	dataManager = function (JSONData, id) {
+	// Constructor class for dataStorage.
+	dataStorage = function (JSONData, id) {
     	var manager = this;
     	manager.addData(JSONData, id);
 	},
-	proto = dataManager.prototype,
+	proto = dataStorage.prototype,
 
 	//Function to update all the linked child data
 	updataData = function (id) {
@@ -24,6 +24,7 @@ var	dataStore = {},
 			linkId,
 			filter,
 			filterFn,
+			type,
 			info;
 
 		linkIds = linkData.link;
@@ -36,10 +37,11 @@ var	dataStore = {},
 			tempDataUpdated[linkId] = true;
 			filter = filters[i];
 			filterFn = filter.getFilter();
+			type = filter.type;
 
 			if (typeof filterFn === 'function') {
 				if (filterStore[filter.id]) {
-					dataStore[linkId] = filterFn(parentData);
+					dataStore[linkId] = executeFilter(type, filterFn, parentData);
 				}
 				else {
 					dataStore[linkId] = parentData;
@@ -51,6 +53,19 @@ var	dataStore = {},
 			if (linkStore[linkId]) {
 				updataData(linkId);
 			}
+		}
+	},
+
+	executeFilter = function (type, filterFn, JSONData) {
+		switch (type) {
+			case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
+				break;
+			case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
+				break;
+			case 'addInfo' :
+			case 'reExpress' : return Array.prototype.map.call(JSONData, filterFn);
+				break;
+			default : return filterFn(JSONData);
 		}
 	};
 
@@ -99,17 +114,19 @@ proto.getData = function (filters) {
 			filterFn,
 			datalinks,
 			filterID,
+			type,
 			isFilterArray = filters instanceof Array,
 			len = isFilterArray ? filters.length : 1;
 
 		for (i = 0; i < len; i++) {
 			filter = filters[i] || filters;
 			filterFn = filter.getFilter();
+			type = filter.type;
 
 			if (typeof filterFn === 'function') {
-				newData = filterFn(dataStore[id]);
+				newData = executeFilter(type, filterFn, dataStore[id]);
 
-				newDataObj = new dataManager(newData);
+				newDataObj = new dataStorage(newData);
 				newId = newDataObj.id;
 				parentStore[newId] = data;
 
