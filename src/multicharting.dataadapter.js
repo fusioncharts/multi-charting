@@ -8,19 +8,20 @@
 })(function (MultiCharting) {
 
     MultiCharting.prototype.createChart = function () {
-        var argument = arguments && arguments[0],
-            chartType = argument && argument.type,
-            container = argument && argument.container,
-            configuration = argument && argument.configuration,
-            callbackFN = argument && argument.callbackFN,
-            DATA = argument && argument.dataStore,
+        var argument = arguments && arguments[0] || {},
+            configuration,
+            callbackFN,
+            DATA,
             chartConfig = {},
             dataSource = {};
-        dataSource = convertData(DATA, configuration, callbackFN);
-        chartConfig.type = chartType;
-        chartConfig.renderAt = container;
-        chartConfig.dataFormat = 'json';
-        chartConfig.dataSource = dataSource
+        extend2(chartConfig,argument, true);
+        configuration = chartConfig.configuration || {};
+        DATA = chartConfig.dataStore;
+        callbackFN = configuration.callbackFN;
+        dataConfig = configuration.data;
+        dataSource = convertData(DATA, dataConfig, callbackFN);
+        delete chartConfig.dataStore;
+        delete chartConfig.configuration;
         FusionCharts.ready(function () {
             var chart = new FusionCharts(chartConfig);
             chart.render();
