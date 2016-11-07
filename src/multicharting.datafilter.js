@@ -2,9 +2,9 @@ var filterStore = {},
 	filterLink = {},
 	filterIdCount = 0,
 	// Constructor class for dataProcessor.
-	dataProcessor = function (filter, id, type) {
+	dataProcessor = function () {
     	var manager = this;
-    	manager.addCustomFilter(filter, id, type);
+    	manager.addRule(arguments);
 	},
 	filterProto = dataProcessor.prototype,
 
@@ -34,9 +34,13 @@ var filterStore = {},
 	};
 
 // Function to add filter in the filter store
-filterProto.addCustomFilter = function (filterFn, id, type) {
+filterProto.addRule = function () {
 	var filter = this,
-		oldId = filter.id;
+		oldId = filter.id,
+		argument = arguments[0],
+		filterFn = argument.rule,
+		id = argument.type,
+		type = argument.type;
 
 	id = oldId || id || 'filterStore' + filterIdCount ++;
 	filterStore[id] = filterFn;
@@ -76,19 +80,35 @@ filterProto.deleteFilter = function () {
 	delete filterLink[id];
 };
 
-filterProto.filter = function (filterFn, id) {
-	this.addCustomFilter(filterFn, id, 'filter');
+filterProto.filter = function () {
+	this.addRule(
+		{	rule : arguments[0],
+			type : 'filter'
+		}
+	);
 };
 
-filterProto.sort = function (filterFn, id) {
-	this.addCustomFilter(filterFn, id, 'sort');
+filterProto.sort = function () {
+	this.addRule(
+		{	rule : arguments[0],
+			type : 'sort'
+		}
+	);
 };
 
-filterProto.addInfo = function (filterFn, id) {
-	this.addCustomFilter(filterFn, id, 'addInfo');
+filterProto.addInfo = function () {
+	this.addRule(
+		{	rule : arguments[0],
+			type : 'addInfo'
+		}
+	);
 };
 
-filterProto.reExpress = function (filterFn, id) {
-	this.addCustomFilter(filterFn, id, 'reExpress');
+filterProto.reExpress = function () {
+	this.addRule(
+		{	rule : arguments[0],
+			type : 'reExpress'
+		}
+	);
 };
 
