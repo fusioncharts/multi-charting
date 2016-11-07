@@ -1,18 +1,32 @@
-// (fucntion (MC) {
-// 	if (!MC) {
-// 		return;
-// 	}
-// })(MC)
+/**
+ * MultiCharting Extension for FusionCharts
+ * This module contains the basic routines required by subsequent modules to
+ * extend/scale or add functionality to the MultiCharting object.
+ *
+ */
 
-var multiCharting = function () {
-	},
+(function (env, factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = env.document ?
+            factory(env) : function(win) {
+                if (!win.document) {
+                    throw new Error("Window with document not present");
+                }
+                return factory(win, true);
+            };
+    } else {
+        env.MultiCharting = factory(env, true);
+    }
+})(typeof window !== 'undefined' ? window : this, function (_window, windowExists) {
+    // In case MultiCharting already exists.
+    if (_window.MultiCharting) {
+        return;
+    }
 
-	multiProto = multiCharting.prototype;
+	var MultiCharting = function () {
+	};
 
-multiProto.createDataStore = function () {
-	return new dataStorage(arguments);
-};
 
-multiProto.createDataProcessor = function () {
-	return new dataProcessor(arguments);
-}
+	return MultiCharting;
+});
+
