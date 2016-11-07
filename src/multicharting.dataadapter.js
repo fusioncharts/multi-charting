@@ -10,8 +10,7 @@
     MultiCharting.prototype.dataadapter = function () {
         return convertData(arguments);
     };
-    var extend2 = MultiCharting.lib.extend2,
-        merge = MultiCharting.lib.merge;
+    var extend2 = MultiCharting.prototype.lib.extend2;
     //function to convert data, it returns fc supported JSON
     function convertData() {
         var argument = arguments[0] || {},

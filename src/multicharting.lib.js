@@ -7,25 +7,24 @@
     }
 })(function (MultiCharting) {
 
-	var lib = {
-	    extend2: function (obj1, obj2, skipUndef) {
-	        var OBJECTSTRING = 'object';
-	        //if none of the arguments are object then return back
-	        if (typeof obj1 !== OBJECTSTRING && typeof obj2 !== OBJECTSTRING) {
-	            return null;
-	        }
+	var extend2 = function (obj1, obj2, skipUndef) {
+            var OBJECTSTRING = 'object';
+            //if none of the arguments are object then return back
+            if (typeof obj1 !== OBJECTSTRING && typeof obj2 !== OBJECTSTRING) {
+                return null;
+            }
 
-	        if (typeof obj2 !== OBJECTSTRING || obj2 === null) {
-	            return obj1;
-	        }
+            if (typeof obj2 !== OBJECTSTRING || obj2 === null) {
+                return obj1;
+            }
 
-	        if (typeof obj1 !== OBJECTSTRING) {
-	            obj1 = obj2 instanceof Array ? [] : {};
-	        }
-	        merge(obj1, obj2, skipUndef);
-	        return obj1;
-	    },
-	    merge: function (obj1, obj2, skipUndef, tgtArr, srcArr) {
+            if (typeof obj1 !== OBJECTSTRING) {
+                obj1 = obj2 instanceof Array ? [] : {};
+            }
+            merge(obj1, obj2, skipUndef);
+            return obj1;
+        },
+        merge = function (obj1, obj2, skipUndef, tgtArr, srcArr) {
             var item,
                 srcVal,
                 tgtVal,
@@ -141,8 +140,11 @@
                 }
             }
             return obj1;
-    	}
-	};
+        },
+        lib = {
+            extend2: extend2,
+            merge: merge
+        };
 
 	MultiCharting.prototype.lib = (MultiCharting.prototype.lib || lib);
 

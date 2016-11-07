@@ -15,7 +15,9 @@
             var chart = this;
             chart.render(arguments);
         },
-        chartProto = Chart.prototype;
+        chartProto = Chart.prototype,
+        extend2 = MultiCharting.prototype.lib.extend2,
+        dataadapter = MultiCharting.prototype.dataadapter;
 
     chartProto.render = function () {
         var chart = this,
@@ -37,7 +39,7 @@
         configData.config = configuration.data;
 
         //store fc supported json to render charts
-        dataSource = this.dataadapter(configData);
+        dataSource = dataadapter(configData);
 
         //delete data configuration parts for FC json converter
         delete chartConfig.dataStore;
