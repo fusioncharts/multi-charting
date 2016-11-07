@@ -11,7 +11,7 @@
 		return new dataStorage(arguments);
 	};
 
-	var	lib = MultiCharting.prototype.lib = {},
+	var	lib = MultiCharting.prototype.lib,
 		dataStore = lib.dataStore = {},
 		// For storing the child of a parent
 		linkStore = {},
