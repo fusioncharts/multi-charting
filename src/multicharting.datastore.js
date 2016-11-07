@@ -71,6 +71,7 @@
 			}
 		},
 
+		// Function to execute the dataProcessor over the data
 		executeProcessor = function (type, filterFn, JSONData) {
 			switch (type) {
 				case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
@@ -82,6 +83,26 @@
 					break;
 				default : return filterFn(JSONData);
 			}
+		},
+
+		//Function to convert/get raw data into JSON data
+		parseData = function (dataSpecs) {
+			var	dataSource = dataSpecs.dataSource,
+				dataType = dataSpecs.dataType,
+				JSONData;
+
+			switch(dataType) {
+				case 'jsonurl' : 
+					break;
+				case 'csv' : 
+					break;
+				case 'csvurl' : 
+					break;
+				case 'json' : 
+				default : JSONData = dataSource;
+			};
+
+			return JSONData;
 		};
 
 	// Function to add data in the data store
@@ -89,9 +110,9 @@
 		var data = this,
 			oldId = data.id,
 			argument = arguments[0],
-			JSONData = argument.data,
 			id = argument.id,
-			oldJSONData = dataStore[oldId] || [];
+			oldJSONData = dataStore[oldId] || [],
+			JSONData = parseData(argument);
 
 		id = oldId || id || 'dataStore' + idCount ++;
 		dataStore[id] = oldJSONData.concat(JSONData || []);
@@ -204,18 +225,13 @@
 	};
 
 	// Function to modify data
-	dataStoreProto.modifyData = function (JSONData) {
-		var data = this,
-			id = data.id;
+	dataStoreProto.modifyData = function () {
+		var data = this;
 
 		dataStore[id] = [];
-		data.addData({
-			data : JSONData,
-			id : id
-		});
+		data.addData(arguments);
 		dispatchEvent(new CustomEvent('dataModified', {'detail' : {
-			'id': id,
-			'data' : JSONData
+			'id': data.id
 		}}));
 	};
 });
