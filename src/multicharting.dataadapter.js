@@ -8,14 +8,14 @@
 })(function (MultiCharting) {
 
     MultiCharting.prototype.dataadapter = function () {
-        return convertData(arguments);
+        return convertData(arguments[0]);
     };
     var extend2 = MultiCharting.prototype.lib.extend2;
     //function to convert data, it returns fc supported JSON
     function convertData() {
         var argument = arguments[0] || {},
             jsonData = argument.jsonData,
-            configuration = argument.configuration,
+            configuration = argument.config,
             callbackFN = argument.callbackFN,
             jsonCreator = function(jsonData, configuration) {
                 var conf = configuration,
