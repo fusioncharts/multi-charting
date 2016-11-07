@@ -11,26 +11,26 @@
 		return new dataStorage(arguments);
 	};
 
-	var	dataStore = {},
+	var	lib = MultiCharting.prototype.lib = {},
+		dataStore = lib.dataStore = {},
 		// For storing the child of a parent
 		linkStore = {},
 		//For storing the parent of a child
-		parentStore = {},
-		// Store all the dataObjs that are updated.
-		tempDataUpdated = {},
+		parentStore = lib.parentStore = {},
 		idCount = 0,
 		// Constructor class for dataStorage.
-		dataStorage = function (JSONData, id) {
+		dataStorage = function () {
 	    	var manager = this;
-	    	manager.addData(JSONData, id);
+	    	manager.addData(arguments);
 		},
-		proto = dataStorage.prototype,
+		dataStoreProto = dataStorage.prototype,
 
 		//Function to update all the linked child data
 		updataData = function (id) {
 			var i,
 				linkData = linkStore[id],
 				parentData = dataStore[id],
+				filterStore = lib.filterStore,
 				len,
 				linkIds,
 				filters,
@@ -38,7 +38,9 @@
 				filter,
 				filterFn,
 				type,
-				info;
+				info,
+				// Store all the dataObjs that are updated.
+				tempDataUpdated = lib.tempDataUpdated = {};
 
 			linkIds = linkData.link;
 			filters = linkData.filter;
@@ -54,7 +56,7 @@
 
 				if (typeof filterFn === 'function') {
 					if (filterStore[filter.id]) {
-						dataStore[linkId] = executeFilter(type, filterFn, parentData);
+						dataStore[linkId] = executeProcessor(type, filterFn, parentData);
 					}
 					else {
 						dataStore[linkId] = parentData;
@@ -69,7 +71,7 @@
 			}
 		},
 
-		executeFilter = function (type, filterFn, JSONData) {
+		executeProcessor = function (type, filterFn, JSONData) {
 			switch (type) {
 				case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
 					break;
@@ -83,9 +85,12 @@
 		};
 
 	// Function to add data in the data store
-	proto.addData = function (JSONData, id) {
+	dataStoreProto.addData = function () {
 		var data = this,
 			oldId = data.id,
+			argument = arguments[0],
+			JSONData = argument.data,
+			id = argument.id,
 			oldJSONData = dataStore[oldId] || [];
 
 		id = oldId || id || 'dataStore' + idCount ++;
@@ -103,15 +108,16 @@
 	};
 
 	// Function to get the jsondata of the data object
-	proto.getJSON = function () {
+	dataStoreProto.getJSON = function () {
 		return dataStore[this.id];
 	};
 
 	// Function to get child data object after applying filter on the parent data.
 	// @params {filters} - This can be a filter function or an array of filter functions.
-	proto.getData = function (filters) {
+	dataStoreProto.getData = function (filters) {
 		var data = this,
-			id = data.id;
+			id = data.id,
+			filterLink = lib.filterLink;
 		// If no parameter is present then return the unfiltered data.
 		if (!filters) {
 			return dataStore[id];
@@ -137,7 +143,7 @@
 				type = filter.type;
 
 				if (typeof filterFn === 'function') {
-					newData = executeFilter(type, filterFn, dataStore[id]);
+					newData = executeProcessor(type, filterFn, dataStore[id]);
 
 					newDataObj = new dataStorage(newData);
 					newId = newDataObj.id;
@@ -169,7 +175,7 @@
 	};
 
 	// Function to delete the current data from the datastore and also all its childs recursively
-	proto.deleteData = function (optionalId) {
+	dataStoreProto.deleteData = function (optionalId) {
 		var data = this,
 			id = optionalId || data.id,
 			linkData = linkStore[id],
@@ -193,23 +199,23 @@
 	};
 
 	// Function to get the id of the current data
-	proto.getID = function () {
+	dataStoreProto.getID = function () {
 		return this.id;
 	};
 
 	// Function to modify data
-	proto.modifyData = function (JSONData) {
+	dataStoreProto.modifyData = function (JSONData) {
 		var data = this,
 			id = data.id;
 
 		dataStore[id] = [];
-		data.addData(JSONData, id);
+		data.addData({
+			data : JSONData,
+			id : id
+		});
 		dispatchEvent(new CustomEvent('dataModified', {'detail' : {
 			'id': id,
 			'data' : JSONData
 		}}));
 	};
-
-
-
 });
