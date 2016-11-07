@@ -143,6 +143,6 @@
     	}
 	};
 
-	MultiCharting.lib = (MultiCharting.lib || lib);
+	MultiCharting.prototype.lib = (MultiCharting.prototype.lib || lib);
 
 });
