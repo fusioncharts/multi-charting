@@ -6,15 +6,14 @@ var Grid = function (selector, configuration) {
 	grid.gridDiv.style.width = configuration.width + 'px';	
 	grid.gridDiv.style.display = 'block';
 	grid.gridDiv.style.position = 'relative';
-	grid.gridDiv.style.outline = '2px solid red';
 }
 
 var protoGrid = Grid.prototype;
 
 protoGrid.draw = function(){
 	var grid = this,
-		configuration = grid && grid.configuration,
-		config = configuration && configuration.config,
+		configuration = grid && grid.configuration || {},
+		config = configuration.config,
 		className = '',
 		configManager = grid && grid.gridManager(),
 		len = configManager && configManager.length;
@@ -23,22 +22,23 @@ protoGrid.draw = function(){
 			'height' : configManager[i].height,
 			'width' : configManager[i].width,
 			'top' : configManager[i].top,
-			'left' : configManager[i].left				
-		}, className);
+			'left' : configManager[i].left,
+			'id' : configManager[i].id
+		});
 	}
 };
 
-protoGrid.drawDiv = function(configuration,className) {
+protoGrid.drawDiv = function(configuration, id, className) {
 	var grid = this,
 		cell = document.createElement('div'),
 		gridDiv = grid && grid.gridDiv;
+	cell.id = configuration.id || '';
 	cell.className = (configuration && configuration.purpose) || '' + ' cell ' + (className || '');
 	cell.style.height = configuration &&  configuration.height + 'px';
 	cell.style.width = configuration &&  configuration.width + 'px';
 	cell.style.top = configuration && configuration.top + 'px';
 	cell.style.left = configuration &&  configuration.left + 'px';
 	cell.style.position = 'absolute';
-	cell.style.outline = '1px solid black';
 	gridDiv.appendChild(cell);
 };
 
@@ -211,7 +211,8 @@ protoGrid.gridManager = function(){
 					top : top,
 					left : left,
 					height : height,
-					width : width
+					width : width,
+					id : config[i].id
 				});
 			}
 		}	
