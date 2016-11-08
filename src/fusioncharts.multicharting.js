@@ -28,6 +28,7 @@
     var MultiCharting = function () {
     };
 
+    MultiCharting.prototype.win = _window;
 
     if (windowExists) {
         _window.MultiCharting = MultiCharting;
