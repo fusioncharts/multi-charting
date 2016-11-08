@@ -47,6 +47,7 @@
         var matrix = this,
             cell = document.createElement('div'),
             matrixContainer = matrix && matrix.matrixContainer;
+
         cell.id = configuration.id || '';
         cell.className = (configuration && configuration.purpose) || '' + ' cell ' + (className || '');
         cell.style.height = configuration &&  configuration.height + 'px';
@@ -75,6 +76,7 @@
             j,
             lenRow = configuration.length,
             mapArr = matrix.matrixManager(configuration),
+            processedConfig = matrix.setPlcHldr(mapArr, configuration),
             heightArr = matrix.getRowHeight(mapArr),
             widthArr = matrix.getColWidth(mapArr),
             drawManagerObjArr = [],
@@ -95,10 +97,12 @@
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
                 colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);
                 id = configuration[i][j] && configuration[i][j].id;
-                top = matrixPosX[i];
-                left = matrixPosY[j];
-                width = matrixPosX[i + colspan];
-                height = matrixPosY[j + rowspan];
+                row = parseInt(configuration[i][j].row);
+                col = parseInt(configuration[i][j].col);
+                left = matrixPosX[col];
+                top = matrixPosY[row];
+                width = matrixPosX[col + colspan] - left;
+                height = matrixPosY[row + rowspan] - top;
 
                 drawManagerObjArr.push({
                     top : top,
@@ -109,6 +113,7 @@
                 });
             }
         }
+       
         return drawManagerObjArr;
     };
 
@@ -122,6 +127,27 @@
         }
 
         return arr;
+    };
+
+    protoMatrix.setPlcHldr = function(mapArr, configuration){
+        var matrix = this,
+            row,
+            col,
+            i,
+            j,
+            lenR,
+            lenC;
+
+        for(i = 0, lenR = mapArr.length; i < lenR; i++){ 
+            for(j = 0, lenC = mapArr[i].length; j < lenC; j++){
+                row = mapArr[i][j].id.split('-')[0];
+                col = mapArr[i][j].id.split('-')[1];
+
+                configuration[row][col].row = configuration[row][col].row === undefined ? i : configuration[row][col].row;
+                configuration[row][col].col = configuration[row][col].col === undefined ? j : configuration[row][col].col;
+            }
+        }
+        return configuration;
     };
 
     protoMatrix.getRowHeight = function(mapArr) {
@@ -174,15 +200,14 @@
             lenCell,
             rowSpan,
             colSpan,
-            count,
             width,
             height,
             defaultH = matrix.defaultH,
             defaultW = matrix.defaultW,
             offset;
             
-        for (i = 0, count = 1; i < lenRow; i++) {            
-            for (j = 0, lenCell = configuration[i].length; j < lenCell; j++, count++) {
+        for (i = 0; i < lenRow; i++) {            
+            for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
             
                 rowSpan = (configuration[i][j] && configuration[i][j].rowspan) || 1;
                 colSpan = (configuration[i][j] && configuration[i][j].colspan) || 1;   
@@ -203,7 +228,7 @@
                         }
                         
                         mapArr[i + k][offset] = { 
-                            id : count,
+                            id : (i + '-' + j),
                             width : width,
                             height : height
                         };
@@ -211,6 +236,7 @@
                 }
             }
         }
+
         return mapArr;
     };
 });
