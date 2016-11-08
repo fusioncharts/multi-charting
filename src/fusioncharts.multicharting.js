@@ -26,6 +26,7 @@
 	var MultiCharting = function () {
 	};
 
+    MultiCharting.prototype.win = _window;
 
 	return MultiCharting;
 });
