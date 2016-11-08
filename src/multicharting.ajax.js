@@ -6,14 +6,18 @@
     }
 })(function (MultiCharting) {
 	
-	MultiCharting.prototype.getAjax = function (success, failure) {
-		return new Ajax(success, failure);
+	MultiCharting.prototype.ajax = function () {
+		return new Ajax(arguments[0]);
 	}
 
-	var Ajax = function (success, error) {
-		    this.onSuccess = success;
-		    this.onError = error;
-		    this.open = false;
+	var Ajax = function () {
+			var ajax = this,
+				argument = arguments[0];
+
+		    ajax.onSuccess = argument.success;
+		    ajax.onError = argument.error;
+		    ajax.open = false;
+		    return ajax.get(argument.url);
 		},
 
 		// Prepare function to retrieve compatible xmlhttprequest.
@@ -104,7 +108,7 @@
         XHRNative = (!AXObject || !fileProtocol) && win.XMLHttpRequest;
 
 
-    ajaxProto.get = function (url, callbackArgs) {
+    ajaxProto.get = function (url) {
         var wrapper = this,
             xmlhttp = wrapper.xmlhttp,
             errorCallback = wrapper.onError,
@@ -134,20 +138,19 @@
                 if (xmlhttp.readyState === 4) {
                     if ((!xmlhttp.status && fileProtocol) || (xmlhttp.status >= 200 &&
                             xmlhttp.status < 300) || xmlhttp.status === 304 ||
-                            xmlhttp.status === 1223 || xmlhttp.status === 0) {debugger;
+                            xmlhttp.status === 1223 || xmlhttp.status === 0) {
                         successCallback &&
-                            successCallback(xmlhttp.responseText, wrapper,
-                            callbackArgs, url);
+                            successCallback(xmlhttp.responseText, wrapper, url);
                     }
                     else if (errorCallback) {
-                        errorCallback(new Error(XHREQERROR), wrapper, callbackArgs, url);
+                        errorCallback(new Error(XHREQERROR), wrapper, url);
                     }
                     wrapper.open = false;
                 }
             }
             catch (error) {
                 if (errorCallback) {
-                    errorCallback(error, wrapper, callbackArgs, url);
+                    errorCallback(error, wrapper, url);
                 }
             }
         };
@@ -168,7 +171,7 @@
         }
         catch (error) {
             if (errorCallback) {
-                errorCallback(error, wrapper, callbackArgs, url);
+                errorCallback(error, wrapper, url);
             }
         }
 

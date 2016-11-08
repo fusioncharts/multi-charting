@@ -8,23 +8,23 @@
 })(function (MultiCharting) {
 
 	MultiCharting.prototype.createDataProcessor = function () {
-		return new dataProcessor(arguments);
+		return new DataProcessor(arguments);
 	};
 
 	var lib = MultiCharting.prototype.lib,
 		filterStore = lib.filterStore = {},
 		filterLink = lib.filterLink = {},
 		filterIdCount = 0,
-		dataStore = lib.dataStore,
+		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
 		
-		// Constructor class for dataProcessor.
-		dataProcessor = function () {
+		// Constructor class for DataProcessor.
+		DataProcessor = function () {
 	    	var manager = this;
 	    	manager.addRule(arguments);
 		},
 		
-		dataProcessorProto = dataProcessor.prototype,
+		dataProcessorProto = DataProcessor.prototype,
 
 		// Function to update data on change of filter.
 		updataFilterProcessor = function (id, copyParentToChild) {
@@ -39,7 +39,7 @@
 				datum = data[i];
 				dataId = datum.id;
 				if (!lib.tempDataUpdated[dataId]) {
-					if (parentStore[dataId] && dataStore[dataId]) {
+					if (parentStore[dataId] && dataStorage[dataId]) {
 						JSONData = parentStore[dataId].getData();
 						datum.modifyData(copyParentToChild ? JSONData : filterStore[id](JSONData));
 					}
