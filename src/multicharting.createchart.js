@@ -47,7 +47,7 @@
         //set data source into chart configuration
         chartConfig.dataSource = dataSource;
         chart.chartObj = chartConfig;
-console.log(JSON.stringify(chartConfig))
+        
         //render FC 
         var chart = new FusionCharts(chartConfig);
         chart.render();
