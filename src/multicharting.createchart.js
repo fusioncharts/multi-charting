@@ -8,14 +8,16 @@
 })(function (MultiCharting) {
 
     MultiCharting.prototype.createChart = function () {
-        return new Chart(arguments);
+        return new Chart(arguments[0]);
     };
 
     var Chart = function () {
-            var chart = this;
-            chart.render(arguments);
+            var chart = this;           
+            chart.render(arguments[0]);
         },
-        chartProto = Chart.prototype;
+        chartProto = Chart.prototype,
+        extend2 = MultiCharting.prototype.lib.extend2,
+        dataadapter = MultiCharting.prototype.dataadapter;
 
     chartProto.render = function () {
         var chart = this,
@@ -26,30 +28,28 @@
             chartConfig = {},
             dataSource = {},
             configData = {};
-
         //parse argument into chartConfig 
         extend2(chartConfig,argument);
         
         //data configuration 
         configuration = chartConfig.configuration || {};
-        configData.jsonData = chartConfig.dataStore;
+        configData.jsonData = chartConfig.jsonData;
         configData.callbackFN = configuration.callback;
         configData.config = configuration.data;
 
         //store fc supported json to render charts
-        dataSource = this.dataadapter(configData);
-
+        dataSource = dataadapter(configData);
+        
         //delete data configuration parts for FC json converter
-        delete chartConfig.dataStore;
+        delete chartConfig.jsonData;
         delete chartConfig.configuration;
         
         //set data source into chart configuration
         chartConfig.dataSource = dataSource;
         chart.chartObj = chartConfig;
+        
         //render FC 
-        FusionCharts.ready(function () {
-            var chart = new FusionCharts(chartConfig);
-            chart.render();
-        });
+        var chart = new FusionCharts(chartConfig);
+        chart.render();
     };
 });
