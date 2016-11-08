@@ -4,6 +4,9 @@
   "description": "Data visualisation that deals with multiple charts",
   "main": "fusioncharts.multicharting.js",
   "scripts": {
+    "build-source": "gulp build-source",
+    "build": "gulp build",
+    "lint": "gulp lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,6 +29,64 @@
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
-    "gulp-sourcemaps": "^2.2.0"
+    "gulp-jshint": "^2.0.2",
+    "gulp-sourcemaps": "^2.2.0",
+    "gulp-uglify": "^2.0.0",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1",
+    "pump": "^1.0.1"
+  },
+  "jshintConfig": {
+    "bitwise": false,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": false,
+    "es3": false,
+    "forin": false,
+    "freeze": true,
+    "immed": true,
+    "indent": 4,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": false,
+    "plusplus": false,
+    "quotmark": "single",
+    "undef": true,
+    "unused": true,
+    "trailing": true,
+    "asi": false,
+    "boss": true,
+    "debug": false,
+    "eqnull": true,
+    "evil": false,
+    "expr": true,
+    "funcscope": false,
+    "globalstrict": false,
+    "iterator": false,
+    "lastsemic": false,
+    "laxbreak": false,
+    "laxcomma": false,
+    "loopfunc": false,
+    "maxlen": 120,
+    "multistr": false,
+    "notypeof": false,
+    "proto": false,
+    "scripturl": false,
+    "smarttabs": false,
+    "shadow": false,
+    "sub": false,
+    "supernew": false,
+    "browser": false,
+    "devel": false,
+    "node": true,
+    "predef": [
+      "-console"
+    ],
+    "onevar": true,
+    "globals": {
+      "FusionCharts": true
+    }
   }
 }

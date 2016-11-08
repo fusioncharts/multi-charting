@@ -5,12 +5,14 @@
  *
  */
 
+ /* global window: true */
+
 (function (env, factory) {
     if (typeof module === 'object' && module.exports) {
         module.exports = env.document ?
             factory(env) : function(win) {
                 if (!win.document) {
-                    throw new Error("Window with document not present");
+                    throw new Error('Window with document not present');
                 }
                 return factory(win, true);
             };
@@ -23,9 +25,12 @@
         return;
     }
 
-	var MultiCharting = function () {
-	};
+    var MultiCharting = function () {
+    };
 
 
-	return MultiCharting;
+    if (windowExists) {
+        _window.MultiCharting = MultiCharting;
+    }
+    return MultiCharting;
 });
