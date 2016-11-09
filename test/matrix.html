@@ -1,68 +1,814 @@
-<!DOCTYPE html>
+<DOCTYPE !html>
 <html>
-<head>
-	<title></title>
-	<link rel="stylesheet" href="matrix.css"/>
-	<script type="text/javascript" src="../src/multicharting.matrix.js"></script>
-</head>
-<body>
-    <div id="grid">
-    </div>
-    <script type="text/javascript">
-(function(){
-	var configuration = {
-        dimension : [3, 6],
-        height : 800,
-        width : 1000,
-        config_ : [{
-            'row': 1,
-            'col': 1,
-            'purpose' : 'chart'
-        },
-        {
-            'row': [2, 3],
-            'col': 1,
-            'purpose' : 'chart'
-        },
-        {
-            'row': [4, 5],
-            'col': 1,
-            'purpose' : 'chart'
-        },
-        {
-            'row': 6,
-            'col': 1,
-           'purpose' : 'chart'
-        },
-        {
-            'row': [1, 2],
-            'col': [2],
-            'purpose' : 'chart'
-        },
-        {
-            'row': [3, 4],
-            'col': [2],
-            'purpose' : 'chart'
-        },
-        {
-            'row': [5, 6],
-            'col': [2],
-            'purpose' : 'chart'
-        },
-        {
-            'row': [1,2,3],
-            'col': [3],
-            'purpose' : 'chart'
-        },
-        {
-            'row': [4, 5, 6],
-            'col': [3],
-            'purpose' : 'chart'
-        }]
-    };	
-	var g = new Grid('grid', configuration);
-	g.draw();
-}());
-    </script>
-</body>
+    <head>
+
+        <script type='text/javascript' src='../src/fusioncharts.multicharting.js'></script>
+        <script type='text/javascript' src='../src/multicharting.lib.js'></script>
+        <script type='text/javascript' src='../src/multicharting.datastore.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataprocessor.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+        <script type="text/javascript" src="../src/multicharting.createchart.js"></script>
+        <script type="text/javascript" src="../src/multicharting.matrix.js"></script>
+<!-- 
+        <script type='text/javascript' src='../out/fc.mc.js'></script>
+        <script type="text/javascript" src="../src/multicharting.matrix.js"></script> -->
+        <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
+
+    </head>
+
+    <body>
+
+        <center style='margin: 10px'>
+            <div id="matrix">
+        </div>
+        </cneter>
+
+        <script type='text/javascript'>
+            var MultiChartObj = new MultiCharting(),
+
+                dataStore = MultiChartObj.createDataStore(),
+
+                dataProcessor1 = MultiChartObj.createDataProcessor(),
+                dataProcessor2 = MultiChartObj.createDataProcessor(),
+
+                data = [
+                        {
+                            "date": "08-2017",
+                            "tea": "16300",
+                            "coffee": "16570",
+                            "milk": "16201"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16910",
+                            "coffee": "16111",
+                            "milk": "16340"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16080",
+                            "coffee": "16901",
+                            "milk": "16521"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16781",
+                            "coffee": "16970",
+                            "milk": "16910"
+                        },
+                        {
+                            "date": "10-2017",
+                            "tea": "16220",
+                            "coffee": "16690",
+                            "milk": "16540"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16700",
+                            "coffee": "16180",
+                            "milk": "16891"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16951",
+                            "coffee": "16690",
+                            "milk": "16480"
+                        },
+                        {
+                            "date": "05-2016",
+                            "tea": "16481",
+                            "coffee": "16460",
+                            "milk": "16920"
+                        },
+                        {
+                            "date": "02-2016",
+                            "tea": "16060",
+                            "coffee": "16841",
+                            "milk": "16060"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16321",
+                            "coffee": "16540",
+                            "milk": "16080"
+                        },
+                        {
+                            "date": "11-2016",
+                            "tea": "16510",
+                            "coffee": "16391",
+                            "milk": "16060"
+                        },
+                        {
+                            "date": "11-2015",
+                            "tea": "16450",
+                            "coffee": "16801",
+                            "milk": "16590"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16900",
+                            "coffee": "16670",
+                            "milk": "16491"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16931",
+                            "coffee": "16070",
+                            "milk": "16290"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16830",
+                            "coffee": "16590",
+                            "milk": "16330"
+                        },
+                        {
+                            "date": "12-2015",
+                            "tea": "16720",
+                            "coffee": "16870",
+                            "milk": "16830"
+                        },
+                        {
+                            "date": "11-2017",
+                            "tea": "16440",
+                            "coffee": "16230",
+                            "milk": "16380"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16061",
+                            "coffee": "16021",
+                            "milk": "16411"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16070",
+                            "coffee": "16800",
+                            "milk": "16560"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16550",
+                            "coffee": "16450",
+                            "milk": "16871"
+                        },
+                        {
+                            "date": "10-2017",
+                            "tea": "16531",
+                            "coffee": "16040",
+                            "milk": "16070"
+                        },
+                        {
+                            "date": "04-2017",
+                            "tea": "16240",
+                            "coffee": "16790",
+                            "milk": "16451"
+                        },
+                        {
+                            "date": "03-2017",
+                            "tea": "16390",
+                            "coffee": "16620",
+                            "milk": "16580"
+                        },
+                        {
+                            "date": "12-2015",
+                            "tea": "16060",
+                            "coffee": "16851",
+                            "milk": "16590"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16921",
+                            "coffee": "16170",
+                            "milk": "16720"
+                        },
+                        {
+                            "date": "02-2016",
+                            "tea": "16931",
+                            "coffee": "16910",
+                            "milk": "16400"
+                        },
+                        {
+                            "date": "07-2016",
+                            "tea": "16770",
+                            "coffee": "16930",
+                            "milk": "16880"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16910",
+                            "coffee": "16650",
+                            "milk": "16330"
+                        },
+                        {
+                            "date": "11-2016",
+                            "tea": "16230",
+                            "coffee": "16831",
+                            "milk": "16400"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16760",
+                            "coffee": "16930",
+                            "milk": "16160"
+                        },
+                        {
+                            "date": "11-2015",
+                            "tea": "16410",
+                            "coffee": "16750",
+                            "milk": "16670"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16590",
+                            "coffee": "16510",
+                            "milk": "16110"
+                        },
+                        {
+                            "date": "10-2016",
+                            "tea": "16980",
+                            "coffee": "16340",
+                            "milk": "16970"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16830",
+                            "coffee": "16990",
+                            "milk": "16220"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16970",
+                            "coffee": "16660",
+                            "milk": "16620"
+                        },
+                        {
+                            "date": "05-2017",
+                            "tea": "16330",
+                            "coffee": "16861",
+                            "milk": "16461"
+                        },
+                        {
+                            "date": "02-2017",
+                            "tea": "16250",
+                            "coffee": "16400",
+                            "milk": "16321"
+                        },
+                        {
+                            "date": "03-2017",
+                            "tea": "16891",
+                            "coffee": "16341",
+                            "milk": "16080"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16450",
+                            "coffee": "16610",
+                            "milk": "16960"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16760",
+                            "coffee": "16101",
+                            "milk": "16350"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16171",
+                            "coffee": "16730",
+                            "milk": "16151"
+                        },
+                        {
+                            "date": "04-2016",
+                            "tea": "16040",
+                            "coffee": "16830",
+                            "milk": "16270"
+                        },
+                        {
+                            "date": "05-2016",
+                            "tea": "16541",
+                            "coffee": "16850",
+                            "milk": "16770"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16800",
+                            "coffee": "16991",
+                            "milk": "16540"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16691",
+                            "coffee": "16110",
+                            "milk": "16841"
+                        },
+                        {
+                            "date": "05-2016",
+                            "tea": "16650",
+                            "coffee": "16950",
+                            "milk": "16100"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16970",
+                            "coffee": "16121",
+                            "milk": "16330"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16160",
+                            "coffee": "16850",
+                            "milk": "16360"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16310",
+                            "coffee": "16571",
+                            "milk": "16430"
+                        },
+                        {
+                            "date": "04-2017",
+                            "tea": "16000",
+                            "coffee": "16860",
+                            "milk": "16120"
+                        },
+                        {
+                            "date": "02-2017",
+                            "tea": "16790",
+                            "coffee": "16010",
+                            "milk": "16701"
+                        },
+                        {
+                            "date": "05-2017",
+                            "tea": "16441",
+                            "coffee": "16760",
+                            "milk": "16150"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16710",
+                            "coffee": "16700",
+                            "milk": "16220"
+                        },
+                        {
+                            "date": "12-2015",
+                            "tea": "16180",
+                            "coffee": "16421",
+                            "milk": "16701"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16260",
+                            "coffee": "16010",
+                            "milk": "16880"
+                        },
+                        {
+                            "date": "10-2016",
+                            "tea": "16470",
+                            "coffee": "16780",
+                            "milk": "16530"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16410",
+                            "coffee": "16280",
+                            "milk": "16191"
+                        },
+                        {
+                            "date": "06-2016",
+                            "tea": "16241",
+                            "coffee": "16650",
+                            "milk": "16781"
+                        },
+                        {
+                            "date": "02-2016",
+                            "tea": "16470",
+                            "coffee": "16750",
+                            "milk": "16271"
+                        },
+                        {
+                            "date": "02-2016",
+                            "tea": "16441",
+                            "coffee": "16880",
+                            "milk": "16080"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16810",
+                            "coffee": "16540",
+                            "milk": "16590"
+                        },
+                        {
+                            "date": "04-2016",
+                            "tea": "16191",
+                            "coffee": "16490",
+                            "milk": "16260"
+                        },
+                        {
+                            "date": "11-2016",
+                            "tea": "16110",
+                            "coffee": "16390",
+                            "milk": "16490"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16670",
+                            "coffee": "16911",
+                            "milk": "16150"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16150",
+                            "coffee": "16100",
+                            "milk": "16710"
+                        },
+                        {
+                            "date": "03-2016",
+                            "tea": "16040",
+                            "coffee": "16251",
+                            "milk": "16480"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16810",
+                            "coffee": "16320",
+                            "milk": "16600"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16560",
+                            "coffee": "16090",
+                            "milk": "16440"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16970",
+                            "coffee": "16940",
+                            "milk": "16090"
+                        },
+                        {
+                            "date": "03-2016",
+                            "tea": "16420",
+                            "coffee": "16240",
+                            "milk": "16340"
+                        },
+                        {
+                            "date": "11-2015",
+                            "tea": "16470",
+                            "coffee": "16321",
+                            "milk": "16741"
+                        },
+                        {
+                            "date": "10-2016",
+                            "tea": "16541",
+                            "coffee": "16600",
+                            "milk": "16700"
+                        },
+                        {
+                            "date": "05-2017",
+                            "tea": "16041",
+                            "coffee": "16410",
+                            "milk": "16340"
+                        },
+                        {
+                            "date": "06-2017",
+                            "tea": "16320",
+                            "coffee": "16720",
+                            "milk": "16220"
+                        },
+                        {
+                            "date": "04-2016",
+                            "tea": "16440",
+                            "coffee": "16251",
+                            "milk": "16280"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16601",
+                            "coffee": "16600",
+                            "milk": "16170"
+                        },
+                        {
+                            "date": "11-2016",
+                            "tea": "16941",
+                            "coffee": "16470",
+                            "milk": "16570"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16620",
+                            "coffee": "16201",
+                            "milk": "16420"
+                        },
+                        {
+                            "date": "03-2016",
+                            "tea": "16350",
+                            "coffee": "16900",
+                            "milk": "16890"
+                        },
+                        {
+                            "date": "04-2017",
+                            "tea": "16640",
+                            "coffee": "16460",
+                            "milk": "16350"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16960",
+                            "coffee": "16010",
+                            "milk": "16260"
+                        },
+                        {
+                            "date": "01-2016",
+                            "tea": "16471",
+                            "coffee": "16520",
+                            "milk": "16380"
+                        },
+                        {
+                            "date": "02-2017",
+                            "tea": "16040",
+                            "coffee": "16690",
+                            "milk": "16830"
+                        },
+                        {
+                            "date": "06-2017",
+                            "tea": "16750",
+                            "coffee": "16480",
+                            "milk": "16970"
+                        },
+                        {
+                            "date": "01-2017",
+                            "tea": "16441",
+                            "coffee": "16461",
+                            "milk": "16030"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16451",
+                            "coffee": "16641",
+                            "milk": "16970"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16331",
+                            "coffee": "16060",
+                            "milk": "16091"
+                        },
+                        {
+                            "date": "10-2017",
+                            "tea": "16881",
+                            "coffee": "16380",
+                            "milk": "16920"
+                        },
+                        {
+                            "date": "11-2016",
+                            "tea": "16280",
+                            "coffee": "16700",
+                            "milk": "16691"
+                        },
+                        {
+                            "date": "07-2016",
+                            "tea": "16541",
+                            "coffee": "16120",
+                            "milk": "16720"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16790",
+                            "coffee": "16321",
+                            "milk": "16440"
+                        },
+                        {
+                            "date": "08-2017",
+                            "tea": "16101",
+                            "coffee": "16100",
+                            "milk": "16350"
+                        },
+                        {
+                            "date": "12-2015",
+                            "tea": "16940",
+                            "coffee": "16730",
+                            "milk": "16900"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16571",
+                            "coffee": "16760",
+                            "milk": "16620"
+                        },
+                        {
+                            "date": "06-2017",
+                            "tea": "16910",
+                            "coffee": "16651",
+                            "milk": "16490"
+                        },
+                        {
+                            "date": "02-2017",
+                            "tea": "16110",
+                            "coffee": "16891",
+                            "milk": "16980"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16000",
+                            "coffee": "16670",
+                            "milk": "16270"
+                        },
+                        {
+                            "date": "12-2015",
+                            "tea": "16121",
+                            "coffee": "16920",
+                            "milk": "16590"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16810",
+                            "coffee": "16341",
+                            "milk": "16470"
+                        },
+                        {
+                            "date": "03-2016",
+                            "tea": "16951",
+                            "coffee": "16360",
+                            "milk": "16830"
+                        }
+                ],
+
+                sortOperator = function (a, b) {
+                    return Number(a.tea) - Number(b.tea);
+                },
+                filterOperator = function (a, b) {
+                    var d = Number(a.tea)
+                    return (d < 16600 && d > 16500);
+                },
+                newData1,
+                newData2;
+
+            dataProcessor1.sort(sortOperator);
+            dataProcessor2.filter(filterOperator);
+
+            dataStore.setData({dataSource: data});
+
+            newData1 = dataStore.getData(dataProcessor1);
+            newData2 = dataStore.getData(dataProcessor2);
+
+            chart1 = {
+                type: "MSColumn2D",
+                renderAt: "chart1",
+                width: '100%',
+                height: '100%',
+                configuration : {
+                    data : {
+                        dimension: ['date'],
+                        measure: ['tea', 'coffee'],
+                        seriesType: 'MS',
+                        config: {
+                            chart: {
+                                "caption": "Top 5 Stores by Sales",
+                                "subCaption": "Last month",
+                                "yAxisName": "Sales (In USD)",
+                                "numberPrefix": "$",
+                                "paletteColors": "#0075c2",
+                                "bgColor": "#ffffff",
+                                "showBorder": "0",
+                                "showCanvasBorder": "0",
+                                "usePlotGradientColor": "0",
+                                "plotBorderAlpha": "10",
+                                "placeValuesInside": "1",
+                                "valueFontColor": "#ffffff",
+                                "showAxisLines": "1",
+                                "axisLineAlpha": "25",
+                                "divLineAlpha": "10",
+                                "alignCaptionWithCanvas": "0",
+                                "showAlternateVGridColor": "0",
+                                "captionFontSize": "14",
+                                "subcaptionFontSize": "14",
+                                "subcaptionFontBold": "0",
+                                "toolTipColor": "#ffffff",
+                                "toolTipBorderThickness": "0",
+                                "toolTipBgColor": "#000000",
+                                "toolTipBgAlpha": "80",
+                                "toolTipBorderRadius": "2",
+                                "toolTipPadding": "5"
+                            }
+                        }
+                    }
+                },
+                jsonData: newData2.getJSON()
+            };
+            chart2 = {
+                type: "MSColumn3D",
+                renderAt: "chart2",
+                width: '100%',
+                height: '100%',
+                configuration : {
+                    data : {
+                        dimension: ['date'],
+                        measure: ['tea', 'coffee'],
+                        seriesType: 'MS',
+                        config: {
+                            chart: {
+                                "caption": "Top 5 Stores by Sales",
+                                "subCaption": "Last month",
+                                "yAxisName": "Sales (In USD)",
+                                "numberPrefix": "$",
+                                "paletteColors": "#0075c2",
+                                "bgColor": "#ffffff",
+                                "showBorder": "0",
+                                "showCanvasBorder": "0",
+                                "usePlotGradientColor": "0",
+                                "plotBorderAlpha": "10",
+                                "placeValuesInside": "1",
+                                "valueFontColor": "#ffffff",
+                                "showAxisLines": "1",
+                                "axisLineAlpha": "25",
+                                "divLineAlpha": "10",
+                                "alignCaptionWithCanvas": "0",
+                                "showAlternateVGridColor": "0",
+                                "captionFontSize": "14",
+                                "subcaptionFontSize": "14",
+                                "subcaptionFontBold": "0",
+                                "toolTipColor": "#ffffff",
+                                "toolTipBorderThickness": "0",
+                                "toolTipBgColor": "#000000",
+                                "toolTipBgAlpha": "80",
+                                "toolTipBorderRadius": "2",
+                                "toolTipPadding": "5"
+                            }
+                        }
+                    }
+                },
+                jsonData: newData2.getJSON()
+            };
+            chart3 = {
+                type: "line",
+                renderAt: "chart3",
+                width: '100%',
+                height: '100%',
+                configuration : {
+                    data : {
+                        dimension: ['date'],
+                        measure: ['tea', 'coffee'],
+                        seriesType: 'MS',
+                        config: {
+                            chart: {
+                                "caption": "Top 5 Stores by Sales",
+                                "subCaption": "Last month",
+                                "yAxisName": "Sales (In USD)",
+                                "numberPrefix": "$",
+                                "paletteColors": "#0075c2",
+                                "bgColor": "#ffffff",
+                                "showBorder": "0",
+                                "showCanvasBorder": "0",
+                                "usePlotGradientColor": "0",
+                                "plotBorderAlpha": "10",
+                                "placeValuesInside": "1",
+                                "valueFontColor": "#ffffff",
+                                "showAxisLines": "1",
+                                "axisLineAlpha": "25",
+                                "divLineAlpha": "10",
+                                "alignCaptionWithCanvas": "0",
+                                "showAlternateVGridColor": "0",
+                                "captionFontSize": "14",
+                                "subcaptionFontSize": "14",
+                                "subcaptionFontBold": "0",
+                                "toolTipColor": "#ffffff",
+                                "toolTipBorderThickness": "0",
+                                "toolTipBgColor": "#000000",
+                                "toolTipBgAlpha": "80",
+                                "toolTipBorderRadius": "2",
+                                "toolTipPadding": "5"
+                            }
+                        }
+                    }
+                },
+                jsonData: newData2.getJSON()
+            };
+            var configuration = [
+                [{
+                    rowspan: '2',
+                    height : 300,
+                    width : 500,
+                    chart : chart1
+                },{
+                    height : 50,
+                    width : 200,                    
+                    id : 'html1',
+                    html : 'hello'
+                }],[{
+                    height : 300,                    
+                    id : 'chart2',
+                    chart : chart2
+                }/*,{
+                    id : 'chart3',
+                    chart : chart3
+                }*/]
+            ];
+            var matrix = MultiChartObj.createMatrix('matrix', configuration);
+            matrix.draw();
+        </script>
+
+    </body>
+
+
 </html>
