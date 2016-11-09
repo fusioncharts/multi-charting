@@ -101,7 +101,7 @@
             klen = 0,
             cell = [],
             min = Math.min,
-            finalOb = [],
+            finalOb,
             updateManager = function () {
                 var lim = 0,
                     jlen = 0,
@@ -116,6 +116,7 @@
 
                     //create cell array that cointain csv data
                     cell = CSVToArray(splitedData[i], delimiter); // jshint ignore:line
+                    cell = cell && cell[0];
                     //take min of header length and total columns
                     jlen = min(header.length, cell.length);
 
@@ -148,6 +149,7 @@
             };
 
         structure = structure || 1;
+        header = header && header[0];
 
         //if the value is empty
         if (splitedData[splitedData.length - 1] === '') {
