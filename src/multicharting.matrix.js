@@ -1,3 +1,4 @@
+
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== "undefined") {
         module.exports = factory;
@@ -9,15 +10,15 @@
     MultiCharting.prototype.createMatrix = function () {
         return new Matrix(arguments[0],arguments[1]);
     };
-    
-    var Matrix = function (selector, configuration) {
-        var matrix = this;
-        matrix.selector = selector;
-        matrix.matrixContainer = document.getElementById(selector);
-        matrix.configuration = configuration;
-        matrix.defaultH = 100;
-        matrix.defaultW = 100;
-    };
+    var createChart = MultiCharting.prototype.createChart,
+        Matrix = function (selector, configuration) {
+            var matrix = this;
+            matrix.selector = selector;
+            matrix.matrixContainer = document.getElementById(selector);
+            matrix.configuration = configuration;
+            matrix.defaultH = 100;
+            matrix.defaultW = 100;
+        };
 
     protoMatrix = Matrix.prototype;
 
@@ -32,12 +33,15 @@
         // matrix.setAttrContainer();
         for(i = 0; i < len; i++) {
             placeHolder[i] = matrix.drawCell({
-                    'height' : configManager[i].height,
-                    'width' : configManager[i].width,
-                    'top' : configManager[i].top,
-                    'left' : configManager[i].left,
-                    'id' : configManager[i].id
-                });
+                'height' : configManager[i].height,
+                'width' : configManager[i].width,
+                'top' : configManager[i].top,
+                'left' : configManager[i].left,
+                'id' : configManager[i].id,
+                'html' : configManager[i].html,
+                'chart' : configManager[i].chart
+            });
+            placeHolder[i].chart = (configManager[i].chart && createChart(configManager[i].chart)) || {};
         }
         matrix.placeHolder = [];
         matrix.placeHolder = placeHolder;
@@ -55,6 +59,7 @@
         cell.style.top = configuration && configuration.top + 'px';
         cell.style.left = configuration &&  configuration.left + 'px';
         cell.style.position = 'absolute';
+        cell.innerHTML = configuration.html || '';
         matrixContainer.appendChild(cell);
 
         return {
@@ -63,11 +68,12 @@
                 height : cell.style.height,
                 width : cell.style.width,
                 top : cell.style.top,
-                left : cell.style.left
+                left : cell.style.left,
+                html : configuration.html || '',
+                chart : configuration.chart || {}
             },
             graphics : cell
         };
-
     };
 
     protoMatrix.drawManager = function (configuration) {
@@ -90,13 +96,17 @@
             top,
             left,
             height,
-            width;
+            width,
+            chart,
+            html;
 
         for (i = 0; i < lenRow; i++) {            
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
                 colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);
                 id = configuration[i][j] && configuration[i][j].id;
+                chart = configuration[i][j] && configuration[i][j].chart;
+                html = configuration[i][j] && configuration[i][j].html;
                 row = parseInt(configuration[i][j].row);
                 col = parseInt(configuration[i][j].col);
                 left = matrixPosX[col];
@@ -109,7 +119,9 @@
                     left : left,
                     height : height,
                     width : width,
-                    id : id
+                    id : id,
+                    html : html,
+                    chart : chart
                 });
             }
         }
