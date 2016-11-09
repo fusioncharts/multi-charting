@@ -92,7 +92,6 @@
             cell = [],
             min = Math.min,
             finalOb = [],
-            parsingComplete = false,
             updateManager = function () {
                 var lim = 0,
                     jlen = 0,
@@ -135,8 +134,6 @@
                     updateManager();
                 } else {
                     callback && callback(finalOb);
-                    parsingComplete = true;
-                    return finalOb;
                 }
             };
 
@@ -161,9 +158,6 @@
 
         updateManager();
 
-        if (parsingComplete) {
-            return finalOb;
-        }
     };
 
 });
