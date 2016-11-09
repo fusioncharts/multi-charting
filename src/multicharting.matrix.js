@@ -60,28 +60,21 @@
             className = '',
             configManager = configuration && matrix && matrix.drawManager(configuration),
             len = configManager && configManager.length,
-            placeHolder = [];
+            placeHolder = [],
+            parentContainer = matrix && matrix.matrixContainer,
+            lenC;
         
         for(i = 0; i < len; i++) {
-            placeHolder[i] = matrix.drawCell({
-                'height' : configManager[i].height,
-                'width' : configManager[i].width,
-                'top' : configManager[i].top,
-                'left' : configManager[i].left,
-                'id' : configManager[i].id,
-                'html' : configManager[i].html,
-                'chart' : configManager[i].chart
-            });
-            if(configManager[i].chart){
-                configManager[i].chart.renderAt = configManager[i].id;
+            placeHolder[i] = [];
+            for(j = 0, lenC = configManager[i].length; j < lenC; j++){
+                placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
             }
-            placeHolder[i].chart = (configManager[i].chart && createChart(configManager[i].chart)) || {};
         }
         matrix.placeHolder = [];
         matrix.placeHolder = placeHolder;
     };
 
-    protoMatrix.drawCell = function(configuration, id, className) {
+/*    protoMatrix.drawCell = function(configuration, id, className) {
         var matrix = this,
             cell = document.createElement('div'),
             matrixContainer = matrix && matrix.matrixContainer;
@@ -98,17 +91,19 @@
 
         return {
             config : {
-                id : cell.id,
-                height : cell.style.height,
-                width : cell.style.width,
-                top : cell.style.top,
-                left : cell.style.left,
-                html : configuration.html || '',
-                chart : configuration.chart || {}
+                rowspan : configuration.rowspan,
+                colspan : configuration.colspan,                
+                id      : cell.id,
+                height  : cell.style.height,
+                width   : cell.style.width,
+                top     : cell.style.top,
+                left    : cell.style.left,
+                html    : configuration.html || '',
+                chart   : configuration.chart || {}
             },
             graphics : cell
         };
-    };
+    };*/
 
     protoMatrix.drawManager = function (configuration) {
         var matrix = this,
@@ -135,7 +130,8 @@
             html;
 
         matrix.setContainerResolution(heightArr, widthArr);
-        for (i = 0; i < lenRow; i++) {            
+        for (i = 0; i < lenRow; i++) {  
+            drawManagerObjArr[i] = [];          
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
                 colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);                
@@ -147,15 +143,17 @@
                 top = matrixPosY[row];
                 width = matrixPosX[col + colspan] - left;
                 height = matrixPosY[row + rowspan] - top;
-                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);
-                drawManagerObjArr.push({
-                    top : top,
-                    left : left,
-                    height : height,
-                    width : width,
-                    id : id,
-                    html : html,
-                    chart : chart
+                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);                
+                drawManagerObjArr[i].push({
+                    top     : top,
+                    left    : left,
+                    height  : height,
+                    width   : width,
+                    id      : id,
+                    rowspan : rowspan,
+                    colspan : colspan,
+                    html    : html,
+                    chart   : chart
                 });
             }
         }
@@ -290,4 +288,96 @@
 
         return mapArr;
     };
+
+    protoMatrix.update = function (configuration) {
+        var matrix = this,
+            configManager = configuration && matrix && matrix.drawManager(configuration),
+            len = configManager && configManager.length,
+            lenC,
+            lenPlcHldr,
+            i,
+            j,
+            k,
+            placeHolder = matrix && matrix.placeHolder,
+            parentContainer  = matrix && matrix.matrixContainer,
+            disposalBox = [],
+            recycledCell;
+
+        lenPlcHldr = placeHolder.length;
+        for (k = lenC; k <= lenPlcHldr; k++) {
+            disposalBox = disposalBox.concat(placeHolder.pop());
+        }
+
+        for(i = 0; i < len; i++) {            
+            for(j = 0, lenC = configManager[i].length; j < lenC; j++){
+                if(placeHolder[i][j]) {
+                    placeHolder[i][j].update(configManager[i][j]);
+                } else {
+                    recycledCell = disposalBox.pop();
+                    if(recycledCell) {
+                        placeHolder[i][j] = recycledCell.update(configManager[i][j]);
+                    } else {
+                        placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
+                    }
+                }
+            }
+
+            lenPlcHldr = placeHolder[i].length;
+
+            for (k = lenC; k <= lenPlcHldr; k++) {
+                disposalBox = disposalBox.concat(placeHolder[i].pop());
+            }
+        }
+    };
+
+    var Cell = function () {
+            var cell = this;
+            cell.container = arguments[1];
+            cell.config = arguments[0];
+            cell.draw();
+            cell.config.chart && cell.renderChart();
+        },
+        protoCell = Cell.prototype;
+
+    protoCell.draw = function (){
+        var cell = this;
+        cell.graphics = document.createElement('div');
+        cell.graphics.id = cell.config.id || '';        
+        cell.graphics.style.height = cell.config.height + 'px';
+        cell.graphics.style.width = cell.config.width + 'px';
+        cell.graphics.style.top = cell.config.top + 'px';
+        cell.graphics.style.left = cell.config.left + 'px';
+        cell.graphics.style.position = 'absolute';
+        cell.graphics.innerHTML = cell.config.html || '';
+        cell.container.appendChild(cell.graphics);
+    };
+
+    protoCell.renderChart = function () {
+        var cell = this; 
+
+        cell.config.chart.renderAt = cell.config.id;
+        cell.config.chart.width = '100%';
+        cell.config.chart.height = '100%';
+      
+        if(cell.chart) {
+            cell.chart.update(cell.config.chart);        
+        } else {
+            cell.chart = createChart(cell.config.chart);            
+        }
+    };
+
+    protoCell.update = function (newConfig) {
+        var cell = this;
+        if(newConfig){
+            cell.config = newConfig;
+            cell.graphics.id = cell.config.id || '';        
+            cell.graphics.style.height = cell.config.height + 'px';
+            cell.graphics.style.width = cell.config.width + 'px';
+            cell.graphics.style.top = cell.config.top + 'px';
+            cell.graphics.style.left = cell.config.left + 'px';
+            cell.graphics.style.position = 'absolute';
+            cell.graphics.innerHTML = cell.config.html || '';
+            cell.config.chart && cell.renderChart() || delete cell.chart;
+        }
+    }
 });

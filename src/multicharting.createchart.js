@@ -21,6 +21,16 @@
 
     chartProto.render = function () {
         var chart = this,
+            argument =arguments[0] || {};
+        chart.getJSON(argument);        
+
+        //render FC 
+        chart.chartObj = new FusionCharts(chart.chartConfig);
+        chart.chartObj.render();
+    };
+
+    chartProto.getJSON = function () {
+        var chart = this,
             argument =arguments[0] || {},
             configuration,
             callbackFN,
@@ -46,10 +56,15 @@
         
         //set data source into chart configuration
         chartConfig.dataSource = dataSource;
-        chart.chartObj = chartConfig;
-        
-        //render FC 
-        var chart = new FusionCharts(chartConfig);
-        chart.render();
+        chart.chartConfig = chartConfig;        
     };
+
+    chartProto.update = function () {
+        var chart = this,
+            argument =arguments[0] || {};
+
+        chart.getJSON(argument);
+        chart.chartObj.chartType(chart.chartConfig.type);
+        chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+    }
 });
