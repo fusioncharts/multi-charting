@@ -80,6 +80,16 @@
     /* jshint ignore:end */
 
     MultiCharting.prototype.convertToArray = function (data, delimiter, structure, callback) {
+        if (typeof data === 'object') {
+            delimiter = data.delimiter;
+            structure = data.structure;
+            callback = data.callback;
+            data = data.string;
+        }
+
+        if (typeof data !== 'string') {
+            throw new Error('CSV string not provided');
+        }
         var splitedData = data.split(/\r\n|\r|\n/),
             //total number of rows
             len = splitedData.length,
@@ -91,8 +101,7 @@
             klen = 0,
             cell = [],
             min = Math.min,
-            finalOb = [],
-            parsingComplete = false,
+            finalOb,
             updateManager = function () {
                 var lim = 0,
                     jlen = 0,
@@ -107,6 +116,7 @@
 
                     //create cell array that cointain csv data
                     cell = CSVToArray(splitedData[i], delimiter); // jshint ignore:line
+                    cell = cell && cell[0];
                     //take min of header length and total columns
                     jlen = min(header.length, cell.length);
 
@@ -135,12 +145,11 @@
                     updateManager();
                 } else {
                     callback && callback(finalOb);
-                    parsingComplete = true;
-                    return finalOb;
                 }
             };
 
         structure = structure || 1;
+        header = header && header[0];
 
         //if the value is empty
         if (splitedData[splitedData.length - 1] === '') {
@@ -161,9 +170,6 @@
 
         updateManager();
 
-        if (parsingComplete) {
-            return finalOb;
-        }
     };
 
 });
