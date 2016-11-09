@@ -92,6 +92,7 @@
             cell = [],
             min = Math.min,
             finalOb = [],
+            parsingComplete = false,
             updateManager = function () {
                 var lim = 0,
                     jlen = 0,
@@ -112,7 +113,7 @@
                     if(structure === 1){
                         finalOb.push(cell);
                     }
-                    else if(structure === 2){
+                    else if (structure === 2){
                         for (j = 0; j < jlen; ++j) {                    
                             //creating the final object
                             obj[header[j]] = cell[j];
@@ -130,9 +131,12 @@
 
                 if (i < len - 1) {
                     //call update manager
-                    setTimeout(updateManager, 0);
+                    // setTimeout(updateManager, 0);
+                    updateManager();
                 } else {
                     callback && callback(finalOb);
+                    parsingComplete = true;
+                    return finalOb;
                 }
             };
 
@@ -156,6 +160,10 @@
         }
 
         updateManager();
+
+        if (parsingComplete) {
+            return finalOb;
+        }
     };
 
 });
