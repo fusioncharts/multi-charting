@@ -21,6 +21,7 @@
 		// Constructor class for DataStore.
 		DataStore = function () {
 	    	var manager = this;
+	    	manager.uniqueValues = {};
 	    	manager.setData(arguments);
 		},
 		dataStoreProto = DataStore.prototype,
@@ -260,5 +261,47 @@
 				}
 			}
 		});
+	};
+
+	// Funtion to get all the keys of the JSON data
+	dataStoreProto.getKey = function () {
+		var dataStore = this,
+			data = dataStorage[dataStore.id],
+			internalData = data[0],
+			dataType = typeof internalData,
+			keys = dataStore.keys;
+
+		if (keys) {
+			return keys;
+		}
+		if (dataType === 'array') {
+			return (dataStore.keys = internalData);
+		}
+		else if (dataType === 'object') {
+			return (dataStore.keys = Object.keys(internalData));
+		}
+	};
+
+	// Funtion to get all the unique values corresponding to a key
+	dataStoreProto.getUniqueValues = function (key) {
+		var dataStore = this,
+			data = dataStorage[dataStore.id],
+			internalData = data[0],
+			dataType = typeof internalData,
+			uniqueValues = dataStore.uniqueValues[key],
+			tempUniqueValues = {},
+			len = data.length,
+			i;
+
+		if (uniqueValues) {
+			return uniqueValues;
+		}
+
+		for (i = 1; i < len; i++) {
+			internalData = dataType === 'array' ? data[key][i] : data[i][key];
+			!tempUniqueValues[internalData] && (tempUniqueValues[internalData] = true);
+		}
+
+		return (dataStore.uniqueValues[key] = Object.keys(tempUniqueValues));
 	};
 });
