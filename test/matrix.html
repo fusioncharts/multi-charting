@@ -1,7 +1,8 @@
-<DOCTYPE !html>
+   <DOCTYPE !html>
 <html>
     <head>
 
+<!--
         <script type='text/javascript' src='../src/fusioncharts.multicharting.js'></script>
         <script type='text/javascript' src='../src/multicharting.lib.js'></script>
         <script type='text/javascript' src='../src/multicharting.datastore.js'></script>
@@ -9,9 +10,9 @@
         <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
         <script type="text/javascript" src="../src/multicharting.createchart.js"></script>
         <script type="text/javascript" src="../src/multicharting.matrix.js"></script>
-<!-- 
-        <script type='text/javascript' src='../out/fc.mc.js'></script>
-        <script type="text/javascript" src="../src/multicharting.matrix.js"></script> -->
+ -->
+
+        <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
 
     </head>
@@ -19,9 +20,20 @@
     <body>
 
         <center style='margin: 10px'>
-            <div id="matrix">
-        </div>
-        </cneter>
+            <div id="matrix"></div>
+        </center>
+
+        <style type="text/css">
+            #matrix {
+                width: 750px;
+                position: relative;
+                display: inline-block;
+            }
+            #matrix div {
+                border: 1px solid #CCCCCC;
+                vertical-align: middle;
+            }
+        </style>
 
         <script type='text/javascript'>
             var MultiChartObj = new MultiCharting(),
@@ -786,19 +798,27 @@
             };
             var configuration = [
                 [{
-                    rowspan: '2',
+                    // rowspan: '2',
                     height : 300,
-                    width : 500,
+                    width : 300,
+                    html: "Chart 1",
                     chart : chart1
                 },{
                     height : 50,
-                    width : 200,                    
+                    width : 300,                    
                     id : 'html1',
-                    html : 'hello'
+                    html: "Chart 2"
+                },{
+                    height : 50,
+                    width : 300,                    
+                    id : 'html2',
+                    html: "Chart 3"
                 }],[{
+                    colspan: 3,
                     height : 300,                    
                     id : 'chart2',
-                    chart : chart2
+                    chart : chart2,
+                    html: "Chart 4"
                 }/*,{
                     id : 'chart3',
                     chart : chart3
