@@ -19,10 +19,39 @@
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
+
+            matrix.setAttrContainer();
         },
         chartId = 0;
 
     protoMatrix = Matrix.prototype;
+
+    protoMatrix.setAttrContainer = function() {
+        var matrix = this,
+            container = matrix && matrix.matrixContainer;
+        container.style.display = 'block';
+        container.style.position = 'relative';        
+    };
+
+    protoMatrix.setContainerResolution = function (heightArr, widthArr) {
+        var matrix = this,
+            container = matrix && matrix.matrixContainer,
+            height = 0,
+            width = 0,
+            i,
+            j,
+            len;
+        for(i = 0, len = heightArr.length; i < len; i++) {
+            height += heightArr[i];
+        }
+
+        for(i = 0, len = widthArr.length; i < len; i++) {
+            width += widthArr[i];
+        }
+
+        container.style.height = height + 'px';
+        container.style.width = width + 'px';
+    };
 
     protoMatrix.draw = function(){
         var matrix = this,
@@ -32,7 +61,7 @@
             configManager = configuration && matrix && matrix.drawManager(configuration),
             len = configManager && configManager.length,
             placeHolder = [];
-        // matrix.setAttrContainer();
+        
         for(i = 0; i < len; i++) {
             placeHolder[i] = matrix.drawCell({
                 'height' : configManager[i].height,
@@ -105,6 +134,7 @@
             chart,
             html;
 
+        matrix.setContainerResolution(heightArr, widthArr);
         for (i = 0; i < lenRow; i++) {            
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
