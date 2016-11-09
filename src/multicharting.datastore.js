@@ -287,7 +287,7 @@
 		var dataStore = this,
 			data = dataStorage[dataStore.id],
 			internalData = data[0],
-			dataType = typeof internalData,
+			isArray = typeof internalData === 'array',
 			uniqueValues = dataStore.uniqueValues[key],
 			tempUniqueValues = {},
 			len = data.length,
@@ -297,8 +297,8 @@
 			return uniqueValues;
 		}
 
-		for (i = 1; i < len; i++) {
-			internalData = dataType === 'array' ? data[key][i] : data[i][key];
+		for (i = isArray ? 1 : 0; i < len; i++) {
+			internalData = isArray === 'array' ? data[key][i] : data[i][key];
 			!tempUniqueValues[internalData] && (tempUniqueValues[internalData] = true);
 		}
 
