@@ -19,6 +19,7 @@ var gulp = require('gulp'),
     files = [
 		'src/fusioncharts.multicharting.js',
 		'src/multicharting.lib.js',
+        'src/multicharting.ajax.js',
 		'src/multicharting.csv.js',
 		'src/multicharting.datastore.js',
 		'src/multicharting.dataprocessor.js',
