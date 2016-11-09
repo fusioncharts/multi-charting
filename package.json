@@ -30,7 +30,10 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-jshint": "^2.0.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.1",
     "gulp-sourcemaps": "^2.2.0",
+    "gulp-sync": "^0.1.4",
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
@@ -86,7 +89,7 @@
     ],
     "onevar": true,
     "globals": {
-      "FusionCharts": true
+      "MultiCharting": true
     }
   }
 }
