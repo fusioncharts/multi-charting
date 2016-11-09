@@ -80,6 +80,16 @@
     /* jshint ignore:end */
 
     MultiCharting.prototype.convertToArray = function (data, delimiter, structure, callback) {
+        if (typeof data === 'object') {
+            delimiter = data.delimiter;
+            structure = data.structure;
+            callback = data.callback;
+            data = data.string;
+        }
+
+        if (typeof data !== 'string') {
+            throw new Error('CSV string not provided');
+        }
         var splitedData = data.split(/\r\n|\r|\n/),
             //total number of rows
             len = splitedData.length,
