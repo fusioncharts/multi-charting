@@ -9,19 +9,22 @@ var gulp = require('gulp'),
     pump = require('pump'),
     rename = require('gulp-rename'),
     rm = require('gulp-rimraf'),
+    gulpsync = require('gulp-sync')(gulp),
+    fs = require('fs'),
     argArr = process.argv,
     argLen = argArr.length,
     jshintConfig = packageJSON.jshintConfig,
     BUILD_DIR = 'out/', // Name of the directory where to create the build files
     BUILD_FILE_NAME = 'fusioncharts.multicharting.js', // Name of the build file
     files = [
-		'src/fusioncharts.multicharting.js'
-		// 'src/multicharting.lib.js',
-		// 'src/multicharting.datastore.js',
-		// 'src/multicharting.dataprocessor.js',
-		// 'src/multicharting.dataadapter.js',
-		// 'src/multicharting.createchart.js',
-		// 'src/multicharting.matrix.js'
+		'src/fusioncharts.multicharting.js',
+		'src/multicharting.lib.js',
+		'src/multicharting.csv.js',
+		'src/multicharting.datastore.js',
+		'src/multicharting.dataprocessor.js',
+		'src/multicharting.dataadapter.js',
+		'src/multicharting.createchart.js',
+		'src/multicharting.matrix.js'
 	],
     ARGUMENTS = {},
 	arg;
@@ -48,7 +51,7 @@ gulp.task('clean', function () {
 // Run lint on the source
 gulp.task('lint', function() {
 	// console.log("\n\n Linging \n\n");
-	return gulp.src(files)
+	return gulp.src(ARGUMENTS.file || files)
     	.pipe(jshint(jshintConfig))
 		.pipe(jshint.reporter('jshint-stylish'))
 		.pipe(jshint.reporter('fail'));
@@ -57,6 +60,17 @@ gulp.task('lint', function() {
 // Build only the source file
 gulp.task('build-source', ['clean'], function () {
 	// console.log("\n\n build-source \n\n");
+
+    // Throw error if file not exist
+    for (var i = 0; i < files.length; i ++) {
+        if (!fs.existsSync(files[i])) {
+            console.log('\n\n');
+            console.log("Module does not exist: ", files[i]);
+            console.log('\n\n');
+            throw "Module does not exist";
+        }
+    }
+
 	return gulp.src(files)
 		.pipe(sourcemaps.init())
 		.pipe(concat(BUILD_FILE_NAME))
@@ -76,7 +90,8 @@ gulp.task('compress', function (cb) {
 });
 
 // Build the source and minified files
-gulp.task('build', ['build-source', 'compress']);
+gulp.task('build', gulpsync.sync(['build-source', 'compress']));
 
 // Runs lint and then creates source and minified files
-gulp.task('default', ['lint', 'build']);
+gulp.task('default', gulpsync.sync(['lint', 'build']));
+// gulp.task('default', gulpsync.sync(['lint', 'build-source', 'compress']));

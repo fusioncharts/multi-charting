@@ -1,30 +1,13 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
 
-	var extend2 = function (obj1, obj2, skipUndef) {
-            var OBJECTSTRING = 'object';
-            //if none of the arguments are object then return back
-            if (typeof obj1 !== OBJECTSTRING && typeof obj2 !== OBJECTSTRING) {
-                return null;
-            }
-
-            if (typeof obj2 !== OBJECTSTRING || obj2 === null) {
-                return obj1;
-            }
-
-            if (typeof obj1 !== OBJECTSTRING) {
-                obj1 = obj2 instanceof Array ? [] : {};
-            }
-            merge(obj1, obj2, skipUndef);
-            return obj1;
-        },
-        merge = function (obj1, obj2, skipUndef, tgtArr, srcArr) {
+	var merge = function (obj1, obj2, skipUndef, tgtArr, srcArr) {
             var item,
                 srcVal,
                 tgtVal,
@@ -139,6 +122,23 @@
                     }
                 }
             }
+            return obj1;
+        },
+        extend2 = function (obj1, obj2, skipUndef) {
+            var OBJECTSTRING = 'object';
+            //if none of the arguments are object then return back
+            if (typeof obj1 !== OBJECTSTRING && typeof obj2 !== OBJECTSTRING) {
+                return null;
+            }
+
+            if (typeof obj2 !== OBJECTSTRING || obj2 === null) {
+                return obj1;
+            }
+
+            if (typeof obj1 !== OBJECTSTRING) {
+                obj1 = obj2 instanceof Array ? [] : {};
+            }
+            merge(obj1, obj2, skipUndef);
             return obj1;
         },
         lib = {
