@@ -10,6 +10,7 @@
     MultiCharting.prototype.createMatrix = function () {
         return new Matrix(arguments[0],arguments[1]);
     };
+
     var createChart = MultiCharting.prototype.createChart,
         Matrix = function (selector, configuration) {
             var matrix = this;
@@ -18,7 +19,8 @@
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
-        };
+        },
+        chartId = 0;
 
     protoMatrix = Matrix.prototype;
 
@@ -41,6 +43,9 @@
                 'html' : configManager[i].html,
                 'chart' : configManager[i].chart
             });
+            if(configManager[i].chart){
+                configManager[i].chart.renderAt = configManager[i].id;
+            }
             placeHolder[i].chart = (configManager[i].chart && createChart(configManager[i].chart)) || {};
         }
         matrix.placeHolder = [];
@@ -103,8 +108,7 @@
         for (i = 0; i < lenRow; i++) {            
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
-                colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);
-                id = configuration[i][j] && configuration[i][j].id;
+                colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);                
                 chart = configuration[i][j] && configuration[i][j].chart;
                 html = configuration[i][j] && configuration[i][j].html;
                 row = parseInt(configuration[i][j].row);
@@ -113,7 +117,7 @@
                 top = matrixPosY[row];
                 width = matrixPosX[col + colspan] - left;
                 height = matrixPosY[row + rowspan] - top;
-
+                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);
                 drawManagerObjArr.push({
                     top : top,
                     left : left,
@@ -127,6 +131,11 @@
         }
        
         return drawManagerObjArr;
+    };
+
+    protoMatrix.idCreator = function(row, col){
+        chartId++;
+        return 'id-' + row + '-' + col + '-' + chartId;
     };
 
     protoMatrix.getPos =  function(src){
