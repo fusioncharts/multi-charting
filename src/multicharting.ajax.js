@@ -1,14 +1,10 @@
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
-	
-	MultiCharting.prototype.ajax = function () {
-		return new Ajax(arguments[0]);
-	}
 
 	var Ajax = function () {
 			var ajax = this,
@@ -20,7 +16,29 @@
 		    return ajax.get(argument.url);
 		},
 
-		// Prepare function to retrieve compatible xmlhttprequest.
+        ajaxProto = Ajax.prototype,
+
+        FUNCTION = 'function',
+        MSXMLHTTP = 'Microsoft.XMLHTTP',
+        MSXMLHTTP2 = 'Msxml2.XMLHTTP',
+        GET = 'GET',
+        XHREQERROR = 'XmlHttprequest Error',
+        win = MultiCharting.prototype.win, // keep a local reference of window scope
+
+        // Probe IE version
+        version = parseFloat(win.navigator.appVersion.split('MSIE')[1]),
+        ielt8 = (version >= 5.5 && version <= 7) ? true : false,
+        firefox = /mozilla/i.test(win.navigator.userAgent),
+        //
+        // Calculate flags.
+        // Check whether the page is on file protocol.
+        fileProtocol = win.location.protocol === 'file:',
+        AXObject = win.ActiveXObject,
+
+        // Check if native xhr is present
+        XHRNative = (!AXObject || !fileProtocol) && win.XMLHttpRequest,
+
+        // Prepare function to retrieve compatible xmlhttprequest.
         newXmlHttpRequest = function () {
             var xmlhttp;
 
@@ -80,33 +98,11 @@
              * @type {string}
              */
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
+        };
 
-        ajaxProto = Ajax.prototype,
-
-        FUNCTION = 'function',
-        MSXMLHTTP = 'Microsoft.XMLHTTP',
-        MSXMLHTTP2 = 'Msxml2.XMLHTTP',
-        GET = 'GET',
-        POST = 'POST',
-        XHREQERROR = 'XmlHttprequest Error',
-        RUN = 'run',
-        ERRNO = '1110111515A',
-        win = MultiCharting.prototype.win, // keep a local reference of window scope
-
-        // Probe IE version
-        version = parseFloat(win.navigator.appVersion.split('MSIE')[1]),
-        ielt8 = (version >= 5.5 && version <= 7) ? true : false,
-        firefox = /mozilla/i.test(win.navigator.userAgent),
-        //
-        // Calculate flags.
-        // Check whether the page is on file protocol.
-        fileProtocol = win.location.protocol === 'file:',
-        AXObject = win.ActiveXObject,
-
-        // Check if native xhr is present
-        XHRNative = (!AXObject || !fileProtocol) && win.XMLHttpRequest;
-
+    MultiCharting.prototype.ajax = function () {
+        return new Ajax(arguments[0]);
+    };
 
     ajaxProto.get = function (url) {
         var wrapper = this,
@@ -170,7 +166,7 @@
         }
 
         return xmlhttp;
-    },
+    };
 
     ajaxProto.abort = function () {
         var instance = this,
@@ -179,7 +175,7 @@
         instance.open = false;
         return xmlhttp && typeof xmlhttp.abort === FUNCTION && xmlhttp.readyState &&
                 xmlhttp.readyState !== 0 && xmlhttp.abort();
-    },
+    };
 
     ajaxProto.dispose = function () {
         var instance = this;
@@ -191,5 +187,5 @@
         delete instance.open;
 
         return (instance = null);
-    }
+    };
 });

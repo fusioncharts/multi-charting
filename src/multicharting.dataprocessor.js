@@ -1,15 +1,11 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
-
-	MultiCharting.prototype.createDataProcessor = function () {
-		return new DataProcessor(arguments);
-	};
 
 	var lib = MultiCharting.prototype.lib,
 		filterStore = lib.filterStore = {},
@@ -17,7 +13,7 @@
 		filterIdCount = 0,
 		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
-		
+		win = MultiCharting.prototype.win,
 		// Constructor class for DataProcessor.
 		DataProcessor = function () {
 	    	var manager = this;
@@ -51,6 +47,10 @@
 			lib.tempDataUpdated = {};
 		};
 
+	MultiCharting.prototype.createDataProcessor = function () {
+		return new DataProcessor(arguments);
+	};
+
 	// Function to add filter in the filter store
 	dataProcessorProto.addRule = function () {
 		var filter = this,
@@ -71,7 +71,7 @@
 			updataFilterProcessor(id);
 		}
 
-		dispatchEvent(new CustomEvent('filterAdded', {'detail' : {
+		win.dispatchEvent(new win.CustomEvent('filterAdded', {'detail' : {
 			'id': id,
 			'filter' : filterFn
 		}}));
