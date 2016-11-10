@@ -1,15 +1,11 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
-
-    MultiCharting.prototype.createChart = function () {
-        return new Chart(arguments[0]);
-    };
 
     var Chart = function () {
             var chart = this;           
@@ -71,5 +67,9 @@
         setTimeout(function () {
             chart.chartObj.render();
         },10);
-    }
+    };
+
+    MultiCharting.prototype.createChart = function () {
+        return new Chart(arguments[0]);
+    };
 });

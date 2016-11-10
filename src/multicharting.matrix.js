@@ -326,6 +326,13 @@
         }      
     };
 
+    protoMatrix.dispose = function () {
+        var node  = matrix && matrix.matrixContainer;
+        while (node.hasChildNodes()) {
+            node.removeChild(node.lastChild);
+        }
+    }
+
     var Cell = function () {
             var cell = this;
             cell.container = arguments[1];
