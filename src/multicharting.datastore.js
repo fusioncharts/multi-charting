@@ -79,50 +79,54 @@
 					break;
 				case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
 					break;
-				case 'addInfo' :
-				case 'reExpress' : return Array.prototype.map.call(JSONData, filterFn);
+				case 'map' : return Array.prototype.map.call(JSONData, filterFn);
 					break;
 				default : return filterFn(JSONData);
 			}
-		},
-
-		//Function to convert/get raw data into JSON data
-		parseData = function (dataSpecs) {
-			var	dataSource = dataSpecs.dataSource,
-				dataType = dataSpecs.dataType,
-				JSONData;
-
-			switch(dataType) {
-				case 'csv' : 
-					break;
-				case 'json' : 
-				default : JSONData = dataSource;
-			};
-
-			return JSONData;
 		};
 
 	// Function to add data in the data store
-	dataStoreProto.setData = function () {
-		var data = this,
-			oldId = data.id,
-			argument = arguments[0],
-			id = argument.id,
+	dataStoreProto.setData = function (dataSpecs, callback) {
+		var dataStore = this,
+			oldId = dataStore.id,
+			id = dataSpecs.id,
+			dataType = dataSpecs.dataType,
+			dataSource = dataSpecs.dataSource,
 			oldJSONData = dataStorage[oldId] || [],
-			JSONData = parseData(argument);
+			JSONData,
+			callbackHelperFn = function (JSONData) {
+				dataStorage[id] = oldJSONData.concat(JSONData || []);
+				if (linkStore[id]) {
+					updataData(id)
+				}
+				if (typeof callback === 'function') {
+					callback(JSONData);
+				}
+			};
 
 		id = oldId || id || 'dataStorage' + idCount ++;
-		dataStorage[id] = oldJSONData.concat(JSONData || []);
+		dataStore.id = id;
+		delete dataStore.keys;
+		delete dataStore.uniqueValues;
 
-		data.id = id;
-
-		if (linkStore[id]) {
-			updataData(id)
+		if (dataType === 'csv') {
+			MultiCharting.prototype.convertToArray({
+				string : dataSpecs.dataSource,
+				delimiter : dataSpecs.delimiter,
+				structure : dataSpecs.structure,
+				callback : function (data) {
+					callbackHelperFn(data);
+				}
+			});
 		}
-		dispatchEvent(new CustomEvent('dataAdded', {'detail' : {
-			'id': id,
-			'data' : JSONData
-		}}));
+		else {
+			callbackHelperFn(dataSource);
+		}
+
+		// dispatchEvent(new CustomEvent('dataAdded', {'detail' : {
+		// 	'id': id,
+		// 	'data' : JSONData
+		// }}));
 	};
 
 	// Function to get the jsondata of the data object
@@ -194,8 +198,8 @@
 
 	// Function to delete the current data from the dataStorage and also all its childs recursively
 	dataStoreProto.deleteData = function (optionalId) {
-		var data = this,
-			id = optionalId || data.id,
+		var dataStore = this,
+			id = optionalId || dataStore.id,
 			linkData = linkStore[id],
 			flag;
 
@@ -204,7 +208,7 @@
 				link = linkData.link,
 				len = link.length;
 			for (i = 0; i < len; i ++) {
-				data.deleteData(link[i]);
+				dataStore.deleteData(link[i]);
 			}
 			delete linkStore[id];
 		}
@@ -223,36 +227,33 @@
 
 	// Function to modify data
 	dataStoreProto.modifyData = function () {
-		var data = this;
+		var dataStore = this;
 
 		dataStorage[id] = [];
-		data.setData(arguments);
+		dataStore.setData(arguments);
 		dispatchEvent(new CustomEvent('dataModified', {'detail' : {
-			'id': data.id
+			'id': dataStore.id
 		}}));
 	};
 
 	// Function to add data to the dataStorage asynchronously via ajax
 	dataStoreProto.setDataUrl = function () {
-		var data = this,
+		var dataStore = this,
 			argument = arguments[0],
 			dataSource = argument.dataSource,
 			dataType = argument.dataType,
 			callback = argument.callback,
 			callbackArgs = argument.callbackArgs,
-			JSONData;
+			data;
 
 		ajax = MultiCharting.prototype.ajax({
 			url : dataSource,
-			success : function(JSONString){
-				JSONData = JSON.parse(JSONString);
-				data.setData({
-					dataSource : JSONData
-				});
-
-				if (typeof callback === 'function') {
-					callback(callbackArgs);
-				}
+			success : function(string) {
+				data = dataType === 'json' ? JSON.parse(string) : string;
+				dataStore.setData({
+					dataSource : data,
+					dataType : dataType,
+				}, callback);
 			},
 
 			error : function(){
@@ -264,7 +265,7 @@
 	};
 
 	// Funtion to get all the keys of the JSON data
-	dataStoreProto.getKey = function () {
+	dataStoreProto.getKeys = function () {
 		var dataStore = this,
 			data = dataStorage[dataStore.id],
 			internalData = data[0],
