@@ -87,8 +87,8 @@
 
 	// Function to add data in the data store
 	dataStoreProto.setData = function (dataSpecs, callback) {
-		var data = this,
-			oldId = data.id,
+		var dataStore = this,
+			oldId = dataStore.id,
 			id = dataSpecs.id,
 			dataType = dataSpecs.dataType,
 			dataSource = dataSpecs.dataSource,
@@ -105,7 +105,9 @@
 			};
 
 		id = oldId || id || 'dataStorage' + idCount ++;
-		data.id = id;
+		dataStore.id = id;
+		delete dataStore.keys;
+		delete dataStore.uniqueValues;
 
 		if (dataType === 'csv') {
 			MultiCharting.prototype.convertToArray({
@@ -196,8 +198,8 @@
 
 	// Function to delete the current data from the dataStorage and also all its childs recursively
 	dataStoreProto.deleteData = function (optionalId) {
-		var data = this,
-			id = optionalId || data.id,
+		var dataStore = this,
+			id = optionalId || dataStore.id,
 			linkData = linkStore[id],
 			flag;
 
@@ -206,7 +208,7 @@
 				link = linkData.link,
 				len = link.length;
 			for (i = 0; i < len; i ++) {
-				data.deleteData(link[i]);
+				dataStore.deleteData(link[i]);
 			}
 			delete linkStore[id];
 		}
@@ -225,12 +227,12 @@
 
 	// Function to modify data
 	dataStoreProto.modifyData = function () {
-		var data = this;
+		var dataStore = this;
 
 		dataStorage[id] = [];
-		data.setData(arguments);
+		dataStore.setData(arguments);
 		dispatchEvent(new CustomEvent('dataModified', {'detail' : {
-			'id': data.id
+			'id': dataStore.id
 		}}));
 	};
 
@@ -263,7 +265,7 @@
 	};
 
 	// Funtion to get all the keys of the JSON data
-	dataStoreProto.getKey = function () {
+	dataStoreProto.getKeys = function () {
 		var dataStore = this,
 			data = dataStorage[dataStore.id],
 			internalData = data[0],
