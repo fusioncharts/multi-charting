@@ -66,5 +66,8 @@
         chart.getJSON(argument);
         chart.chartObj.chartType(chart.chartConfig.type);
         chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+        setTimeout(function () {
+            chart.chartObj.render();
+        },10);
     }
 });

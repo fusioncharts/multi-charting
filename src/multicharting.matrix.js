@@ -1,3 +1,4 @@
+                
 
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== "undefined") {
@@ -304,18 +305,22 @@
             recycledCell;
 
         lenPlcHldr = placeHolder.length;
-        for (k = lenC; k <= lenPlcHldr; k++) {
+        for (k = lenC; k < lenPlcHldr; k++) {
             disposalBox = disposalBox.concat(placeHolder.pop());
         }
 
-        for(i = 0; i < len; i++) {            
+        for(i = 0; i < len; i++) {    
+            if(!placeHolder[i]) {
+                placeHolder[i] = [];
+            }
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
                 if(placeHolder[i][j]) {
-                    placeHolder[i][j].update(configManager[i][j]);
+                    placeHolder[i][j].update(configManager[i][j]);                    
                 } else {
                     recycledCell = disposalBox.pop();
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
+                        
                     } else {
                         placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
                     }
@@ -324,7 +329,7 @@
 
             lenPlcHldr = placeHolder[i].length;
 
-            for (k = lenC; k <= lenPlcHldr; k++) {
+            for (k = lenC; k < lenPlcHldr; k++) {
                 disposalBox = disposalBox.concat(placeHolder[i].pop());
             }
         }
@@ -364,24 +369,31 @@
         cell.config.chart.height = '100%';
       
         if(cell.chart) {
-            cell.chart.update(cell.config.chart);        
+            cell.chart.update(cell.config.chart);
         } else {
             cell.chart = createChart(cell.config.chart);            
         }
+        return cell.chart;
     };
 
     protoCell.update = function (newConfig) {
-        var cell = this;
+        var cell = this,
+            id = cell.config.id;
         if(newConfig){
             cell.config = newConfig;
+            cell.config.id = id;
             cell.graphics.id = cell.config.id || '';        
             cell.graphics.style.height = cell.config.height + 'px';
             cell.graphics.style.width = cell.config.width + 'px';
             cell.graphics.style.top = cell.config.top + 'px';
             cell.graphics.style.left = cell.config.left + 'px';
             cell.graphics.style.position = 'absolute';
-            cell.graphics.innerHTML = cell.config.html || '';
-            cell.config.chart && cell.renderChart() || delete cell.chart;
-        }
+            cell.graphics.innerHTML = cell.config.html || '';            
+            if(cell.config.chart) {
+                cell.chart = cell.renderChart();             
+            } else {
+                delete cell.chart;
+            }          
+        }        
     };
 });
