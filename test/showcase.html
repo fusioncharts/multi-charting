@@ -126,7 +126,11 @@
                                                 var flights = {
                                                 },
                                                 dataArr = [['Date', 'Flights']],
-                                                i;
+                                                i,
+                                                c;
+                                                for (i = 0, c = 0; i <= 2000; i += 50, c++) {
+                                                    // flights[c] = {v: i};
+                                                }
                                                 data.forEach(function (row) {
                                                       if (!flights[row.distance]) {
                                                             flights[row.distance] = 0;
@@ -171,9 +175,12 @@
                                           distanceDataProcessor.addRule({rule: filterByDistance});
                                           flightByDistance = dataStore.getData(distanceDataProcessor);
 
+                                          window.dt = flightByDate.getJSON();
+                                          window.t = flightByTime.getJSON();
                                           window.a = flightByArrival.getJSON();
-                                          window.d = flightByDistance.getJSON();
-                                          console.log(window.a, window.b);
+                                          window.di = flightByDistance.getJSON();
+
+                                          console.log('done');
 
 						}
 					})
