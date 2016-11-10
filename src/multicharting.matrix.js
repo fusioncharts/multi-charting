@@ -1,4 +1,4 @@
-                
+
 
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== "undefined") {
@@ -287,8 +287,9 @@
             recycledCell;
 
         lenPlcHldr = placeHolder.length;
-        for (k = lenC; k < lenPlcHldr; k++) {
-            disposalBox = disposalBox.concat(placeHolder.pop());
+        for (k = len; k < lenPlcHldr; k++) {
+            disposalBox = disposalBox.concat(placeHolder.pop());          
+            
         }
 
         for(i = 0; i < len; i++) {    
@@ -297,9 +298,10 @@
             }
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
                 if(placeHolder[i][j]) {
-                    placeHolder[i][j].update(configManager[i][j]);                    
+                    placeHolder[i][j].update(configManager[i][j]);         
                 } else {
                     recycledCell = disposalBox.pop();
+
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
                         
@@ -310,15 +312,18 @@
             }
 
             lenPlcHldr = placeHolder[i].length;
+            lenC = configManager[i].length;
 
             for (k = lenC; k < lenPlcHldr; k++) {
-                disposalBox = disposalBox.concat(placeHolder[i].pop());
+                disposalBox = disposalBox.concat(placeHolder[i].pop());    
             }
+
         }
 
         for(i = 0, len = disposalBox.length; i < len; i++) {
+            parentContainer.removeChild(disposalBox[i].graphics);
             delete disposalBox[i];
-        }
+        }      
     };
 
     var Cell = function () {
