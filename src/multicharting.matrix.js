@@ -75,37 +75,6 @@
         matrix.placeHolder = placeHolder;
     };
 
-/*    protoMatrix.drawCell = function(configuration, id, className) {
-        var matrix = this,
-            cell = document.createElement('div'),
-            matrixContainer = matrix && matrix.matrixContainer;
-
-        cell.id = configuration.id || '';
-        cell.className = (configuration && configuration.purpose) || '' + ' cell ' + (className || '');
-        cell.style.height = configuration &&  configuration.height + 'px';
-        cell.style.width = configuration &&  configuration.width + 'px';
-        cell.style.top = configuration && configuration.top + 'px';
-        cell.style.left = configuration &&  configuration.left + 'px';
-        cell.style.position = 'absolute';
-        cell.innerHTML = configuration.html || '';
-        matrixContainer.appendChild(cell);
-
-        return {
-            config : {
-                rowspan : configuration.rowspan,
-                colspan : configuration.colspan,                
-                id      : cell.id,
-                height  : cell.style.height,
-                width   : cell.style.width,
-                top     : cell.style.top,
-                left    : cell.style.left,
-                html    : configuration.html || '',
-                chart   : configuration.chart || {}
-            },
-            graphics : cell
-        };
-    };*/
-
     protoMatrix.drawManager = function (configuration) {
         var matrix = this,
             i,
@@ -164,7 +133,7 @@
 
     protoMatrix.idCreator = function(row, col){
         chartId++;
-        return 'id-' + row + '-' + col + '-' + chartId;
+        return 'id'+ chartId;
     };
 
     protoMatrix.getPos =  function(src){
