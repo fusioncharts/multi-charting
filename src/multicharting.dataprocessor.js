@@ -117,7 +117,7 @@
 	dataProcessorProto.map = function () {
 		this.addRule(
 			{	rule : arguments[0],
-				type : 'addInfo'
+				type : 'map'
 			}
 		);
 	};
