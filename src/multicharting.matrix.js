@@ -328,6 +328,10 @@
                 disposalBox = disposalBox.concat(placeHolder[i].pop());
             }
         }
+
+        for(i = 0, len = disposalBox.length; i < len; i++) {
+            delete disposalBox[i];
+        }
     };
 
     var Cell = function () {
@@ -379,5 +383,5 @@
             cell.graphics.innerHTML = cell.config.html || '';
             cell.config.chart && cell.renderChart() || delete cell.chart;
         }
-    }
+    };
 });
