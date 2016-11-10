@@ -134,24 +134,18 @@
         }
 
         xmlhttp.onreadystatechange = function () {
-            try {
-                if (xmlhttp.readyState === 4) {
-                    if ((!xmlhttp.status && fileProtocol) || (xmlhttp.status >= 200 &&
-                            xmlhttp.status < 300) || xmlhttp.status === 304 ||
-                            xmlhttp.status === 1223 || xmlhttp.status === 0) {
-                        successCallback &&
-                            successCallback(xmlhttp.responseText, wrapper, url);
-                    }
-                    else if (errorCallback) {
-                        errorCallback(new Error(XHREQERROR), wrapper, url);
-                    }
-                    wrapper.open = false;
+            
+            if (xmlhttp.readyState === 4) {
+                if ((!xmlhttp.status && fileProtocol) || (xmlhttp.status >= 200 &&
+                        xmlhttp.status < 300) || xmlhttp.status === 304 ||
+                        xmlhttp.status === 1223 || xmlhttp.status === 0) {
+                    successCallback &&
+                        successCallback(xmlhttp.responseText, wrapper, url);
                 }
-            }
-            catch (error) {
-                if (errorCallback) {
-                    errorCallback(error, wrapper, url);
+                else if (errorCallback) {
+                    errorCallback(new Error(XHREQERROR), wrapper, url);
                 }
+                wrapper.open = false;
             }
         };
 
