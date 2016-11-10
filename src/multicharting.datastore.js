@@ -107,7 +107,7 @@
 		id = oldId || id || 'dataStorage' + idCount ++;
 		dataStore.id = id;
 		delete dataStore.keys;
-		delete dataStore.uniqueValues;
+		dataStore.uniqueValues = {};
 
 		if (dataType === 'csv') {
 			MultiCharting.prototype.convertToArray({
