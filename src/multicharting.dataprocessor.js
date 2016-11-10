@@ -56,7 +56,7 @@
 		var filter = this,
 			oldId = filter.id,
 			argument = arguments[0],
-			filterFn = argument.rule,
+			filterFn = argument.rule || argument,
 			id = argument.type,
 			type = argument.type;
 
@@ -114,18 +114,10 @@
 		);
 	};
 
-	dataProcessorProto.addInfo = function () {
+	dataProcessorProto.map = function () {
 		this.addRule(
 			{	rule : arguments[0],
 				type : 'addInfo'
-			}
-		);
-	};
-
-	dataProcessorProto.reExpress = function () {
-		this.addRule(
-			{	rule : arguments[0],
-				type : 'reExpress'
 			}
 		);
 	};
