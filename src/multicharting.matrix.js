@@ -16,17 +16,19 @@
         Matrix = function (selector, configuration) {
             var matrix = this;
             matrix.selector = selector;
+            //matrix container
             matrix.matrixContainer = document.getElementById(selector);
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
-
+            //set style, attr on matrix container 
             matrix.setAttrContainer();
         },
         chartId = 0;
 
     protoMatrix = Matrix.prototype;
 
+    //function to set style, attr on matrix container
     protoMatrix.setAttrContainer = function() {
         var matrix = this,
             container = matrix && matrix.matrixContainer;
@@ -34,6 +36,7 @@
         container.style.position = 'relative';        
     };
 
+    //function to set height, width on matrix container
     protoMatrix.setContainerResolution = function (heightArr, widthArr) {
         var matrix = this,
             container = matrix && matrix.matrixContainer,
@@ -54,11 +57,13 @@
         container.style.width = width + 'px';
     };
 
+    //function to draw matrix
     protoMatrix.draw = function(){
         var matrix = this,
             configuration = matrix && matrix.configuration || {},
             config = configuration.config,
             className = '',
+            //store virtual matrix for user given configuration
             configManager = configuration && matrix && matrix.drawManager(configuration),
             len = configManager && configManager.length,
             placeHolder = [],
@@ -68,6 +73,7 @@
         for(i = 0; i < len; i++) {
             placeHolder[i] = [];
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
+                //store cell object in logical matrix structure
                 placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
             }
         }
@@ -75,42 +81,13 @@
         matrix.placeHolder = placeHolder;
     };
 
-/*    protoMatrix.drawCell = function(configuration, id, className) {
-        var matrix = this,
-            cell = document.createElement('div'),
-            matrixContainer = matrix && matrix.matrixContainer;
-
-        cell.id = configuration.id || '';
-        cell.className = (configuration && configuration.purpose) || '' + ' cell ' + (className || '');
-        cell.style.height = configuration &&  configuration.height + 'px';
-        cell.style.width = configuration &&  configuration.width + 'px';
-        cell.style.top = configuration && configuration.top + 'px';
-        cell.style.left = configuration &&  configuration.left + 'px';
-        cell.style.position = 'absolute';
-        cell.innerHTML = configuration.html || '';
-        matrixContainer.appendChild(cell);
-
-        return {
-            config : {
-                rowspan : configuration.rowspan,
-                colspan : configuration.colspan,                
-                id      : cell.id,
-                height  : cell.style.height,
-                width   : cell.style.width,
-                top     : cell.style.top,
-                left    : cell.style.left,
-                html    : configuration.html || '',
-                chart   : configuration.chart || {}
-            },
-            graphics : cell
-        };
-    };*/
-
+    //function to manage matrix draw
     protoMatrix.drawManager = function (configuration) {
         var matrix = this,
             i,
             j,
             lenRow = configuration.length,
+            //store mapping matrix based on the user configuration
             mapArr = matrix.matrixManager(configuration),
             processedConfig = matrix.setPlcHldr(mapArr, configuration),
             heightArr = matrix.getRowHeight(mapArr),
@@ -129,8 +106,9 @@
             width,
             chart,
             html;
-
+        //function to set height, width on matrix container
         matrix.setContainerResolution(heightArr, widthArr);
+        //calculate cell position and heiht and 
         for (i = 0; i < lenRow; i++) {  
             drawManagerObjArr[i] = [];          
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
@@ -164,7 +142,7 @@
 
     protoMatrix.idCreator = function(row, col){
         chartId++;
-        return 'id-' + row + '-' + col + '-' + chartId;
+        return 'id'+ chartId;
     };
 
     protoMatrix.getPos =  function(src){
@@ -211,8 +189,10 @@
             
         for (i = 0; i < lenRow; i++) {
             for(j = 0, maxHeight = 0, lenCol = mapArr[i].length; j < lenCol; j++) {
-                currHeight = mapArr[i][j].height;
-                maxHeight = maxHeight < currHeight ? currHeight : maxHeight;
+                if(mapArr[i][j]) {
+                    currHeight = mapArr[i][j].height;
+                    maxHeight = maxHeight < currHeight ? currHeight : maxHeight;
+                }
             }
             height[i] = maxHeight;
         }
@@ -230,8 +210,10 @@
             maxWidth;
         for (i = 0, lenCol = mapArr[j].length; i < lenCol; i++){
             for(j = 0, maxWidth = 0; j < lenRow; j++) {
-                currWidth = mapArr[j][i].width;        
-                maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
+                if (mapArr[j][i]) {
+                    currWidth = mapArr[j][i].width;        
+                    maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
+                }
             }
             width[i] = maxWidth;
         }
