@@ -7,6 +7,8 @@
     }
 })(function (MultiCharting) {
 
+    var FusionCharts = MultiCharting.prototype.win.FusionCharts;
+
     var Chart = function () {
             var chart = this;           
             chart.render(arguments[0]);
@@ -29,8 +31,6 @@
         var chart = this,
             argument =arguments[0] || {},
             configuration,
-            callbackFN,
-            jsonData,
             chartConfig = {},
             dataSource = {},
             configData = {};
