@@ -13,9 +13,10 @@
         Improved the arguments for csv data manager Added gulp-rename dependency
  -->
 
-        <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
 
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
+        <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.timeseries.js'></script>
+        <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
         <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.ocean.js'></script>
 
     </head>
@@ -44,6 +45,7 @@
 
         <script type='text/javascript'>
             var MultiChartObj = new MultiCharting(),
+                months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             	dataStore,
             	dataProcessor1,
             	dataProcessor2,
@@ -65,8 +67,8 @@
 
 
 			MultiChartObj.ajax({
-                url: 'airline-small.csv', 
-				// url: 'airline.csv', 
+                // url: 'airline-small.csv',
+				url: 'airline.csv', 
 				success: function (dataCSV) {
 					MultiChartObj.convertToArray({
 						string: dataCSV,
@@ -84,12 +86,15 @@
                                             i;
                                         data.forEach(function (row) {
                                             if (!flights[row.fulldate]) {
-                                                flights[row.fulldate] = 0;
+                                                flights[row.fulldate] = {
+                                                    i: months[row.D.getMonth()] + ' ' + row.D.getDate(),
+                                                    v: 0
+                                                };
                                             }
-                                            flights[row.fulldate] += 1;
+                                            flights[row.fulldate].v += 1;
                                         });
                                         for (var i in flights) {
-                                            dataArr.push([i, flights[i]]);
+                                            dataArr.push([flights[i].i, flights[i].v]);
                                         }
                                         return dataArr;
                                     },
@@ -115,58 +120,63 @@
                                             },
                                             dataArr = [],
                                             i,
-                                            c;
+                                            c,
+                                            val;
+
                                         for (i = -60, c = 0; i <= 150; i += 10, c++) {
                                             flights[i/10] = {v: i, s: 0};
                                         }
-                                        console.log(flights);
+
                                         data.forEach(function (row) {
-                                            let index = Math.floor(row.delay / 10),
+                                            val = Number(row.delay);
+
+                                            let index = Math.ceil(val / 10),
                                                 infoObj = flights[index];
-                                            if (!flights[index]){
-                                                  flights[index].s = 0;
+
+                                            if (flights[index]) {
+                                                flights[index].s += 1;
                                             }
-                                            flights[index].s += 1;
                                         });
-                                        console.log(flights);
-                                        for (var i in flights) {
+                                        for (i in flights) {
                                             dataArr.push([flights[i].v, flights[i].s]);
                                         }
-                                        dataArr.sort(function(a, b) {
-                                            console.log(a, b);
-                                            return a[0] < b[0];
+                                        dataArr.sort(function (a, b) { 
+                                            return a[0] < b[0] ? -1 : 1;
                                         });
-                                        console.log(dataArr);
                                         dataArr.unshift(['Arrival', 'Flights']);
                                         return dataArr;
                                     },
                                     filterByDistance = function (data) {
-                                          var flights = {},
-                                          dataArr = [['Distance', 'Flights']],
-                                          i,
-                                          c;
-                                          for (i = 50, c = 0; i <= 2300; i += 50, c++) {
-                                              flights[c] = {v: i, s: 0};
-                                          }
-                                          data.forEach(function (row) {
-                                                let index = Math.floor(row.distance / 50),
+                                        var flights = {},
+                                            dataArr = [['Distance', 'Flights']],
+                                            i,
+                                            c;
+                                        for (i = 50, c = 0; i <= 2000; i += 50, c++) {
+                                            flights[c] = {
+                                                // v: i % 200 == 0 ? i : '',
+                                                v: i,
+                                                s: 0
+                                            };
+                                        }
+                                        data.forEach(function (row) {
+                                            let index = Math.floor(row.distance / 50),
                                                 infoObj = flights[index];
-                                                if (!flights[index]){
-                                                      flights[index].s = 0;
-                                                }
+                                            if (flights[index]) {
                                                 flights[index].s += 1;
-                                          });
+                                            }
+                                        });
 
-                                          for (var i in flights) {
-                                              dataArr.push([flights[i].v, flights[i].s]);
-                                          }
-                                          return dataArr;
+                                        for (var i in flights) {
+                                            dataArr.push([flights[i].v, flights[i].s]);
+                                        }
+                                        return dataArr;
                                     },
                                     mapFilter = function (row, i) {
-                                          d = parseDate(row.date);
-                                          row.fulldate = d.getMonth() + '-' + d.getDate() + '-' + d.getFullYear();
-                                          row.time = d.getHours();
-                                          return row;
+                                        var d = parseDate(row.date);
+                                        row.D = d;
+                                        row.fulldate = d.getMonth() + '-' + d.getDate() + '-' + d.getFullYear();
+                                        row.time = d.getHours();
+                                        return row;
                                     };
 
                                 // Parse the date and add information in the data
@@ -227,6 +237,7 @@
                                                                 "caption": "Time of Day",
                                                                 "showLegend": 0,
                                                                 "showValues": 0,
+                                                                "showYAxisValues": 0,
                                                                 "theme": "ocean"
                                                             }
                                                         }
@@ -260,6 +271,7 @@
                                                                 "caption": "Arrival Delay",
                                                                 "showLegend": 0,
                                                                 "showValues": 0,
+                                                                "showYAxisValues": 0,
                                                                 "theme": "ocean"
                                                             }
                                                         }                    
@@ -292,6 +304,7 @@
                                                                 "caption": "Distance",
                                                                 "showLegend": 0,
                                                                 "showValues": 0,
+                                                                "showYAxisValues": 0,
                                                                 "theme": "ocean"
                                                             }
                                                         }                    
@@ -327,6 +340,8 @@
                                                                 "caption": "Date",
                                                                 "showLegend": 0,
                                                                 "showValues": 0,
+                                                                "showYAxisValues": 0,
+                                                                "showDivLines": 0,
                                                                 "theme": "ocean"
                                                             }
                                                         }
