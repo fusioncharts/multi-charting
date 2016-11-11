@@ -1,15 +1,11 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
-
-	MultiCharting.prototype.createDataStore = function () {
-		return new DataStore(arguments);
-	};
 
 	var	lib = MultiCharting.prototype.lib,
 		dataStorage = lib.dataStorage = {},
@@ -18,6 +14,7 @@
 		//For storing the parent of a child
 		parentStore = lib.parentStore = {},
 		idCount = 0,
+		win = MultiCharting.prototype.win,
 		// Constructor class for DataStore.
 		DataStore = function () {
 	    	var manager = this;
@@ -25,6 +22,16 @@
 	    	manager.setData(arguments);
 		},
 		dataStoreProto = DataStore.prototype,
+
+		// Function to execute the dataProcessor over the data
+		executeProcessor = function (type, filterFn, JSONData) {
+			switch (type) {
+				case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
+				case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
+				case 'map' : return Array.prototype.map.call(JSONData, filterFn);
+				default : return filterFn(JSONData);
+			}
+		},
 
 		//Function to update all the linked child data
 		updataData = function (id) {
@@ -39,7 +46,6 @@
 				filter,
 				filterFn,
 				type,
-				info,
 				// Store all the dataObjs that are updated.
 				tempDataUpdated = lib.tempDataUpdated = {};
 
@@ -70,20 +76,11 @@
 					updataData(linkId);
 				}
 			}
-		},
-
-		// Function to execute the dataProcessor over the data
-		executeProcessor = function (type, filterFn, JSONData) {
-			switch (type) {
-				case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
-					break;
-				case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
-					break;
-				case 'map' : return Array.prototype.map.call(JSONData, filterFn);
-					break;
-				default : return filterFn(JSONData);
-			}
 		};
+
+	MultiCharting.prototype.createDataStore = function () {
+		return new DataStore(arguments);
+	};
 
 	// Function to add data in the data store
 	dataStoreProto.setData = function (dataSpecs, callback) {
@@ -93,11 +90,10 @@
 			dataType = dataSpecs.dataType,
 			dataSource = dataSpecs.dataSource,
 			oldJSONData = dataStorage[oldId] || [],
-			JSONData,
 			callbackHelperFn = function (JSONData) {
 				dataStorage[id] = oldJSONData.concat(JSONData || []);
 				if (linkStore[id]) {
-					updataData(id)
+					updataData(id);
 				}
 				if (typeof callback === 'function') {
 					callback(JSONData);
@@ -107,7 +103,7 @@
 		id = oldId || id || 'dataStorage' + idCount ++;
 		dataStore.id = id;
 		delete dataStore.keys;
-		delete dataStore.uniqueValues;
+		dataStore.uniqueValues = {};
 
 		if (dataType === 'csv') {
 			MultiCharting.prototype.convertToArray({
@@ -123,7 +119,7 @@
 			callbackHelperFn(dataSource);
 		}
 
-		// dispatchEvent(new CustomEvent('dataAdded', {'detail' : {
+		// win.dispatchEvent(new win.CustomEvent('dataAdded', {'detail' : {
 		// 	'id': id,
 		// 	'data' : JSONData
 		// }}));
@@ -156,6 +152,7 @@
 				datalinks,
 				filterID,
 				type,
+				newDataObj,
 				isFilterArray = filters instanceof Array,
 				len = isFilterArray ? filters.length : 1;
 
@@ -185,7 +182,7 @@
 					// Storing the data on which the filter is applied under the filter id.
 					filterID = filter.getID();
 					datalinks = filterLink[filterID] || (filterLink[filterID] = []);
-					datalinks.push(newDataObj)
+					datalinks.push(newDataObj);
 
 					// setting the current id as the newID so that the next filter is applied on the child data;
 					id = newId;
@@ -214,7 +211,7 @@
 		}
 
 		flag = delete dataStorage[id];
-		dispatchEvent(new CustomEvent('dataDeleted', {'detail' : {
+		win.dispatchEvent(new win.CustomEvent('dataDeleted', {'detail' : {
 			'id': id,
 		}}));
 		return flag;
@@ -229,9 +226,9 @@
 	dataStoreProto.modifyData = function () {
 		var dataStore = this;
 
-		dataStorage[id] = [];
+		dataStorage[dataStore.id] = [];
 		dataStore.setData(arguments);
-		dispatchEvent(new CustomEvent('dataModified', {'detail' : {
+		win.dispatchEvent(new win.CustomEvent('dataModified', {'detail' : {
 			'id': dataStore.id
 		}}));
 	};
@@ -246,7 +243,7 @@
 			callbackArgs = argument.callbackArgs,
 			data;
 
-		ajax = MultiCharting.prototype.ajax({
+		MultiCharting.prototype.ajax({
 			url : dataSource,
 			success : function(string) {
 				data = dataType === 'json' ? JSON.parse(string) : string;
@@ -269,16 +266,15 @@
 		var dataStore = this,
 			data = dataStorage[dataStore.id],
 			internalData = data[0],
-			dataType = typeof internalData,
 			keys = dataStore.keys;
 
 		if (keys) {
 			return keys;
 		}
-		if (dataType === 'array') {
+		if (internalData instanceof Array) {
 			return (dataStore.keys = internalData);
 		}
-		else if (dataType === 'object') {
+		else if (internalData instanceof Object) {
 			return (dataStore.keys = Object.keys(internalData));
 		}
 	};
@@ -288,7 +284,7 @@
 		var dataStore = this,
 			data = dataStorage[dataStore.id],
 			internalData = data[0],
-			isArray = typeof internalData === 'array',
+			isArray = internalData instanceof Array,
 			uniqueValues = dataStore.uniqueValues[key],
 			tempUniqueValues = {},
 			len = data.length,
@@ -298,8 +294,18 @@
 			return uniqueValues;
 		}
 
+		if (isArray) {
+			i = 1;
+			key = dataStore.getKeys().findIndex(function (element) {
+				return element.toUpperCase() === key.toUpperCase();
+			});
+		}
+		else {
+			i = 0;
+		}
+
 		for (i = isArray ? 1 : 0; i < len; i++) {
-			internalData = isArray === 'array' ? data[key][i] : data[i][key];
+			internalData = isArray ? data[i][key] : data[i][key];
 			!tempUniqueValues[internalData] && (tempUniqueValues[internalData] = true);
 		}
 

@@ -1,15 +1,12 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
 
-    MultiCharting.prototype.dataadapter = function () {
-        return convertData(arguments[0]);
-    };
     var extend2 = MultiCharting.prototype.lib.extend2;
     //function to convert data, it returns fc supported JSON
     function convertData() {
@@ -31,7 +28,7 @@
                                 j;
                             json.categories = [
                                 {
-                                    "category": [                        
+                                    'category': [                        
                                     ]
                                 }
                             ];
@@ -66,11 +63,8 @@
                         'ss' : function(jsonData, configuration) {
                             var json = {},
                                 indexMatchLabel,
-                                indexMatchValue,
-                                lenDimension,
-                                lenMeasure,
+                                indexMatchValue, 
                                 lenData,
-                                i,
                                 j,
                                 label,
                                 value;
@@ -164,4 +158,8 @@
             return (callbackFN && callbackFN(json)) || json;    
         }
     }
+
+    MultiCharting.prototype.dataadapter = function () {
+        return convertData(arguments[0]);
+    };
 });

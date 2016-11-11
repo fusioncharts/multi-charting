@@ -1,15 +1,13 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
 
-    MultiCharting.prototype.createChart = function () {
-        return new Chart(arguments[0]);
-    };
+    var FusionCharts = MultiCharting.prototype.win.FusionCharts;
 
     var Chart = function () {
             var chart = this;           
@@ -33,8 +31,6 @@
         var chart = this,
             argument =arguments[0] || {},
             configuration,
-            callbackFN,
-            jsonData,
             chartConfig = {},
             dataSource = {},
             configData = {};
@@ -71,5 +67,9 @@
         setTimeout(function () {
             chart.chartObj.render();
         },10);
-    }
+    };
+
+    MultiCharting.prototype.createChart = function () {
+        return new Chart(arguments[0]);
+    };
 });
