@@ -14,6 +14,7 @@
  -->
 
         <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
+
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
         <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.ocean.js'></script>
 
@@ -22,10 +23,13 @@
     <body>
 
         <center style='margin: 10px'>
-            <div id="matrix"></div>
+            <div id="matrix">
+                  Loading please wait... 
+            </div>
         </center>
 
         <style type="text/css">
+/*            
             #matrix {
                 width: 750px;
                 position: relative;
@@ -35,6 +39,7 @@
                 border: 1px solid #CCCCCC;
                 vertical-align: middle;
             }
+*/        
         </style>
 
         <script type='text/javascript'>
@@ -51,137 +56,290 @@
             dataStore = MultiChartObj.createDataStore();
 
             function parseDate(d) {
-                  return new Date(2001,
-                        d.substring(0, 2) - 1,
-                        d.substring(2, 4),
-                        d.substring(4, 6),
-                        d.substring(6, 8));
+                return new Date(2001,
+                    d.substring(0, 2) - 1,
+                    d.substring(2, 4),
+                    d.substring(4, 6),
+                    d.substring(6, 8));
             }
 
 
 			MultiChartObj.ajax({
-                        // url: 'airline-small.csv', 
-				url: 'airline.csv', 
+                url: 'airline-small.csv', 
+				// url: 'airline.csv', 
 				success: function (dataCSV) {
 					MultiChartObj.convertToArray({
 						string: dataCSV,
-                                    structure: 2,
+                        structure: 2,
 						callback: function (data) {
       						// Store the data
-      				            dataStore.setData({
-      				            	dataSource: data
-      				            }, function () {
+  				            dataStore.setData({
+  				            	dataSource: data
+  				            }, function () {
 
-                                                var filterByDate = function (data) {
-                                                      var flights = {
-                                                      },
-                                                      dataArr = [['Date', 'Flights']],
-                                                      i;
-                                                      data.forEach(function (row) {
-                                                            if (!flights[row.fulldate]) {
-                                                                  flights[row.fulldate] = 0;
-                                                            }
-                                                            flights[row.fulldate] += 1;
-                                                      });
-                                                      for (var i in flights) {
-                                                          dataArr.push([i, flights[i]]);
-                                                      }
-                                                      return dataArr;
-                                                },
-                                                filterByTime = function (data) {
-                                                      var flights = {
-                                                      },
-                                                      dataArr = [['Time', 'Flights']],
-                                                      i;
-                                                      debugger;
-                                                      data.forEach(function (row) {
-                                                            if (!flights[row.time]) {
-                                                                  flights[row.time] = 0;
-                                                            }
-                                                            flights[row.time] += 1;
-                                                      });
-                                                      for (var i in flights) {
-                                                          dataArr.push([i, flights[i]]);
-                                                      }
-                                                      return dataArr;
-                                                },
-                                                filterByArrival = function (data) {
-                                                      var flights = {
-                                                      },
-                                                      dataArr = [['Arrival', 'Flights']],
-                                                      i;
-                                                      data.forEach(function (row) {
-                                                            if (!flights[row.delay]) {
-                                                                  flights[row.delay] = 0;
-                                                            }
-                                                            flights[row.delay] += 1;
-                                                      });
-                                                      for (var i in flights) {
-                                                          dataArr.push([i, flights[i]]);
-                                                      }
-                                                      return dataArr;
-                                                },
-                                                filterByDistance = function (data) {
-                                                      var flights = {
-                                                      },
-                                                      dataArr = [['Date', 'Flights']],
-                                                      i,
-                                                      c;
-                                                      for (i = 0, c = 0; i <= 2000; i += 50, c++) {
-                                                          // flights[c] = {v: i};
-                                                      }
-                                                      data.forEach(function (row) {
-                                                            if (!flights[row.distance]) {
-                                                                  flights[row.distance] = 0;
-                                                            }
-                                                            flights[row.distance] += 1;
-                                                      });
-                                                      for (var i in flights) {
-                                                          dataArr.push([i, flights[i]]);
-                                                      }
-                                                      return dataArr;
-                                                },
-                                                mapFilter = function (row, i) {
-                                                      d = parseDate(row.date);
-                                                      row.fulldate = d.getMonth() + '-' + d.getDate() + '-' + d.getFullYear();
-                                                      row.time = d.getHours();
-                                                      return row;
-                                                };
-
-                                                // Parse the date and add information in the data
-                                                map = MultiChartObj.createDataProcessor();
-                                                map.map(mapFilter);
-                                                newData = dataStore.getData(map);
-
-                                                // filter number of flights by date
-                                                dateDataProcessor = MultiChartObj.createDataProcessor();
-                                                dateDataProcessor.addRule({rule: filterByDate});
-                                                flightByDate = dataStore.getData(dateDataProcessor);
-
-                                                // filter number of flights by time of day
-                                                timeDataProcessor = MultiChartObj.createDataProcessor();
-                                                timeDataProcessor.addRule({rule: filterByTime});
-                                                flightByTime = dataStore.getData(timeDataProcessor);
-                                                
-                                                
-                                                // filter number of flights by arrival delay (min)
-                                                arrivalDataProcessor = MultiChartObj.createDataProcessor();
-                                                arrivalDataProcessor.addRule({rule: filterByArrival});
-                                                flightByArrival = dataStore.getData(arrivalDataProcessor);
-
-                                                // filter number of flights by distance
-                                                distanceDataProcessor = MultiChartObj.createDataProcessor();
-                                                distanceDataProcessor.addRule({rule: filterByDistance});
-                                                flightByDistance = dataStore.getData(distanceDataProcessor);
-
-                                                window.dt = flightByDate.getJSON();
-                                                window.t = flightByTime.getJSON();
-                                                window.a = flightByArrival.getJSON();
-                                                window.di = flightByDistance.getJSON();
-
-                                                console.log('done');
-
+                                var filterByDate = function (data) {
+                                        var flights = {
+                                            },
+                                            dataArr = [['Date', 'Flights']],
+                                            i;
+                                        data.forEach(function (row) {
+                                            if (!flights[row.fulldate]) {
+                                                flights[row.fulldate] = 0;
+                                            }
+                                            flights[row.fulldate] += 1;
+                                        });
+                                        for (var i in flights) {
+                                            dataArr.push([i, flights[i]]);
+                                        }
+                                        return dataArr;
+                                    },
+                                    filterByTime = function (data) {
+                                        var flights = {
+                                            },
+                                            dataArr = [['Time', 'Flights']],
+                                            i;
+                                        // debugger;
+                                        data.forEach(function (row) {
+                                            if (!flights[row.time]) {
+                                                flights[row.time] = 0;
+                                            }
+                                            flights[row.time] += 1;
+                                        });
+                                        for (var i in flights) {
+                                            dataArr.push([i, flights[i]]);
+                                        }
+                                        return dataArr;
+                                    },
+                                    filterByArrival = function (data) {
+                                        var flights = {
+                                            },
+                                            dataArr = [],
+                                            i,
+                                            c;
+                                        for (i = -60, c = 0; i <= 150; i += 10, c++) {
+                                            flights[i/10] = {v: i, s: 0};
+                                        }
+                                        console.log(flights);
+                                        data.forEach(function (row) {
+                                            let index = Math.floor(row.delay / 10),
+                                                infoObj = flights[index];
+                                            if (!flights[index]){
+                                                  flights[index].s = 0;
+                                            }
+                                            flights[index].s += 1;
+                                        });
+                                        console.log(flights);
+                                        for (var i in flights) {
+                                            dataArr.push([flights[i].v, flights[i].s]);
+                                        }
+                                        dataArr.sort(function(a, b) {
+                                            console.log(a, b);
+                                            return a[0] < b[0];
+                                        });
+                                        console.log(dataArr);
+                                        dataArr.unshift(['Arrival', 'Flights']);
+                                        return dataArr;
+                                    },
+                                    filterByDistance = function (data) {
+                                          var flights = {},
+                                          dataArr = [['Distance', 'Flights']],
+                                          i,
+                                          c;
+                                          for (i = 50, c = 0; i <= 2300; i += 50, c++) {
+                                              flights[c] = {v: i, s: 0};
+                                          }
+                                          data.forEach(function (row) {
+                                                let index = Math.floor(row.distance / 50),
+                                                infoObj = flights[index];
+                                                if (!flights[index]){
+                                                      flights[index].s = 0;
+                                                }
+                                                flights[index].s += 1;
                                           });
+
+                                          for (var i in flights) {
+                                              dataArr.push([flights[i].v, flights[i].s]);
+                                          }
+                                          return dataArr;
+                                    },
+                                    mapFilter = function (row, i) {
+                                          d = parseDate(row.date);
+                                          row.fulldate = d.getMonth() + '-' + d.getDate() + '-' + d.getFullYear();
+                                          row.time = d.getHours();
+                                          return row;
+                                    };
+
+                                // Parse the date and add information in the data
+                                map = MultiChartObj.createDataProcessor();
+                                map.map(mapFilter);
+                                newData = dataStore.getData(map);
+
+                                // filter number of flights by date
+                                dateDataProcessor = MultiChartObj.createDataProcessor();
+                                dateDataProcessor.addRule({rule: filterByDate});
+                                flightByDate = dataStore.getData(dateDataProcessor);
+
+                                // filter number of flights by time of day
+                                timeDataProcessor = MultiChartObj.createDataProcessor();
+                                timeDataProcessor.addRule({rule: filterByTime});
+                                flightByTime = dataStore.getData(timeDataProcessor);
+                                
+                                
+                                // filter number of flights by arrival delay (min)
+                                arrivalDataProcessor = MultiChartObj.createDataProcessor();
+                                arrivalDataProcessor.addRule({rule: filterByArrival});
+                                flightByArrival = dataStore.getData(arrivalDataProcessor);
+
+                                // filter number of flights by distance
+                                distanceDataProcessor = MultiChartObj.createDataProcessor();
+                                distanceDataProcessor.addRule({rule: filterByDistance});
+                                flightByDistance = dataStore.getData(distanceDataProcessor);
+
+                                window.dt = flightByDate.getJSON();
+                                window.t = flightByTime.getJSON();
+                                window.a = flightByArrival.getJSON();
+                                window.di = flightByDistance.getJSON();
+
+                                console.log('done');
+
+                                configuration = [
+                                    [
+                                        {
+                                            "height": 150,
+                                            "width": 250,
+                                            "html": "Chart 1",
+                                            "chart": {
+                                                "type": "mscolumn2d",
+                                                // "renderAt": "chart1",
+                                                "width": "100%",
+                                                "height": "100%",
+                                                "configuration": {
+                                                    "data": {
+                                                        "dimension": [
+                                                            "Time"
+                                                        ],
+                                                        "measure": [
+                                                            "Flights"
+                                                        ],
+                                                        "seriesType": "MS",
+                                                        "config": {
+                                                            "chart": {
+                                                                "caption": "Time of Day",
+                                                                "showLegend": 0,
+                                                                "showValues": 0,
+                                                                "theme": "ocean"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "jsonData": window.t
+                                            }
+                                        },
+                                        {
+                                            "height": 120,
+                                            "width": 250,
+                                            "id": "1",
+                                            "html": "Chart 2",
+                                            "chart": {
+                                                "type": "mscolumn2d",
+                                                // "renderAt": "2",
+                                                "width": "100%",
+                                                "height": "100%",
+                                                "jsonData": window.a,
+                                                "configuration": {
+                                                    "data": {
+                                                        "dimension": [
+                                                            "Arrival"
+                                                        ],
+                                                        "measure": [
+                                                            "Flights"
+                                                        ],
+                                                        "seriesType": "MS",
+                                                        "config": {
+                                                            "chart": {
+                                                                "caption": "Arrival Delay",
+                                                                "showLegend": 0,
+                                                                "showValues": 0,
+                                                                "theme": "ocean"
+                                                            }
+                                                        }                    
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "height": 120,
+                                            "width": 400,
+                                            "id": "2",
+                                            "html": "html3",
+                                            "chart": {
+                                                "type": "mscolumn2d",
+                                                // "renderAt": "2",
+                                                "width": "100%",
+                                                "height": "100%",
+                                                "jsonData": window.di,
+                                                "configuration": {
+                                                    "data": {
+                                                        "dimension": [
+                                                            "Distance"
+                                                        ],
+                                                        "measure": [
+                                                            "Flights"
+                                                        ],
+                                                        "seriesType": "MS",
+                                                        "config": {
+                                                            "chart": {
+                                                                "caption": "Distance",
+                                                                "showLegend": 0,
+                                                                "showValues": 0,
+                                                                "theme": "ocean"
+                                                            }
+                                                        }                    
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "height": 200,
+                                            "width": 900,
+                                            "colspan": 4,
+                                            "id": "4",
+                                            "html": "html4",
+                                            "chart": {
+                                                "type": "mscolumn2d",
+                                                "renderAt": "chart1",
+                                                "width": "100%",
+                                                "height": "100%",
+                                                "jsonData": window.dt,
+                                                "configuration": {
+                                                    "data": {
+                                                        "dimension": [
+                                                            "Date"
+                                                        ],
+                                                        "measure": [
+                                                            "Flights"
+                                                        ],
+                                                        "seriesType": "MS",
+                                                        "config": {
+                                                            "chart": {
+                                                                "caption": "Date",
+                                                                "showLegend": 0,
+                                                                "showValues": 0,
+                                                                "theme": "ocean"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                ]
+
+                                matrix = MultiChartObj.createMatrix('matrix', configuration);
+                                matrix.draw();
+                            });
 						}
 					})
 				}
