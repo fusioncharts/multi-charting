@@ -17,7 +17,8 @@
         MAX_PERCENT = '100%',
         BLOCK = 'block',
         RELATIVE = 'relative',
-        ID = 'id';
+        ID = 'id',
+        BORDER_BOX = 'border-box';
 
     var Cell = function () {
             var cell = this;
@@ -37,6 +38,8 @@
         cell.graphics.style.top = cell.config.top + PX;
         cell.graphics.style.left = cell.config.left + PX;
         cell.graphics.style.position = ABSOLUTE;
+        cell.graphics.style.boxSizing = BORDER_BOX;
+        cell.graphics.className = cell.config.className;
         cell.graphics.innerHTML = cell.config.html || EMPTY_STRING;
         cell.container.appendChild(cell.graphics);
     };
@@ -63,6 +66,7 @@
             cell.config = newConfig;
             cell.config.id = id;
             cell.graphics.id = cell.config.id || EMPTY_STRING;        
+            cell.graphics.className = cell.config.className;
             cell.graphics.style.height = cell.config.height + PX;
             cell.graphics.style.width = cell.config.width + PX;
             cell.graphics.style.top = cell.config.top + PX;
@@ -86,19 +90,20 @@
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
+
+            //dispose matrix context
+            matrix.dispose();
             //set style, attr on matrix container 
             matrix.setAttrContainer();
         },
         protoMatrix = Matrix.prototype,
         chartId = 0;
 
-    
     //function to set style, attr on matrix container
     protoMatrix.setAttrContainer = function() {
         var matrix = this,
-            container = matrix && matrix.matrixContainer;
-        container.style.display = BLOCK;
-        container.style.position = RELATIVE;        
+            container = matrix && matrix.matrixContainer;        
+        container.style.position = RELATIVE;
     };
 
     //function to set height, width on matrix container
@@ -163,6 +168,7 @@
             rowspan,
             colspan,
             id,
+            className,
             top,
             left,
             height,
@@ -189,21 +195,23 @@
                 top = matrixPosY[row];
                 width = matrixPosX[col + colspan] - left;
                 height = matrixPosY[row + rowspan] - top;
-                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);                
+                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);
+                className = configuration[i][j] && configuration[i][j].className || '';
                 drawManagerObjArr[i].push({
-                    top     : top,
-                    left    : left,
-                    height  : height,
-                    width   : width,
-                    id      : id,
-                    rowspan : rowspan,
-                    colspan : colspan,
-                    html    : html,
-                    chart   : chart
+                    top       : top,
+                    left      : left,
+                    height    : height,
+                    width     : width,
+                    className : className,
+                    id        : id,
+                    rowspan   : rowspan,
+                    colspan   : colspan,
+                    html      : html,
+                    chart     : chart
                 });
             }
         }
-       
+
         return drawManagerObjArr;
     };
 
@@ -313,21 +321,24 @@
                 colSpan = (configuration[i][j] && configuration[i][j].colspan) || 1;   
                 
                 width = (configuration[i][j] && configuration[i][j].width);
-                width = (width && (width / colSpan)) || defaultW;  
-                
+                width = (width && (width / colSpan)) || defaultW;
+                width = +width.toFixed(2);
+
                 height = (configuration[i][j] && configuration[i][j].height);
                 height = (height && (height / rowSpan)) || defaultH;                      
+                height = +height.toFixed(2);
+
                 for (k = 0, offset = 0; k < rowSpan; k++) {
                     for (l = 0; l < colSpan; l++) {
-                        
-                        shadowMatrix[i + k] = shadowMatrix[i + k] ? shadowMatrix[i + k] : [];                        
+
+                        shadowMatrix[i + k] = shadowMatrix[i + k] ? shadowMatrix[i + k] : [];
                         offset = j + l;
-                        
+
                         while(shadowMatrix[i + k][offset]) {
                             offset++;
                         }
-                        
-                        shadowMatrix[i + k][offset] = { 
+
+                        shadowMatrix[i + k][offset] = {
                             id : (i + '-' + j),
                             width : width,
                             height : height
