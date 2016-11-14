@@ -87,7 +87,7 @@
                                         data.forEach(function (row) {
                                             if (!flights[row.fulldate]) {
                                                 flights[row.fulldate] = {
-                                                    i: months[row.D.getMonth()] + ' ' + row.D.getDate(),
+                                                    i: months[row.D.getMonth()] + ' ' + row.D.getDate() + ' ' + row.D.getFullYear(),
                                                     v: 0
                                                 };
                                             }
@@ -286,9 +286,6 @@
                                             "html": "html3",
                                             "chart": {
                                                 "type": "mscolumn2d",
-                                                // "renderAt": "2",
-                                                "width": "100%",
-                                                "height": "100%",
                                                 "jsonData": window.di,
                                                 "configuration": {
                                                     "data": {
@@ -321,11 +318,9 @@
                                             "id": "4",
                                             "html": "html4",
                                             "chart": {
-                                                "type": "mscolumn2d",
-                                                "renderAt": "chart1",
-                                                "width": "100%",
-                                                "height": "100%",
+                                                "type": "TimeSeries",
                                                 "jsonData": window.dt,
+                                                "plottype": 'column',
                                                 "configuration": {
                                                     "data": {
                                                         "dimension": [
@@ -334,17 +329,37 @@
                                                         "measure": [
                                                             "Flights"
                                                         ],
-                                                        "seriesType": "MS",
+                                                        "seriesType": "TS",
                                                         "config": {
                                                             "chart": {
-                                                                "caption": "Date",
-                                                                "showLegend": 0,
-                                                                "showValues": 0,
-                                                                "showYAxisValues": 0,
-                                                                "showDivLines": 0,
-                                                                "theme": "ocean"
+                                                                "axes": [{
+                                                                    "x": {},
+                                                                    "y": {}
+                                                                }],
+                                                                "datasets": [{
+                                                                    "category": {
+                                                                        "dateformat": "%b %e %Y",
+                                                                        "_data": ["Jan 1 2001", "Jan 2 2001"]
+                                                                    },
+                                                                    "dataset": [{
+                                                                        "uid": "ds-1",
+                                                                        "series": [{
+                                                                            "plottype": "column",
+                                                                            "name": "Series 1",
+                                                                            "_data": [9, 6]
+                                                                        }]
+                                                                    }]
+                                                                }]
                                                             }
                                                         }
+                                                    },
+                                                    "callback": function (data) {
+                                                        // console.log('2 ', JSON.stringify(data, null, 4));
+                                                        // data.chart.datasets[0].dataset[0].series[0].data = data.datasets[0].dataset[0].series[0].data;
+                                                        // data.chart.datasets[0].category.data = data.datasets[0].category.data;
+                                                        // data.datasets = undefined;
+                                                        console.log(JSON.stringify(data, null, 4));
+                                                        return data;
                                                     }
                                                 }
                                             }
