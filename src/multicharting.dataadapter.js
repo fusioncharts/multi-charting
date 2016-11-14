@@ -148,6 +148,10 @@
                 }
                 return generalDataArray;
             },
+            setDefaultAttr = function (json) {
+                json.chart.animation = 0;
+                return json;
+            },
             dataArray,
             json,
             predefinedJson = configuration && configuration.config;
@@ -156,7 +160,7 @@
             dataArray = generalDataFormat(jsonData, configuration);
             json = jsonCreator(dataArray, configuration);          
             json = (predefinedJson && extend2(json,predefinedJson)) || json;    
-            return (callbackFN && callbackFN(json)) || json;    
+            return (callbackFN && callbackFN(json)) || setDefaultAttr(json);    
         }
     }
 

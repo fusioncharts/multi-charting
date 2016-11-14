@@ -63,11 +63,6 @@
         chart.getJSON(argument);
         chart.chartObj.chartType(chart.chartConfig.type);
         chart.chartObj.setJSONData(chart.chartConfig.dataSource);
-
-        //To Do :  remove setTimeout()
-        setTimeout(function () {
-            chart.chartObj.render();
-        },10);
     };
 
     MultiCharting.prototype.createChart = function () {
