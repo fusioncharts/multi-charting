@@ -79,10 +79,10 @@
     }
     /* jshint ignore:end */
 
-    MultiCharting.prototype.convertToArray = function (data, delimiter, structure, callback) {
+    MultiCharting.prototype.convertToArray = function (data, delimiter, outputFormat, callback) {
         if (typeof data === 'object') {
             delimiter = data.delimiter;
-            structure = data.structure;
+            structure = data.outputFormat;
             callback = data.callback;
             data = data.string;
         }
