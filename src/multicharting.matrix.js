@@ -9,7 +9,15 @@
 })(function (MultiCharting) {
 
     var createChart = MultiCharting.prototype.createChart,
-        document = MultiCharting.prototype.win.document;
+        document = MultiCharting.prototype.win.document,
+        PX = 'px',
+        DIV = 'div',
+        EMPTY_STRING = '',
+        ABSOLUTE = 'absolute',
+        MAX_PERCENT = '100%',
+        BLOCK = 'block',
+        RELATIVE = 'relative',
+        ID = 'id';
 
     var Cell = function () {
             var cell = this;
@@ -22,14 +30,14 @@
 
     protoCell.draw = function (){
         var cell = this;
-        cell.graphics = document.createElement('div');
-        cell.graphics.id = cell.config.id || '';        
-        cell.graphics.style.height = cell.config.height + 'px';
-        cell.graphics.style.width = cell.config.width + 'px';
-        cell.graphics.style.top = cell.config.top + 'px';
-        cell.graphics.style.left = cell.config.left + 'px';
-        cell.graphics.style.position = 'absolute';
-        cell.graphics.innerHTML = cell.config.html || '';
+        cell.graphics = document.createElement(DIV);
+        cell.graphics.id = cell.config.id || EMPTY_STRING;        
+        cell.graphics.style.height = cell.config.height + PX;
+        cell.graphics.style.width = cell.config.width + PX;
+        cell.graphics.style.top = cell.config.top + PX;
+        cell.graphics.style.left = cell.config.left + PX;
+        cell.graphics.style.position = ABSOLUTE;
+        cell.graphics.innerHTML = cell.config.html || EMPTY_STRING;
         cell.container.appendChild(cell.graphics);
     };
 
@@ -37,8 +45,8 @@
         var cell = this; 
 
         cell.config.chart.renderAt = cell.config.id;
-        cell.config.chart.width = '100%';
-        cell.config.chart.height = '100%';
+        cell.config.chart.width = MAX_PERCENT;
+        cell.config.chart.height = MAX_PERCENT;
       
         if(cell.chart) {
             cell.chart.update(cell.config.chart);
@@ -54,13 +62,13 @@
         if(newConfig){
             cell.config = newConfig;
             cell.config.id = id;
-            cell.graphics.id = cell.config.id || '';        
-            cell.graphics.style.height = cell.config.height + 'px';
-            cell.graphics.style.width = cell.config.width + 'px';
-            cell.graphics.style.top = cell.config.top + 'px';
-            cell.graphics.style.left = cell.config.left + 'px';
-            cell.graphics.style.position = 'absolute';
-            cell.graphics.innerHTML = cell.config.html || '';            
+            cell.graphics.id = cell.config.id || EMPTY_STRING;        
+            cell.graphics.style.height = cell.config.height + PX;
+            cell.graphics.style.width = cell.config.width + PX;
+            cell.graphics.style.top = cell.config.top + PX;
+            cell.graphics.style.left = cell.config.left + PX;
+            cell.graphics.style.position = ABSOLUTE;
+            !cell.config.chart && (cell.graphics.innerHTML = cell.config.html || EMPTY_STRING);
             if(cell.config.chart) {
                 cell.chart = cell.renderChart();             
             } else {
@@ -89,8 +97,8 @@
     protoMatrix.setAttrContainer = function() {
         var matrix = this,
             container = matrix && matrix.matrixContainer;
-        container.style.display = 'block';
-        container.style.position = 'relative';        
+        container.style.display = BLOCK;
+        container.style.position = RELATIVE;        
     };
 
     //function to set height, width on matrix container
@@ -109,8 +117,8 @@
             width += widthArr[i];
         }
 
-        container.style.height = height + 'px';
-        container.style.width = width + 'px';
+        container.style.height = height + PX;
+        container.style.width = width + PX;
     };
 
     //function to draw matrix
@@ -201,7 +209,7 @@
 
     protoMatrix.idCreator = function(){
         chartId++;       
-        return 'id' + chartId;
+        return ID + chartId;
     };
 
     protoMatrix.getPos =  function(src){
@@ -356,9 +364,8 @@
             }
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
                 if(placeHolder[i][j]) {
-                    placeHolder[i][j].update(configManager[i][j]);         
-                } else {
-
+                    placeHolder[i][j].update(configManager[i][j]);
+                } else {                   
                     recycledCell = disposalBox.pop();
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);

@@ -1,0 +1,136 @@
+   <DOCTYPE !html>
+<html>
+    <head>
+
+
+        <script type='text/javascript' src='../src/fusioncharts.multicharting.js'></script>
+        <script type='text/javascript' src='../src/multicharting.lib.js'></script>
+<!--         <script type='text/javascript' src='../src/multicharting.datastore.js'></script>
+        <script type='text/javascript' src='../src/multicharting.dataprocessor.js'></script> -->
+        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
+        <script type="text/javascript" src="../src/multicharting.createchart.js"></script>
+        <script type="text/javascript" src="../src/multicharting.matrix.js"></script>
+ 
+
+        <!-- <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script> -->
+        <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
+        <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.ocean.js'></script>
+
+    </head>
+
+    <body>
+
+        <center style='margin: 10px'>
+            <div id="matrix"></div>
+        </center>
+
+        <style type="text/css">
+            #matrix {
+                border: 1px solid #CCCCCC;                
+            }
+            #matrix div {
+                border: 1px solid #CCCCCC;
+                vertical-align: middle;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var MultiChartObj = new MultiCharting(),
+                data = [
+                        {
+                            "date": "08-2017",
+                            "tea": "16300",
+                            "coffee": "16570",
+                            "milk": "16201"
+                        },
+                        {
+                            "date": "08-2016",
+                            "tea": "16910",
+                            "coffee": "16111",
+                            "milk": "16340"
+                        },
+                        {
+                            "date": "09-2016",
+                            "tea": "16080",
+                            "coffee": "16901",
+                            "milk": "16521"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16781",
+                            "coffee": "16970",
+                            "milk": "16910"
+                        },
+                        {
+                            "date": "10-2017",
+                            "tea": "16220",
+                            "coffee": "16690",
+                            "milk": "16540"
+                        },
+                        {
+                            "date": "12-2016",
+                            "tea": "16700",
+                            "coffee": "16180",
+                            "milk": "16891"
+                        },
+                        {
+                            "date": "09-2017",
+                            "tea": "16951",
+                            "coffee": "16690",
+                            "milk": "16480"
+                        }
+                ],                
+                args = {
+                    config : {
+                            dimension: ['date'],
+                            measure: ['tea'],
+                            seriesType: 'TS',
+                            config: {
+                                chart: {
+                                    axes: [
+                                        {
+                                            x: { },
+                                            y: { }
+                                        }
+                                    ],
+                                    datasets: [{
+                                        category: {
+                                            dateformat: "%m-%Y"
+                                            
+                                        },
+                                        dataset: [
+                                            {
+                                                uid: 'ds-1',
+                                                series: [
+                                                    {
+                                                        plottype:"area",
+                                                        name: "Series 1"  
+                                                    }
+
+                                                ]
+                                            }
+                                        ]
+                                    }],
+                                    canvas: [{
+                                        axes: function (store) {
+                                            return store.getAxesByIndex(0);
+                                        },
+                                        dataset: function (store) {
+                                            return store.getDatasetsByIndex(0);
+                                        }
+                                    }]
+                                }
+                            }
+                    },
+                    jsonData : data
+                },
+                json = MultiChartObj.dataadapter(args);
+                //console.log(JSON.stringify(json,null,2));
+            document.getElementById('matrix').innerHTML = 'done';
+        </script>
+
+    </body>
+
+
+</html>
+
