@@ -65,8 +65,9 @@
                 cell.chart = cell.renderChart();             
             } else {
                 delete cell.chart;
-            }          
-        }        
+            } 
+        }  
+        return cell;      
     };
 
     var Matrix = function (selector, configuration) {
@@ -132,6 +133,7 @@
                 placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
             }
         }
+
         matrix.placeHolder = [];
         matrix.placeHolder = placeHolder;
     };
@@ -198,7 +200,7 @@
     };
 
     protoMatrix.idCreator = function(){
-        chartId++;
+        chartId++;       
         return 'id' + chartId;
     };
 
@@ -346,10 +348,8 @@
 
         lenPlcHldr = placeHolder.length;
         for (k = len; k < lenPlcHldr; k++) {
-            disposalBox = disposalBox.concat(placeHolder.pop());          
-            
-        }
-
+            disposalBox = disposalBox.concat(placeHolder.pop());            
+        }        
         for(i = 0; i < len; i++) {    
             if(!placeHolder[i]) {
                 placeHolder[i] = [];
@@ -358,8 +358,8 @@
                 if(placeHolder[i][j]) {
                     placeHolder[i][j].update(configManager[i][j]);         
                 } else {
-                    recycledCell = disposalBox.pop();
 
+                    recycledCell = disposalBox.pop();
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
                         
@@ -375,13 +375,15 @@
             for (k = lenC; k < lenPlcHldr; k++) {
                 disposalBox = disposalBox.concat(placeHolder[i].pop());    
             }
-
         }
-
         for(i = 0, len = disposalBox.length; i < len; i++) {
-            parentContainer.removeChild(disposalBox[i].graphics);
+            if(disposalBox[i] !== undefined) {
+                disposalBox[i].chart && disposalBox[i].chart.chartObj.dispose();
+                parentContainer.removeChild(disposalBox[i] && disposalBox[i].graphics);
+                delete disposalBox[i];
+            }
             delete disposalBox[i];
-        }      
+        }   
     };
 
     protoMatrix.dispose = function () {

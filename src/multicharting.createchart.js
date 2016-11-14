@@ -7,7 +7,7 @@
     }
 })(function (MultiCharting) {
 
-    var FusionCharts = MultiCharting.prototype.win.FusionCharts;
+   // var FusionCharts = MultiCharting.prototype.win.FusionCharts;
 
     var Chart = function () {
             var chart = this;           
