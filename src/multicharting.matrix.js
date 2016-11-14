@@ -60,7 +60,7 @@
             cell.graphics.style.top = cell.config.top + 'px';
             cell.graphics.style.left = cell.config.left + 'px';
             cell.graphics.style.position = 'absolute';
-            cell.graphics.innerHTML = cell.config.html || '';            
+            !cell.config.chart && (cell.graphics.innerHTML = cell.config.html || '');
             if(cell.config.chart) {
                 cell.chart = cell.renderChart();             
             } else {
@@ -356,9 +356,8 @@
             }
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
                 if(placeHolder[i][j]) {
-                    placeHolder[i][j].update(configManager[i][j]);         
-                } else {
-
+                    placeHolder[i][j].update(configManager[i][j]);
+                } else {                   
                     recycledCell = disposalBox.pop();
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
