@@ -426,10 +426,21 @@
 
     protoMatrix.dispose = function () {
         var matrix = this,
-            node  = matrix && matrix.matrixContainer;
+            node  = matrix && matrix.matrixContainer,
+            placeHolder = matrix && matrix.placeHolder,
+            i,
+            j;
+        for(i = 0, lenR = placeHolder && placeHolder.length; i < lenR; i++) {
+            for (j = 0, lenC = placeHolder[i] && placeHolder[i].length; j < lenC; j++) {
+                placeHolder[i][j].chart && placeHolder[i][j].chart.chartObj && 
+                    placeHolder[i][j].chart.chartObj.dispose();
+            }
+        }
         while (node.hasChildNodes()) {
             node.removeChild(node.lastChild);
         }
+        node.style.height = '0px';
+        node.style.width = '0px';
     };
 
     MultiCharting.prototype.createMatrix = function () {
