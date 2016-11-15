@@ -62,6 +62,7 @@
     protoCell.update = function (newConfig) {
         var cell = this,
             id = cell.config.id;
+
         if(newConfig){
             cell.config = newConfig;
             cell.config.id = id;
@@ -137,7 +138,8 @@
             parentContainer = matrix && matrix.matrixContainer,
             lenC,
             i,
-            j;
+            j,
+            callBack = arguments[0];
         
         for(i = 0; i < len; i++) {
             placeHolder[i] = [];
@@ -149,6 +151,7 @@
 
         matrix.placeHolder = [];
         matrix.placeHolder = placeHolder;
+        callBack && callBack();
     };
 
     //function to manage matrix draw
@@ -349,6 +352,23 @@
         }
 
         return shadowMatrix;
+    };
+
+    protoMatrix.getBlock  = function() {
+        var id = arguments[0],
+            matrix = this,
+            placeHolder = matrix && matrix.placeHolder,
+            i,
+            j,
+            lenR = placeHolder.length,
+            lenC;
+        for(i = 0; i < lenR; i++) {
+            for(j = 0, lenC = placeHolder[i].length; j < lenC; j++) {
+                if (placeHolder[i][j].config.id == id) {
+                    return placeHolder[i][j];
+                }
+            }
+        }
     };
 
     protoMatrix.update = function (configuration) {

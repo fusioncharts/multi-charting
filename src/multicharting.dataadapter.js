@@ -149,19 +149,20 @@
                 return generalDataArray;
             },
             setDefaultAttr = function (json) {
+                json.chart || (json.chart = {});
                 json.chart.animation = 0;
                 return json;
             },
             dataArray,
-            json,
+            json = {},
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
             dataArray = generalDataFormat(jsonData, configuration);
-            json = jsonCreator(dataArray, configuration);          
-            json = (predefinedJson && extend2(json,predefinedJson)) || json;    
-            return (callbackFN && callbackFN(json)) || setDefaultAttr(json);    
+            json = jsonCreator(dataArray, configuration);            
         }
+        json = (predefinedJson && extend2(json,predefinedJson)) || json;    
+        return (callbackFN && callbackFN(json)) || setDefaultAttr(json); 
     }
 
     MultiCharting.prototype.dataadapter = function () {
