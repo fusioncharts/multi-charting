@@ -69,8 +69,8 @@
 
 
             dataStore.setDataUrl({
-                dataSource: 'airline-small.csv',
-                // dataSource: 'airline.csv',
+                // dataSource: 'airline-small.csv',
+                dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2,
                 callback: function (data) {
@@ -143,7 +143,6 @@
                             return dataArr;
                         },
                         filterByDistance = function (data) {
-                            console.log(data);
                             var flights = {},
                                 dataArr = [['Distance', 'Flights']],
                                 i,
@@ -201,7 +200,6 @@
                     distanceDataProcessor = MultiChartObj.createDataProcessor();
                     distanceDataProcessor.addRule({rule: filterByDistance});
                     flightByDistance = dataStore.getData(distanceDataProcessor);
-                    console.log(JSON.stringify(flightByDistance.getJSON()));
 
                     window.nd = newData.getJSON();
                     window.dt = flightByDate.getJSON();
@@ -318,7 +316,7 @@
                                 "id": "4",
                                 "html": "html4",
                                 "chart": {
-                                    "type": "TimeSeriess",
+                                    "type": "TimeSeries",
                                     "jsonData": window.dt,
                                     "plottype": 'column',
                                     "configuration": {
@@ -358,7 +356,7 @@
                                             // data.chart.datasets[0].dataset[0].series[0].data = data.datasets[0].dataset[0].series[0].data;
                                             // data.chart.datasets[0].category.data = data.datasets[0].category.data;
                                             // data.datasets = undefined;
-                                            console.log(JSON.stringify(data, null, 4));
+                                            // console.log(JSON.stringify(data, null, 4));
                                             return data;
                                         }
                                     }
