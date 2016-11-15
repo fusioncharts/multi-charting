@@ -17,7 +17,8 @@
         MAX_PERCENT = '100%',
         BLOCK = 'block',
         RELATIVE = 'relative',
-        ID = 'id';
+        ID = 'id',
+        BORDER_BOX = 'border-box';
 
     var Cell = function () {
             var cell = this;
@@ -37,6 +38,8 @@
         cell.graphics.style.top = cell.config.top + PX;
         cell.graphics.style.left = cell.config.left + PX;
         cell.graphics.style.position = ABSOLUTE;
+        cell.graphics.style.boxSizing = BORDER_BOX;
+        cell.graphics.className = cell.config.className;
         cell.graphics.innerHTML = cell.config.html || EMPTY_STRING;
         cell.container.appendChild(cell.graphics);
     };
@@ -59,10 +62,12 @@
     protoCell.update = function (newConfig) {
         var cell = this,
             id = cell.config.id;
+
         if(newConfig){
             cell.config = newConfig;
             cell.config.id = id;
             cell.graphics.id = cell.config.id || EMPTY_STRING;        
+            cell.graphics.className = cell.config.className;
             cell.graphics.style.height = cell.config.height + PX;
             cell.graphics.style.width = cell.config.width + PX;
             cell.graphics.style.top = cell.config.top + PX;
@@ -86,19 +91,20 @@
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
+
+            //dispose matrix context
+            matrix.dispose();
             //set style, attr on matrix container 
             matrix.setAttrContainer();
         },
         protoMatrix = Matrix.prototype,
         chartId = 0;
 
-    
     //function to set style, attr on matrix container
     protoMatrix.setAttrContainer = function() {
         var matrix = this,
-            container = matrix && matrix.matrixContainer;
-        container.style.display = BLOCK;
-        container.style.position = RELATIVE;        
+            container = matrix && matrix.matrixContainer;        
+        container.style.position = RELATIVE;
     };
 
     //function to set height, width on matrix container
@@ -132,7 +138,8 @@
             parentContainer = matrix && matrix.matrixContainer,
             lenC,
             i,
-            j;
+            j,
+            callBack = arguments[0];
         
         for(i = 0; i < len; i++) {
             placeHolder[i] = [];
@@ -144,6 +151,7 @@
 
         matrix.placeHolder = [];
         matrix.placeHolder = placeHolder;
+        callBack && callBack();
     };
 
     //function to manage matrix draw
@@ -163,6 +171,7 @@
             rowspan,
             colspan,
             id,
+            className,
             top,
             left,
             height,
@@ -189,21 +198,23 @@
                 top = matrixPosY[row];
                 width = matrixPosX[col + colspan] - left;
                 height = matrixPosY[row + rowspan] - top;
-                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);                
+                id = (configuration[i][j] && configuration[i][j].id) || matrix.idCreator(row,col);
+                className = configuration[i][j] && configuration[i][j].className || '';
                 drawManagerObjArr[i].push({
-                    top     : top,
-                    left    : left,
-                    height  : height,
-                    width   : width,
-                    id      : id,
-                    rowspan : rowspan,
-                    colspan : colspan,
-                    html    : html,
-                    chart   : chart
+                    top       : top,
+                    left      : left,
+                    height    : height,
+                    width     : width,
+                    className : className,
+                    id        : id,
+                    rowspan   : rowspan,
+                    colspan   : colspan,
+                    html      : html,
+                    chart     : chart
                 });
             }
         }
-       
+
         return drawManagerObjArr;
     };
 
@@ -313,21 +324,24 @@
                 colSpan = (configuration[i][j] && configuration[i][j].colspan) || 1;   
                 
                 width = (configuration[i][j] && configuration[i][j].width);
-                width = (width && (width / colSpan)) || defaultW;  
-                
+                width = (width && (width / colSpan)) || defaultW;
+                width = +width.toFixed(2);
+
                 height = (configuration[i][j] && configuration[i][j].height);
                 height = (height && (height / rowSpan)) || defaultH;                      
+                height = +height.toFixed(2);
+
                 for (k = 0, offset = 0; k < rowSpan; k++) {
                     for (l = 0; l < colSpan; l++) {
-                        
-                        shadowMatrix[i + k] = shadowMatrix[i + k] ? shadowMatrix[i + k] : [];                        
+
+                        shadowMatrix[i + k] = shadowMatrix[i + k] ? shadowMatrix[i + k] : [];
                         offset = j + l;
-                        
+
                         while(shadowMatrix[i + k][offset]) {
                             offset++;
                         }
-                        
-                        shadowMatrix[i + k][offset] = { 
+
+                        shadowMatrix[i + k][offset] = {
                             id : (i + '-' + j),
                             width : width,
                             height : height
@@ -338,6 +352,23 @@
         }
 
         return shadowMatrix;
+    };
+
+    protoMatrix.getBlock  = function() {
+        var id = arguments[0],
+            matrix = this,
+            placeHolder = matrix && matrix.placeHolder,
+            i,
+            j,
+            lenR = placeHolder.length,
+            lenC;
+        for(i = 0; i < lenR; i++) {
+            for(j = 0, lenC = placeHolder[i].length; j < lenC; j++) {
+                if (placeHolder[i][j].config.id == id) {
+                    return placeHolder[i][j];
+                }
+            }
+        }
     };
 
     protoMatrix.update = function (configuration) {
@@ -395,10 +426,21 @@
 
     protoMatrix.dispose = function () {
         var matrix = this,
-            node  = matrix && matrix.matrixContainer;
+            node  = matrix && matrix.matrixContainer,
+            placeHolder = matrix && matrix.placeHolder,
+            i,
+            j;
+        for(i = 0, lenR = placeHolder && placeHolder.length; i < lenR; i++) {
+            for (j = 0, lenC = placeHolder[i] && placeHolder[i].length; j < lenC; j++) {
+                placeHolder[i][j].chart && placeHolder[i][j].chart.chartObj && 
+                    placeHolder[i][j].chart.chartObj.dispose();
+            }
+        }
         while (node.hasChildNodes()) {
             node.removeChild(node.lastChild);
         }
+        node.style.height = '0px';
+        node.style.width = '0px';
     };
 
     MultiCharting.prototype.createMatrix = function () {
