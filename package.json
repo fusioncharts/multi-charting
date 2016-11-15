@@ -91,5 +91,8 @@
     "globals": {
       "MultiCharting": true
     }
+  },
+  "dependencies": {
+    "fusioncharts": "^3.11.3"
   }
 }

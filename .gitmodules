@@ -1,0 +1,6 @@
+[submodule "vendors/fusioncharts-caption"]
+	path = vendors/fusioncharts-caption
+	url = git@github.com:fusioncharts/fusioncharts-caption.git
+[submodule "vendors/fusioncharts-axis"]
+	path = vendors/fusioncharts-axis
+	url = git@github.com:fusioncharts/fusioncharts-axis.git
