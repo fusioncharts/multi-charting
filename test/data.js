@@ -1,7 +1,7 @@
 fs = require('fs');
 
 var START_YEAR = 1971,
-	END_YEAR = 3850,
+	END_YEAR = 2050,
 	dt = [],
 	val = [],
 	start = new Date(START_YEAR + '-01-01').getTime(),
@@ -11,7 +11,8 @@ var START_YEAR = 1971,
 
 for (var i = 0; i <= length; i++) {
 	D = new Date(start + (86400000 * i));
-	date = D.getFullYear() + '-' + (D.getMonth() + 1) + '-' + D.getDate();
+    date = D.getFullYear() + '-' + (D.getMonth() + 1) + '-' + D.getDate();
+	// date = D.getTime();
 	min = i + 100;
 	max = i + 110;
 	value = Math.round(min + (Math.random() * max - min));
@@ -58,9 +59,8 @@ data = {
 };
 
 
-fs.writeFileSync('test/tsdata.js', 'var dataObj = ' + JSON.stringify(data));
+// fs.writeFileSync('test/tsdata.js', 'var dataObj = ' + JSON.stringify(data));
+fs.writeFileSync('test/tsdata.js', '' + JSON.stringify(data));
 fs.writeFileSync('test/hcdata.json', JSON.stringify(hcdata));
 // fs.writeFileSync('test/tsdata.json', JSON.stringify(data, null, 4));
 
-// console.log(val);
-// console.log(dt);
