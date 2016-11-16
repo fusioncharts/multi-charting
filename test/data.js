@@ -1,11 +1,12 @@
 fs = require('fs');
 
 var START_YEAR = 1971,
-	END_YEAR = 2250,
+	END_YEAR = 3850,
 	dt = [],
 	val = [],
 	start = new Date(START_YEAR + '-01-01').getTime(),
-	length = (END_YEAR - START_YEAR) * 365;
+	length = (END_YEAR - START_YEAR) * 365,
+    hcdata = [];
 
 
 for (var i = 0; i <= length; i++) {
@@ -19,6 +20,8 @@ for (var i = 0; i <= length; i++) {
 	// dt += '"' + date + '", ';
 	val.push(value);;
 	dt.push(date);
+
+    hcdata.push([D.getTime(), value]);
 }
 
 console.log('Total number of data points: ', i);
@@ -42,8 +45,8 @@ data = {
                     {
                         "uid": "ds-1",
                         "series": [{
-                            "plottype": "line",
-                            // "plottype": "column",
+                            // "plottype": "line",
+                            "plottype": "column",
                             "name": "Series 1",
                         	data: val
                         }]
@@ -56,6 +59,7 @@ data = {
 
 
 fs.writeFileSync('test/tsdata.js', 'var dataObj = ' + JSON.stringify(data, null, 4));
+fs.writeFileSync('test/hcdata.json', JSON.stringify(hcdata));
 // fs.writeFileSync('test/tsdata.json', JSON.stringify(data, null, 4));
 
 // console.log(val);

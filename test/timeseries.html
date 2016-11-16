@@ -1,18 +1,8 @@
 <DOCTYPE !html>
 <html>
     <head>
-<!--
-        <script type='text/javascript' src='../src/fusioncharts.multicharting.js'></script>
-        <script type='text/javascript' src='../src/multicharting.lib.js'></script>
-        <script type='text/javascript' src='../src/multicharting.datastore.js'></script>
-        <script type='text/javascript' src='../src/multicharting.dataprocessor.js'></script>
-        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
- -->
-
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.timeseries.js'></script>
-        <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
-        <script type='text/javascript' src='../node_modules/fusioncharts/themes/fusioncharts.theme.ocean.js'></script>
         <script type='text/javascript' src='tsdata.js'></script>
 
     </head>
@@ -24,62 +14,14 @@
  		</cneter>
 
         <script type='text/javascript'>
-data = [{
-    "chart": {
-        "axes": [{
-            "x": {},
-            "y": {}
-        }],
-        "datasets": [{
-            "category": {
-                "dateformat": "%e-%b-%Y",
-                "data": ["1-Jan-2015", "2-Jan-2015", "3-Jan-2015", "4-Jan-2015", "5-Jan-2015", "6-Jan-2015", "7-Jan-2015", "8-Jan-2015", "9-Jan-2015", "10-Jan-2015"]
-            },
-            "dataset": [{
-                "uid": "ds-1",
-                "series": [{
-                    "plottype": "column",
-                    "name": "Series 1",
-                    "data": [9, 6, 9, 3, 4, 7, 3, 3, 9, 2]
-                }]
-            }]
-        }]
-    }
-}, {
-    "chart": {
-        "axes": [{
-            "x": {},
-            "y": {}
-        }],
-        "datasets": [{
-            "category": {
-                "dateformat": "%e %b %Y", "data": ["1 Jan 2001", "2 Jan 2001"]
-                // "dateformat": "%e %b", "data": ["1 Jan", "2 Jan", '3 Jan']
-            },
-            "dataset": [{
-                "uid": "ds-1",
-                "series": [{
-                    "plottype": "column",
-                    "name": "Series 1",
-                    "data": [9, 6, 8]
-                }]
-            }]
-        }]
-    }
-}
-];
 
         chart = new FusionCharts({
         	type: "TimeSeries",
         	width: "700",
         	height: "300",
         	renderAt: "chart-container",
-            // dataFormat: 'jsonurl',
         	dataFormat: 'json',
-        	plottype: '',
-            // dataSource: 'tsdata.json'
             dataSource: dataObj
-        	// dataSource: data[2]
         });
         chart.render();
 

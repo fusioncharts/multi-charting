@@ -2,18 +2,6 @@
 <html>
     <head>
 
-<!--
-        <script type='text/javascript' src='../src/fusioncharts.multicharting.js'></script>
-        <script type='text/javascript' src='../src/multicharting.lib.js'></script>
-        <script type='text/javascript' src='../src/multicharting.datastore.js'></script>
-        <script type='text/javascript' src='../src/multicharting.dataprocessor.js'></script>
-        <script type='text/javascript' src='../src/multicharting.dataadapter.js'></script>
-        <script type="text/javascript" src="../src/multicharting.createchart.js"></script>
-        <script type="text/javascript" src="../src/multicharting.matrix.js"></script>
-        Improved the arguments for csv data manager Added gulp-rename dependency
- -->
-
-
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.js'></script>
         <script type='text/javascript' src='../node_modules/fusioncharts/fusioncharts.timeseries.js'></script>
         <script type='text/javascript' src='../out/fusioncharts.multicharting.js'></script>
@@ -30,17 +18,18 @@
         </center>
 
         <style type="text/css">
-/*            
-            #matrix {
+            
+/*            #matrix {
                 width: 750px;
                 position: relative;
                 display: inline-block;
             }
+*/
             #matrix div {
                 border: 1px solid #CCCCCC;
                 vertical-align: middle;
             }
-*/        
+        
         </style>
 
         <script type='text/javascript'>
@@ -69,8 +58,8 @@
 
 
             dataStore.setDataUrl({
-                // dataSource: 'airline-small.csv',
-                dataSource: 'airline.csv',
+                dataSource: 'airline-small.csv',
+                // dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2,
                 callback: function (data) {
@@ -211,158 +200,155 @@
 
 
                     configuration = [
-                        [
-                            {
-                                "height": 150,
-                                "width": 250,
-                                "html": "Chart 1",
-                                "chart": {
-                                    "type": "mscolumn2d",
-                                    // "renderAt": "chart1",
-                                    "width": "100%",
-                                    "height": "100%",
-                                    "configuration": {
-                                        "data": {
-                                            "dimension": [
-                                                "Time"
-                                            ],
-                                            "measure": [
-                                                "Flights"
-                                            ],
-                                            "seriesType": "MS",
-                                            "config": {
-                                                "chart": {
-                                                    "caption": "Time of Day",
-                                                    "showLegend": 0,
-                                                    "showValues": 0,
-                                                    "showYAxisValues": 0,
-                                                    "theme": "ocean"
-                                                }
+                        [{
+                            // "height": 150,
+                            // "width": 50,
+                            "html": "Axis"
+                        }, {
+                            "height": 150,
+                            "width": 250,
+                            "html": "Chart 1",
+                            "chart": {
+                                "type": "mscolumn2d",
+                                // "renderAt": "chart1",
+                                "width": "100%",
+                                "height": "100%",
+                                "configuration": {
+                                    "data": {
+                                        "dimension": [
+                                            "Time"
+                                        ],
+                                        "measure": [
+                                            "Flights"
+                                        ],
+                                        "seriesType": "MS",
+                                        "config": {
+                                            "chart": {
+                                                "caption": "Time of Day",
+                                                "showLegend": 0,
+                                                "showValues": 0,
+                                                "showYAxisValues": 0,
+                                                "theme": "ocean"
+                                            }
+                                        }
+                                    }
+                                },
+                                "jsonData": window.t
+                            }
+                        }, {
+                            "height": 120,
+                            "width": 250,
+                            "id": "1",
+                            "html": "Chart 2",
+                            "chart": {
+                                "type": "mscolumn2d",
+                                // "renderAt": "2",
+                                "width": "100%",
+                                "height": "100%",
+                                "jsonData": window.a,
+                                "configuration": {
+                                    "data": {
+                                        "dimension": [
+                                            "Arrival"
+                                        ],
+                                        "measure": [
+                                            "Flights"
+                                        ],
+                                        "seriesType": "MS",
+                                        "config": {
+                                            "chart": {
+                                                "caption": "Arrival Delay",
+                                                "showLegend": 0,
+                                                "showValues": 0,
+                                                "showYAxisValues": 0,
+                                                "theme": "ocean"
+                                            }
+                                        }                    
+                                    }
+                                }
+                            }
+                        }, {
+                            "height": 120,
+                            "width": 400,
+                            "id": "2",
+                            "html": "html3",
+                            "chart": {
+                                "type": "mscolumn2d",
+                                "jsonData": window.di,
+                                "configuration": {
+                                    "data": {
+                                        "dimension": [
+                                            "Distance"
+                                        ],
+                                        "measure": [
+                                            "Flights"
+                                        ],
+                                        "seriesType": "MS",
+                                        "config": {
+                                            "chart": {
+                                                "caption": "Distance",
+                                                "showLegend": 0,
+                                                "showValues": 0,
+                                                "showYAxisValues": 0,
+                                                "theme": "ocean"
+                                            }
+                                        }                    
+                                    }
+                                }
+                            }
+                        }], [{
+                            "height": 200,
+                            "width": 900,
+                            "colspan": 4,
+                            "id": "4",
+                            "html": "html4",
+                            "chart": {
+                                "type": "TimeSeriess",
+                                "jsonData": window.dt,
+                                "plottype": 'column',
+                                "configuration": {
+                                    "data": {
+                                        "dimension": [
+                                            "Date"
+                                        ],
+                                        "measure": [
+                                            "Flights"
+                                        ],
+                                        "seriesType": "TS",
+                                        "config": {
+                                            "chart": {
+                                                "axes": [{
+                                                    "x": {},
+                                                    "y": {}
+                                                }],
+                                                "datasets": [{
+                                                    "category": {
+                                                        "dateformat": "%b %e %Y",
+                                                        "_data": ["Jan 1 2001", "Jan 2 2001"]
+                                                    },
+                                                    "dataset": [{
+                                                        "uid": "ds-1",
+                                                        "series": [{
+                                                            "plottype": "column",
+                                                            "name": "Series 1",
+                                                            "_data": [9, 6]
+                                                        }]
+                                                    }]
+                                                }]
                                             }
                                         }
                                     },
-                                    "jsonData": window.t
-                                }
-                            },
-                            {
-                                "height": 120,
-                                "width": 250,
-                                "id": "1",
-                                "html": "Chart 2",
-                                "chart": {
-                                    "type": "mscolumn2d",
-                                    // "renderAt": "2",
-                                    "width": "100%",
-                                    "height": "100%",
-                                    "jsonData": window.a,
-                                    "configuration": {
-                                        "data": {
-                                            "dimension": [
-                                                "Arrival"
-                                            ],
-                                            "measure": [
-                                                "Flights"
-                                            ],
-                                            "seriesType": "MS",
-                                            "config": {
-                                                "chart": {
-                                                    "caption": "Arrival Delay",
-                                                    "showLegend": 0,
-                                                    "showValues": 0,
-                                                    "showYAxisValues": 0,
-                                                    "theme": "ocean"
-                                                }
-                                            }                    
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "height": 120,
-                                "width": 400,
-                                "id": "2",
-                                "html": "html3",
-                                "chart": {
-                                    "type": "mscolumn2d",
-                                    "jsonData": window.di,
-                                    "configuration": {
-                                        "data": {
-                                            "dimension": [
-                                                "Distance"
-                                            ],
-                                            "measure": [
-                                                "Flights"
-                                            ],
-                                            "seriesType": "MS",
-                                            "config": {
-                                                "chart": {
-                                                    "caption": "Distance",
-                                                    "showLegend": 0,
-                                                    "showValues": 0,
-                                                    "showYAxisValues": 0,
-                                                    "theme": "ocean"
-                                                }
-                                            }                    
-                                        }
+                                    "callback": function (data) {
+                                        // console.log('2 ', JSON.stringify(data, null, 4));
+                                        // data.chart.datasets[0].dataset[0].series[0].data = data.datasets[0].dataset[0].series[0].data;
+                                        // data.chart.datasets[0].category.data = data.datasets[0].category.data;
+                                        // data.datasets = undefined;
+                                        // console.log(JSON.stringify(data, null, 4));
+                                        return data;
                                     }
                                 }
                             }
-                        ],
-                        [
-                            {
-                                "height": 200,
-                                "width": 900,
-                                "colspan": 4,
-                                "id": "4",
-                                "html": "html4",
-                                "chart": {
-                                    "type": "TimeSeries",
-                                    "jsonData": window.dt,
-                                    "plottype": 'column',
-                                    "configuration": {
-                                        "data": {
-                                            "dimension": [
-                                                "Date"
-                                            ],
-                                            "measure": [
-                                                "Flights"
-                                            ],
-                                            "seriesType": "TS",
-                                            "config": {
-                                                "chart": {
-                                                    "axes": [{
-                                                        "x": {},
-                                                        "y": {}
-                                                    }],
-                                                    "datasets": [{
-                                                        "category": {
-                                                            "dateformat": "%b %e %Y",
-                                                            "_data": ["Jan 1 2001", "Jan 2 2001"]
-                                                        },
-                                                        "dataset": [{
-                                                            "uid": "ds-1",
-                                                            "series": [{
-                                                                "plottype": "column",
-                                                                "name": "Series 1",
-                                                                "_data": [9, 6]
-                                                            }]
-                                                        }]
-                                                    }]
-                                                }
-                                            }
-                                        },
-                                        "callback": function (data) {
-                                            // console.log('2 ', JSON.stringify(data, null, 4));
-                                            // data.chart.datasets[0].dataset[0].series[0].data = data.datasets[0].dataset[0].series[0].data;
-                                            // data.chart.datasets[0].category.data = data.datasets[0].category.data;
-                                            // data.datasets = undefined;
-                                            // console.log(JSON.stringify(data, null, 4));
-                                            return data;
-                                        }
-                                    }
-                                }
-                            }
-                        ]
+                        }]
                     ]
 
                     matrix = MultiChartObj.createMatrix('matrix', configuration);
@@ -371,324 +357,6 @@
                 }
             })
 
-
-
-
-/*
-
-			MultiChartObj.ajax({
-                url: 'airline-small.csv',
-				// url: 'airline.csv', 
-				success: function (dataCSV) {
-					MultiChartObj.convertToArray({
-						string: dataCSV,
-                        outputFormat: 2,
-						callback: function (data) {
-      						// Store the data
-  				            dataStore.setData({
-  				            	dataSource: data
-  				            }, function () {
-                                var filterByDate = function (data) {
-                                        var flights = {
-                                            },
-                                            dataArr = [['Date', 'Flights']],
-                                            i;
-                                        data.forEach(function (row) {
-                                            if (!flights[row.fulldate]) {
-                                                flights[row.fulldate] = {
-                                                    i: months[row.D.getMonth()] + ' ' + row.D.getDate() + ' ' + row.D.getFullYear(),
-                                                    v: 0
-                                                };
-                                            }
-                                            flights[row.fulldate].v += 1;
-                                        });
-                                        for (var i in flights) {
-                                            dataArr.push([flights[i].i, flights[i].v]);
-                                        }
-                                        return dataArr;
-                                    },
-                                    filterByTime = function (data) {
-                                        var flights = {
-                                            },
-                                            dataArr = [['Time', 'Flights']],
-                                            i;
-                                        // debugger;
-                                        data.forEach(function (row) {
-                                            if (!flights[row.time]) {
-                                                flights[row.time] = 0;
-                                            }
-                                            flights[row.time] += 1;
-                                        });
-                                        for (var i in flights) {
-                                            dataArr.push([i, flights[i]]);
-                                        }
-                                        return dataArr;
-                                    },
-                                    filterByArrival = function (data) {
-                                        var flights = {
-                                            },
-                                            dataArr = [],
-                                            i,
-                                            c,
-                                            val;
-
-                                        for (i = -60, c = 0; i <= 150; i += 10, c++) {
-                                            flights[i/10] = {v: i, s: 0};
-                                        }
-
-                                        data.forEach(function (row) {
-                                            val = Number(row.delay);
-
-                                            let index = Math.ceil(val / 10),
-                                                infoObj = flights[index];
-
-                                            if (flights[index]) {
-                                                flights[index].s += 1;
-                                            }
-                                        });
-                                        for (i in flights) {
-                                            dataArr.push([flights[i].v, flights[i].s]);
-                                        }
-                                        dataArr.sort(function (a, b) { 
-                                            return a[0] < b[0] ? -1 : 1;
-                                        });
-                                        dataArr.unshift(['Arrival', 'Flights']);
-                                        return dataArr;
-                                    },
-                                    filterByDistance = function (data) {
-                                        var flights = {},
-                                            dataArr = [['Distance', 'Flights']],
-                                            i,
-                                            c;
-                                        for (i = 50, c = 0; i <= 2000; i += 50, c++) {
-                                            flights[c] = {
-                                                // v: i % 200 == 0 ? i : '',
-                                                v: i,
-                                                s: 0
-                                            };
-                                        }
-                                        data.forEach(function (row) {
-                                            let index = Math.floor(row.distance / 50),
-                                                infoObj = flights[index];
-                                            if (flights[index]) {
-                                                flights[index].s += 1;
-                                            }
-                                        });
-
-                                        for (var i in flights) {
-                                            dataArr.push([flights[i].v, flights[i].s]);
-                                        }
-                                        return dataArr;
-                                    },
-                                    mapFilter = function (row, i) {
-                                        debugger;
-                                        var d = parseDate(row.date);
-                                        row.D = d;
-                                        row.fulldate = d.getMonth() + '-' + d.getDate() + '-' + d.getFullYear();
-                                        row.time = d.getHours();
-                                        return row;
-                                    };
-
-                    console.log(JSON.stringify(dataStore.getJSON()));
-
-                                // Parse the date and add information in the data
-                                map = MultiChartObj.createDataProcessor();
-                                map.map(mapFilter);
-                                newData = dataStore.getData(map);
-
-                                // filter number of flights by date
-                                dateDataProcessor = MultiChartObj.createDataProcessor();
-                                dateDataProcessor.addRule({rule: filterByDate});
-                                flightByDate = dataStore.getData(dateDataProcessor);
-
-                                // filter number of flights by time of day
-                                timeDataProcessor = MultiChartObj.createDataProcessor();
-                                timeDataProcessor.addRule({rule: filterByTime});
-                                flightByTime = dataStore.getData(timeDataProcessor);
-                                
-                                
-                                // filter number of flights by arrival delay (min)
-                                arrivalDataProcessor = MultiChartObj.createDataProcessor();
-                                arrivalDataProcessor.addRule({rule: filterByArrival});
-                                flightByArrival = dataStore.getData(arrivalDataProcessor);
-
-                                // filter number of flights by distance
-                                distanceDataProcessor = MultiChartObj.createDataProcessor();
-                                distanceDataProcessor.addRule({rule: filterByDistance});
-                                flightByDistance = dataStore.getData(distanceDataProcessor);
-
-                                window.dt = flightByDate.getJSON();
-                                window.t = flightByTime.getJSON();
-                                window.a = flightByArrival.getJSON();
-                                window.di = flightByDistance.getJSON();
-
-                                console.log('done');
-
-                                configuration = [
-                                    [
-                                        {
-                                            "height": 150,
-                                            "width": 250,
-                                            "html": "Chart 1",
-                                            "chart": {
-                                                "type": "mscolumn2d",
-                                                // "renderAt": "chart1",
-                                                "width": "100%",
-                                                "height": "100%",
-                                                "configuration": {
-                                                    "data": {
-                                                        "dimension": [
-                                                            "Time"
-                                                        ],
-                                                        "measure": [
-                                                            "Flights"
-                                                        ],
-                                                        "seriesType": "MS",
-                                                        "config": {
-                                                            "chart": {
-                                                                "caption": "Time of Day",
-                                                                "showLegend": 0,
-                                                                "showValues": 0,
-                                                                "showYAxisValues": 0,
-                                                                "theme": "ocean"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "jsonData": window.t
-                                            }
-                                        },
-                                        {
-                                            "height": 120,
-                                            "width": 250,
-                                            "id": "1",
-                                            "html": "Chart 2",
-                                            "chart": {
-                                                "type": "mscolumn2d",
-                                                // "renderAt": "2",
-                                                "width": "100%",
-                                                "height": "100%",
-                                                "jsonData": window.a,
-                                                "configuration": {
-                                                    "data": {
-                                                        "dimension": [
-                                                            "Arrival"
-                                                        ],
-                                                        "measure": [
-                                                            "Flights"
-                                                        ],
-                                                        "seriesType": "MS",
-                                                        "config": {
-                                                            "chart": {
-                                                                "caption": "Arrival Delay",
-                                                                "showLegend": 0,
-                                                                "showValues": 0,
-                                                                "showYAxisValues": 0,
-                                                                "theme": "ocean"
-                                                            }
-                                                        }                    
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "height": 120,
-                                            "width": 400,
-                                            "id": "2",
-                                            "html": "html3",
-                                            "chart": {
-                                                "type": "mscolumn2d",
-                                                "jsonData": window.di,
-                                                "configuration": {
-                                                    "data": {
-                                                        "dimension": [
-                                                            "Distance"
-                                                        ],
-                                                        "measure": [
-                                                            "Flights"
-                                                        ],
-                                                        "seriesType": "MS",
-                                                        "config": {
-                                                            "chart": {
-                                                                "caption": "Distance",
-                                                                "showLegend": 0,
-                                                                "showValues": 0,
-                                                                "showYAxisValues": 0,
-                                                                "theme": "ocean"
-                                                            }
-                                                        }                    
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    [
-                                        {
-                                            "height": 200,
-                                            "width": 900,
-                                            "colspan": 4,
-                                            "id": "4",
-                                            "html": "html4",
-                                            "chart": {
-                                                "type": "TimeSeriess",
-                                                "jsonData": window.dt,
-                                                "plottype": 'column',
-                                                "configuration": {
-                                                    "data": {
-                                                        "dimension": [
-                                                            "Date"
-                                                        ],
-                                                        "measure": [
-                                                            "Flights"
-                                                        ],
-                                                        "seriesType": "TS",
-                                                        "config": {
-                                                            "chart": {
-                                                                "axes": [{
-                                                                    "x": {},
-                                                                    "y": {}
-                                                                }],
-                                                                "datasets": [{
-                                                                    "category": {
-                                                                        "dateformat": "%b %e %Y",
-                                                                        "_data": ["Jan 1 2001", "Jan 2 2001"]
-                                                                    },
-                                                                    "dataset": [{
-                                                                        "uid": "ds-1",
-                                                                        "series": [{
-                                                                            "plottype": "column",
-                                                                            "name": "Series 1",
-                                                                            "_data": [9, 6]
-                                                                        }]
-                                                                    }]
-                                                                }]
-                                                            }
-                                                        }
-                                                    },
-                                                    "callback": function (data) {
-                                                        // console.log('2 ', JSON.stringify(data, null, 4));
-                                                        // data.chart.datasets[0].dataset[0].series[0].data = data.datasets[0].dataset[0].series[0].data;
-                                                        // data.chart.datasets[0].category.data = data.datasets[0].category.data;
-                                                        // data.datasets = undefined;
-                                                        console.log(JSON.stringify(data, null, 4));
-                                                        return data;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    ]
-                                ]
-
-                                matrix = MultiChartObj.createMatrix('matrix', configuration);
-                                matrix.draw();
-                            });
-						}
-					})
-				}
-			});
-
-
-*/
         </script>
 
     </body>
