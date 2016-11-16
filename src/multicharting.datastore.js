@@ -109,7 +109,7 @@
 			MultiCharting.prototype.convertToArray({
 				string : dataSpecs.dataSource,
 				delimiter : dataSpecs.delimiter,
-				structure : dataSpecs.structure,
+				outputFormat : dataSpecs.outputFormat,
 				callback : function (data) {
 					callbackHelperFn(data);
 				}
@@ -239,6 +239,8 @@
 			argument = arguments[0],
 			dataSource = argument.dataSource,
 			dataType = argument.dataType,
+			delimiter = argument.delimiter,
+			outputFormat = argument.outputFormat,
 			callback = argument.callback,
 			callbackArgs = argument.callbackArgs,
 			data;
@@ -250,6 +252,8 @@
 				dataStore.setData({
 					dataSource : data,
 					dataType : dataType,
+					delimiter : delimiter,
+					outputFormat : outputFormat,
 				}, callback);
 			},
 

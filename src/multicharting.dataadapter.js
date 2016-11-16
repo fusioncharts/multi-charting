@@ -1,15 +1,12 @@
 
 (function (factory) {
-    if (typeof module === 'object' && typeof module.exports !== "undefined") {
+    if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
     } else {
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
 
-    MultiCharting.prototype.dataadapter = function () {
-        return convertData(arguments[0]);
-    };
     var extend2 = MultiCharting.prototype.lib.extend2;
     //function to convert data, it returns fc supported JSON
     function convertData() {
@@ -31,7 +28,7 @@
                                 j;
                             json.categories = [
                                 {
-                                    "category": [                        
+                                    'category': [                        
                                     ]
                                 }
                             ];
@@ -66,11 +63,8 @@
                         'ss' : function(jsonData, configuration) {
                             var json = {},
                                 indexMatchLabel,
-                                indexMatchValue,
-                                lenDimension,
-                                lenMeasure,
+                                indexMatchValue, 
                                 lenData,
-                                i,
                                 j,
                                 label,
                                 value;
@@ -95,30 +89,31 @@
                                 lenData,
                                 i,
                                 j;
-                            json.datasets = [];
-                            json.datasets[0] = {};
-                            json.datasets[0].category = {};
-                            json.datasets[0].category.data = [];
+                            json.chart = {};
+                            json.chart.datasets = [];
+                            json.chart.datasets[0] = {};
+                            json.chart.datasets[0].category = {};
+                            json.chart.datasets[0].category.data = [];
                             for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
                                 indexMatch = jsonData[0].indexOf(configuration.dimension[i]);
                                 if (indexMatch != -1) {
                                     for (j = 1, lenData = jsonData.length; j < lenData; j++) {
-                                        json.datasets[0].category.data.push(jsonData[j][indexMatch]);
+                                        json.chart.datasets[0].category.data.push(jsonData[j][indexMatch]);
                                     }
                                 }
                             }
-                            json.datasets[0].dataset = [];
-                            json.datasets[0].dataset[0] = {};
-                            json.datasets[0].dataset[0].series = [];
+                            json.chart.datasets[0].dataset = [];
+                            json.chart.datasets[0].dataset[0] = {};
+                            json.chart.datasets[0].dataset[0].series = [];
                             for (i = 0, lenMeasure = configuration.measure.length; i < lenMeasure; i++) {
                                 indexMatch = jsonData[0].indexOf(configuration.measure[i]);
                                 if (indexMatch != -1) {
-                                    json.datasets[0].dataset[0].series[i] = {  
+                                    json.chart.datasets[0].dataset[0].series[i] = {  
                                         'name' : configuration.measure[i],                              
                                         'data': []
                                     };
                                     for(j = 1, lenData = jsonData.length; j < lenData; j++) {
-                                        json.datasets[0].dataset[0].series[i].data.push(jsonData[j][indexMatch]);
+                                        json.chart.datasets[0].dataset[0].series[i].data.push(jsonData[j][indexMatch]);
                                     }
                                 }
                             }
@@ -153,15 +148,24 @@
                 }
                 return generalDataArray;
             },
+            setDefaultAttr = function (json) {
+                json.chart || (json.chart = {});
+                json.chart.animation = 0;
+                return json;
+            },
             dataArray,
-            json,
+            json = {},
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
             dataArray = generalDataFormat(jsonData, configuration);
-            json = jsonCreator(dataArray, configuration);
-            json = (predefinedJson && extend2(json,predefinedJson)) || json;    
-            return (callbackFN && callbackFN(json)) || json;    
+            json = jsonCreator(dataArray, configuration);            
         }
+        json = (predefinedJson && extend2(json,predefinedJson)) || json;    
+        return (callbackFN && callbackFN(json)) || setDefaultAttr(json); 
     }
+
+    MultiCharting.prototype.dataadapter = function () {
+        return convertData(arguments[0]);
+    };
 });
