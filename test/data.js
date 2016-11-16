@@ -63,4 +63,3 @@ data = {
 fs.writeFileSync('test/tsdata.js', '' + JSON.stringify(data));
 fs.writeFileSync('test/hcdata.json', JSON.stringify(hcdata));
 // fs.writeFileSync('test/tsdata.json', JSON.stringify(data, null, 4));
-
