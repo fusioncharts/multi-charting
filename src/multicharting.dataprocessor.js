@@ -7,13 +7,14 @@
     }
 })(function (MultiCharting) {
 
-	var lib = MultiCharting.prototype.lib,
+	var multiChartingProto = MultiCharting.prototype,
+		lib = multiChartingProto.lib,
 		filterStore = lib.filterStore = {},
 		filterLink = lib.filterLink = {},
 		filterIdCount = 0,
 		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
-		win = MultiCharting.prototype.win,
+		win = multiChartingProto.win,
 		// Constructor class for DataProcessor.
 		DataProcessor = function () {
 	    	var manager = this;
@@ -47,7 +48,7 @@
 			lib.tempDataUpdated = {};
 		};
 
-	MultiCharting.prototype.createDataProcessor = function () {
+	multiChartingProto.createDataProcessor = function () {
 		return new DataProcessor(arguments);
 	};
 
@@ -71,10 +72,10 @@
 			updataFilterProcessor(id);
 		}
 
-		win.dispatchEvent(new win.CustomEvent('filterAdded', {'detail' : {
+		multiChartingProto.raiseEvent('filterAdded', {
 			'id': id,
-			'filter' : filterFn
-		}}));
+			'data' : filterFn
+		}, dataStore);
 	};
 
 	// Funtion to get the filter method.
@@ -96,6 +97,10 @@
 
 		delete filterStore[id];
 		delete filterLink[id];
+
+		multiChartingProto.raiseEvent('filterDeleted', {
+			'id': id,
+		}, dataStore);
 	};
 
 	dataProcessorProto.filter = function () {
