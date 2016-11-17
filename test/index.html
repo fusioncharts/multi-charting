@@ -25,11 +25,11 @@
                 position: relative;
                 display: inline-block;
             }
-*/
             #matrix div {
                 border: 1px solid #CCCCCC;
                 vertical-align: middle;
             }
+*/
         
         </style>
 
@@ -228,10 +228,16 @@
                                         "config": {
                                             "chart": {
                                                 "caption": "Time of Day",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
+                                                "theme": "ocean",
+                                                "showLegend": "0",
+                                                "showYAxisValues": "0",
+                                                "captionAlignment": "left",
+                                                "showValues": "0",
+                                                "divLineAlpha": "0",
+                                                "rotateLabels": "0",
+                                                "paletteColors": "#4682B4",
+                                                "plotSpacePercent": "10",
+                                                "showBorder": "0"
                                             }
                                         }
                                     }
@@ -260,11 +266,17 @@
                                         "seriesType": "MS",
                                         "config": {
                                             "chart": {
-                                                "caption": "Arrival Delay",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
+                                                "caption": "Arrival Delay (min.)",
+                                                "theme": "ocean",
+                                                "showLegend": "0",
+                                                "showYAxisValues": "0",
+                                                "captionAlignment": "left",
+                                                "showValues": "0",
+                                                "divLineAlpha": "0",
+                                                "rotateLabels": "0",
+                                                "paletteColors": "#4682B4",
+                                                "plotSpacePercent": "10",
+                                                "showBorder": "0"
                                             }
                                         }                    
                                     }
@@ -289,12 +301,17 @@
                                         "seriesType": "MS",
                                         "config": {
                                             "chart": {
-                                                "showHoverEffect": 0,
-                                                "caption": "Distance",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
+                                                "caption": "Distance (mi.)",
+                                                "theme": "ocean",
+                                                "showLegend": "0",
+                                                "showYAxisValues": "0",
+                                                "captionAlignment": "left",
+                                                "showValues": "0",
+                                                "divLineAlpha": "0",
+                                                "rotateLabels": "0",
+                                                "paletteColors": "#4682B4",
+                                                "plotSpacePercent": "10",
+                                                "showBorder": "0"
                                             }
                                         }                    
                                     }
@@ -307,7 +324,8 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "mscolumn2d",
+                                "type": "MSColumn2D",
+                                // "type": "timeseries",
                                 "jsonData": window.dt,
                                 "plottype": 'column',
                                 "configuration": {
@@ -319,30 +337,43 @@
                                             "Flights"
                                         ],
                                         "seriesType": "MS",
+                                        // "seriesType": "TS",
                                         "config": {
                                             "chart": {
-                                                "axes": [{
-                                                    "x": {},
-                                                    "y": {}
-                                                }],
-                                                "datasets": [{
-                                                    "category": {
-                                                        "dateformat": "%b %e %Y",
-                                                        "_data": ["Jan 1 2001", "Jan 2 2001"]
-                                                    },
-                                                    "dataset": [{
-                                                        "uid": "ds-1",
-                                                        "series": [{
-                                                            "plot": {
-                                                                "type": "column",
-                                                                "style": {
-                                                                    "fill": "#04476C"
-                                                                }
-                                                            },
-                                                            "name": "Series 1"
-                                                        }]
-                                                    }]
-                                                }]
+                                                "Caption": "Date",
+                                                "theme": "ocean",
+                                                "showLegend": "0",
+                                                "showYAxisValues": "0",
+                                                "captionAlignment": "left",
+                                                "showValues": "0",
+                                                "divLineAlpha": "0",
+                                                "rotateLabels": "0",
+                                                "paletteColors": "#4682B4",
+                                                "plotSpacePercent": "10",
+                                                "showBorder": "0"
+
+                                                // "axes": [{
+                                                //     "x": {},
+                                                //     "y": {}
+                                                // }],
+                                                // "datasets": [{
+                                                //     "category": {
+                                                //         "dateformat": "%b %e %Y",
+                                                //         "_data": ["Jan 1 2001", "Jan 2 2001"]
+                                                //     },
+                                                //     "dataset": [{
+                                                //         "uid": "ds-1",
+                                                //         "series": [{
+                                                //             "plot": {
+                                                //                 "type": "column",
+                                                //                 "style": {
+                                                //                     "fill": "#04476C"
+                                                //                 }
+                                                //             },
+                                                //             "name": "Series 1"
+                                                //         }]
+                                                //     }]
+                                                // }]
                                             }
                                         }
                                     },
