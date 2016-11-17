@@ -5,7 +5,7 @@
         factory(MultiCharting);
     }
 })(function (MultiCharting) {
-	
+    
 
     var global = MultiCharting.prototype,
         win = global.win,
@@ -78,6 +78,12 @@
             }
         },
 
+        eventMap = {
+            hoverin : 'dataplotrollover',
+            hoverout : 'dataplotrollout',
+            clik : 'dataplotclick'
+        }
+
         EventTarget = {
 
             unpropagator: function () {
@@ -97,8 +103,9 @@
             lastEventId: 0,
 
             addListener: function (type, listener, bind) {
-			
+            
                 var recurseReturn,
+                    FCEventType,
                     i;
                 // In case type is sent as array, we recurse this function.
                 if (isArray(type)) {
@@ -152,6 +159,15 @@
 
                 // Add the listener to the queue.
                 EventTarget.listeners[type].push([listener, bind]);
+
+                if (FCEventType = eventMap[type]) {
+                    FusionCharts.addEventListener(FCEventType, function (e, d) {
+                        raiseEvent(type, {
+                            FCEventObj : e,
+                            FCDataObj : d
+                        }, MultiCharting);
+                    });
+                }
 
                 return listener;
             },

@@ -14,7 +14,6 @@
 		filterIdCount = 0,
 		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
-		win = multiChartingProto.win,
 		// Constructor class for DataProcessor.
 		DataProcessor = function () {
 	    	var manager = this;
@@ -75,7 +74,7 @@
 		multiChartingProto.raiseEvent('filterAdded', {
 			'id': id,
 			'data' : filterFn
-		}, dataStore);
+		}, filter);
 	};
 
 	// Funtion to get the filter method.
@@ -100,7 +99,7 @@
 
 		multiChartingProto.raiseEvent('filterDeleted', {
 			'id': id,
-		}, dataStore);
+		}, filter);
 	};
 
 	dataProcessorProto.filter = function () {

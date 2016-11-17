@@ -15,7 +15,6 @@
 		//For storing the parent of a child
 		parentStore = lib.parentStore = {},
 		idCount = 0,
-		win = multiChartingProto.win,
 		// Constructor class for DataStore.
 		DataStore = function () {
 	    	var manager = this;
