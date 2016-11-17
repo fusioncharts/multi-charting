@@ -71,7 +71,8 @@
                             json.data = [];
                             indexMatchLabel = jsonData[0].indexOf(configuration.dimension[0]);
                             indexMatchValue = jsonData[0].indexOf(configuration.measure[0]);
-                            for (j = 1, lenData = jsonData.length; j < lenData; j++) {                  
+                            for (j = 1, lenData = jsonData.length; j < lenData; j++) {     
+                            console.log(jsonData);            
                                 label = jsonData[j][indexMatchLabel];                           
                                 value = jsonData[j][indexMatchValue]; 
                                 json.data.push({
@@ -169,22 +170,23 @@
                         return aggregatedData;
                     },
                     'average' : function() {
-                        var lenR = data.length,
-                            sumArr = this.sum(),
+                        var iAggregateMthd = this,
+                            lenR = data.length,
+                            aggregatedSumArr = iAggregateMthd.sum(),
                             i,
                             len,
                             aggregatedData = [];
-                        for(i = 0, len = sumArr.length; i < len; i++){
-                            (sumArr[i] != key) && (aggregatedData[i] = (+sumArr[i]) / lenR);
+                        for(i = 0, len = aggregatedSumArr.length; i < len; i++){
+                            ((aggregatedSumArr[i] != key) && (aggregatedData[i] = (+aggregatedSumArr[i]) / lenR)) || (aggregatedData[i] = aggregatedSumArr[i]);
                         }
                         return aggregatedData;
                     }
-                },
-                aggregatedData;
+                };
 
-                aggregateMode && (aggregateMode = aggregateMode.toLowerCase());
-                (aggregateMode && (aggregatedData = aggregateMathod[aggregateMode]())) || (aggregatedData = data[0]);
-                return aggregatedData;
+                aggregateMode = aggregateMode && aggregateMode.toLowerCase();
+                aggregateMode = (aggregateMathod[aggregateMode] && aggregateMode) || 'sum';
+
+                return aggregateMathod[aggregateMode]();
             },
             getSortedData = function (data, categoryArr, dimension, aggregateMode) {
                 var indeoxOfKey,
