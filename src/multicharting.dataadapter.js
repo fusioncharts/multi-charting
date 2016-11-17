@@ -13,7 +13,8 @@
         var argument = arguments[0] || {},
             dataadapter = this;
 
-        dataadapter.globalData = argument.jsonData;
+        dataadapter.dataStore = argument.datastore;       
+        dataadapter.dataJSON = dataadapter.dataStore.getJsonData();
         dataadapter.configuration = argument.config;
         dataadapter.callback = argument.callback;
         dataadapter.FCjson = dataadapter.convertData();
@@ -230,7 +231,7 @@
             json = {},
             predefinedJson = {};
 
-            jsonData = dataadapter.globalData;
+            jsonData = dataadapter.dataJSON;
             configuration = dataadapter.configuration;
             callback = dataadapter.callback;
 
@@ -239,10 +240,27 @@
         if (jsonData && configuration) {
             dataArray = generalDataFormat(jsonData, configuration);
             configuration.categories && (dataArray = getSortedData(dataArray, configuration.categories, configuration.dimension, configuration.aggregateMode));
+            dataadapter.dataArray = dataArray;
             json = jsonCreator(dataArray, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;
         return (callback && callback(json)) || setDefaultAttr(json); 
+    };
+
+    protoDataadapter.getFCjson = function() {
+        return this.FCjson;
+    };
+
+    protoDataadapter.getDataJson = function() {
+        return this.dataJSON;
+    };
+
+    protoDataadapter.getDataArray = function() {
+        return this.dataArray;
+    };
+
+    protoDataadapter.getDimension = function () {
+        return this.configuration.dimension;
     };
 
     MultiCharting.prototype.dataadapter = function () {
