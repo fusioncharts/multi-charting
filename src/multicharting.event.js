@@ -83,6 +83,7 @@
             hoverout : 'dataplotrollout',
             clik : 'dataplotclick'
         },
+        raiseEvent,
 
         EventTarget = {
 
@@ -372,13 +373,6 @@
             }
         },
 
-        // Facilitate for raising events internally.
-        raiseEvent = global.raiseEvent = function (type, args, obj, eventScope,
-                defaultFn, cancelledFn) {
-            return EventTarget.triggerEvent(type, obj, args, eventScope,
-                defaultFn, cancelledFn);
-        },
-
         /**
          * List of events that has an equivalent legacy event. Used by the
          * raiseEvent method to check whether a particular event raised
@@ -393,6 +387,13 @@
          * @type object
          */
         conditionChecks = {};
+
+    // Facilitate for raising events internally.
+    raiseEvent = global.raiseEvent = function (type, args, obj, eventScope,
+            defaultFn, cancelledFn) {
+        return EventTarget.triggerEvent(type, obj, args, eventScope,
+            defaultFn, cancelledFn);
+    };
 
     global.disposeEvents = function (target) {
         var type, i;

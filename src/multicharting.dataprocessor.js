@@ -17,7 +17,7 @@
 		// Constructor class for DataProcessor.
 		DataProcessor = function () {
 	    	var manager = this;
-	    	manager.addRule(arguments);
+	    	manager.addRule(arguments[0]);
 		},
 		
 		dataProcessorProto = DataProcessor.prototype,
@@ -48,7 +48,7 @@
 		};
 
 	multiChartingProto.createDataProcessor = function () {
-		return new DataProcessor(arguments);
+		return new DataProcessor(arguments[0]);
 	};
 
 	// Function to add filter in the filter store
@@ -56,9 +56,9 @@
 		var filter = this,
 			oldId = filter.id,
 			argument = arguments[0],
-			filterFn = argument.rule || argument,
-			id = argument.type,
-			type = argument.type;
+			filterFn = (argument && argument.rule) || argument,
+			id = argument && argument.type,
+			type = argument && argument.type;
 
 		id = oldId || id || 'filterStore' + filterIdCount ++;
 		filterStore[id] = filterFn;
