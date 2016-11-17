@@ -71,8 +71,7 @@
                             json.data = [];
                             indexMatchLabel = jsonData[0].indexOf(configuration.dimension[0]);
                             indexMatchValue = jsonData[0].indexOf(configuration.measure[0]);
-                            for (j = 1, lenData = jsonData.length; j < lenData; j++) {     
-                            console.log(jsonData);            
+                            for (j = 1, lenData = jsonData.length; j < lenData; j++) { 
                                 label = jsonData[j][indexMatchLabel];                           
                                 value = jsonData[j][indexMatchValue]; 
                                 json.data.push({
