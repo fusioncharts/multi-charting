@@ -153,12 +153,75 @@
                 json.chart.animation = 0;
                 return json;
             },
+            getAggregateData = function (data, key, aggregateMode) {
+                var aggregateMathod = {
+                    'sum' : function(){
+                        var i,
+                            j,
+                            lenR,
+                            lenC,
+                            aggregatedData = data[0];
+                        for(i = 1, lenR = data.length; i < lenR; i++) {
+                            for(j = 0, lenC = data[i].length; j < lenC; j++) {
+                                (data[i][j] != key) && (aggregatedData[j] = +aggregatedData[j] + +data[i][j]);
+                            }
+                        }
+                        return aggregatedData;
+                    },
+                    'average' : function() {
+                        var lenR = data.length,
+                            sumArr = this.sum(),
+                            i,
+                            len,
+                            aggregatedData = [];
+                        for(i = 0, len = sumArr.length; i < len; i++){
+                            (sumArr[i] != key) && (aggregatedData[i] = (+sumArr[i]) / lenR);
+                        }
+                        return aggregatedData;
+                    }
+                },
+                aggregatedData;
+
+                aggregateMode && (aggregateMode = aggregateMode.toLowerCase());
+                (aggregateMode && (aggregatedData = aggregateMathod[aggregateMode]())) || (aggregatedData = data[0]);
+                return aggregatedData;
+            },
+            getSortedData = function (data, categoryArr, dimension, aggregateMode) {
+                var indeoxOfKey,
+                    newData = [],
+                    subSetData = [],
+                    key = [],
+                    categories = [],
+                    lenKey,
+                    lenData,
+                    lenCat,
+                    j,
+                    k,
+                    i;
+                (!Array.isArray(dimension) && (key = [dimension])) || (key = dimension);
+                (!Array.isArray(categoryArr[0]) && (categories = [categoryArr])) || (categories = categoryArr);
+
+                newData.push(data[0]);
+                for(k = 0, lenKey = key.length; k < lenKey; k++) {
+                    indeoxOfKey = data[0].indexOf(key[k]);                    
+                    for(i = 0,lenCat = categories[k].length; i < lenCat  && indeoxOfKey !== -1; i++) {
+                        subSetData = [];
+                        for(j = 1, lenData = data.length; j < lenData; j++) {                        
+                            (data[j][indeoxOfKey] == categories[k][i]) && (subSetData.push(data[j]));
+                        }     
+                        newData.push(getAggregateData(subSetData, categories[k][i], aggregateMode));
+                    }
+                }
+                return newData;
+            },
             dataArray,
             json = {},
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
             dataArray = generalDataFormat(jsonData, configuration);
+            configuration.categories && (dataArray = getSortedData(dataArray, configuration.categories, configuration.dimension, configuration.aggregateMode));
+            console.log(configuration.categories,dataArray);
             json = jsonCreator(dataArray, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;    
