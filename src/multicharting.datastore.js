@@ -7,19 +7,19 @@
     }
 })(function (MultiCharting) {
 
-	var	lib = MultiCharting.prototype.lib,
+	var	multiChartingProto = MultiCharting.prototype,
+		lib = multiChartingProto.lib,
 		dataStorage = lib.dataStorage = {},
 		// For storing the child of a parent
 		linkStore = {},
 		//For storing the parent of a child
 		parentStore = lib.parentStore = {},
 		idCount = 0,
-		win = MultiCharting.prototype.win,
 		// Constructor class for DataStore.
 		DataStore = function () {
 	    	var manager = this;
 	    	manager.uniqueValues = {};
-	    	manager.setData(arguments);
+	    	manager.setData(arguments[0]);
 		},
 		dataStoreProto = DataStore.prototype,
 
@@ -78,7 +78,7 @@
 			}
 		};
 
-	MultiCharting.prototype.createDataStore = function () {
+	multiChartingProto.createDataStore = function () {
 		return new DataStore(arguments);
 	};
 
@@ -92,12 +92,16 @@
 			oldJSONData = dataStorage[oldId] || [],
 			callbackHelperFn = function (JSONData) {
 				dataStorage[id] = oldJSONData.concat(JSONData || []);
+				JSONData && multiChartingProto.raiseEvent('dataAdded', {
+					'id': id,
+					'data' : JSONData
+				}, dataStore);
 				if (linkStore[id]) {
 					updataData(id);
 				}
 				if (typeof callback === 'function') {
 					callback(JSONData);
-				}
+				}	
 			};
 
 		id = oldId || id || 'dataStorage' + idCount ++;
@@ -106,7 +110,7 @@
 		dataStore.uniqueValues = {};
 
 		if (dataType === 'csv') {
-			MultiCharting.prototype.convertToArray({
+			multiChartingProto.convertToArray({
 				string : dataSpecs.dataSource,
 				delimiter : dataSpecs.delimiter,
 				outputFormat : dataSpecs.outputFormat,
@@ -118,11 +122,6 @@
 		else {
 			callbackHelperFn(dataSource);
 		}
-
-		// win.dispatchEvent(new win.CustomEvent('dataAdded', {'detail' : {
-		// 	'id': id,
-		// 	'data' : JSONData
-		// }}));
 	};
 
 	// Function to get the jsondata of the data object
@@ -164,11 +163,10 @@
 				if (typeof filterFn === 'function') {
 					newData = executeProcessor(type, filterFn, dataStorage[id]);
 
-					newDataObj = new DataStore(newData);
+					newDataObj = new DataStore({dataSource : newData});
 					newId = newDataObj.id;
 					parentStore[newId] = data;
 
-					dataStorage[newId] = newData;
 					result.push(newDataObj);
 
 					//Pushing the id and filter of child class under the parent classes id.
@@ -211,9 +209,9 @@
 		}
 
 		flag = delete dataStorage[id];
-		win.dispatchEvent(new win.CustomEvent('dataDeleted', {'detail' : {
+		multiChartingProto.raiseEvent('dataDeleted', {
 			'id': id,
-		}}));
+		}, dataStore);
 		return flag;
 	};
 
@@ -224,13 +222,15 @@
 
 	// Function to modify data
 	dataStoreProto.modifyData = function () {
-		var dataStore = this;
+		var dataStore = this,
+			id = dataStore.id;
 
-		dataStorage[dataStore.id] = [];
+		dataStorage[id] = [];
 		dataStore.setData(arguments);
-		win.dispatchEvent(new win.CustomEvent('dataModified', {'detail' : {
-			'id': dataStore.id
-		}}));
+		
+		multiChartingProto.raiseEvent('dataModified', {
+			'id': id
+		}, dataStore);
 	};
 
 	// Function to add data to the dataStorage asynchronously via ajax
@@ -245,7 +245,7 @@
 			callbackArgs = argument.callbackArgs,
 			data;
 
-		MultiCharting.prototype.ajax({
+		multiChartingProto.ajax({
 			url : dataSource,
 			success : function(string) {
 				data = dataType === 'json' ? JSON.parse(string) : string;
