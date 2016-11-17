@@ -221,7 +221,6 @@
         if (jsonData && configuration) {
             dataArray = generalDataFormat(jsonData, configuration);
             configuration.categories && (dataArray = getSortedData(dataArray, configuration.categories, configuration.dimension, configuration.aggregateMode));
-            console.log(configuration.categories,dataArray);
             json = jsonCreator(dataArray, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;    
