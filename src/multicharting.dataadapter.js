@@ -9,11 +9,19 @@
 
     var extend2 = MultiCharting.prototype.lib.extend2;
     //function to convert data, it returns fc supported JSON
-    function convertData() {
+    var DataAdapter = function () {
         var argument = arguments[0] || {},
-            jsonData = argument.jsonData,
-            configuration = argument.config,
-            callbackFN = argument.callbackFN,
+            dataadapter = this;
+
+        dataadapter.globalData = argument.jsonData;
+        dataadapter.configuration = argument.config;
+        dataadapter.callback = argument.callback;
+        dataadapter.FCjson = dataadapter.convertData();
+    },
+    protoDataadapter = DataAdapter.prototype;
+
+    protoDataadapter.convertData = function() {
+        var dataadapter = this,
             jsonCreator = function(jsonData, configuration) {
                 var conf = configuration,
                     seriesType = conf && conf.seriesType,
@@ -154,7 +162,7 @@
                 return json;
             },
             getAggregateData = function (data, key, aggregateMode) {
-                var aggregateMathod = {
+                var aggregateMethod = {
                     'sum' : function(){
                         var i,
                             j,
@@ -183,9 +191,9 @@
                 };
 
                 aggregateMode = aggregateMode && aggregateMode.toLowerCase();
-                aggregateMode = (aggregateMathod[aggregateMode] && aggregateMode) || 'sum';
+                aggregateMode = (aggregateMethod[aggregateMode] && aggregateMode) || 'sum';
 
-                return aggregateMathod[aggregateMode]();
+                return aggregateMethod[aggregateMode]();
             },
             getSortedData = function (data, categoryArr, dimension, aggregateMode) {
                 var indeoxOfKey,
@@ -198,7 +206,8 @@
                     lenCat,
                     j,
                     k,
-                    i;
+                    i,
+                    arr = [];
                 (!Array.isArray(dimension) && (key = [dimension])) || (key = dimension);
                 (!Array.isArray(categoryArr[0]) && (categories = [categoryArr])) || (categories = categoryArr);
 
@@ -210,6 +219,8 @@
                         for(j = 1, lenData = data.length; j < lenData; j++) {                        
                             (data[j][indeoxOfKey] == categories[k][i]) && (subSetData.push(data[j]));
                         }     
+                        arr[indeoxOfKey] = categories[k][i];
+                        (subSetData.length === 0) && (subSetData.push(arr));
                         newData.push(getAggregateData(subSetData, categories[k][i], aggregateMode));
                     }
                 }
@@ -217,6 +228,12 @@
             },
             dataArray,
             json = {},
+            predefinedJson = {};
+
+            jsonData = dataadapter.globalData;
+            configuration = dataadapter.configuration;
+            callback = dataadapter.callback;
+
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
@@ -224,11 +241,11 @@
             configuration.categories && (dataArray = getSortedData(dataArray, configuration.categories, configuration.dimension, configuration.aggregateMode));
             json = jsonCreator(dataArray, configuration);            
         }
-        json = (predefinedJson && extend2(json,predefinedJson)) || json;    
-        return (callbackFN && callbackFN(json)) || setDefaultAttr(json); 
-    }
+        json = (predefinedJson && extend2(json,predefinedJson)) || json;
+        return (callback && callback(json)) || setDefaultAttr(json); 
+    };
 
     MultiCharting.prototype.dataadapter = function () {
-        return convertData(arguments[0]);
+        return new DataAdapter(arguments[0]);
     };
 });

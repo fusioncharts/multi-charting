@@ -26,6 +26,13 @@
         //render FC 
         chart.chartObj = new FusionCharts(chart.chartConfig);
         chart.chartObj.render();
+        chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
+            // var dataRow = getRowData(d);
+            var dataRow = {};
+            MultiCharting.prototype.raiseEvent('hoverin', {
+                data : dataRow
+            }, chart);
+        });
     };
 
     chartProto.getJSON = function () {
@@ -34,19 +41,21 @@
             configuration,
             chartConfig = {},
             dataSource = {},
-            configData = {};
+            configData = {},
+            dataadapterObj = {};
         //parse argument into chartConfig 
         extend2(chartConfig,argument);
         
         //data configuration 
         configuration = chartConfig.configuration || {};
         configData.jsonData = chartConfig.jsonData;
-        configData.callbackFN = configuration.callback;
+        configData.callback = configuration.callback;
         configData.config = configuration.data;
 
         //store fc supported json to render charts
-        dataSource = dataadapter(configData);
-        
+        dataadapterObj = dataadapter(configData);
+        dataSource = dataadapterObj.FCjson;
+
         //delete data configuration parts for FC json converter
         delete chartConfig.jsonData;
         delete chartConfig.configuration;
