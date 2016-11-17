@@ -58,7 +58,7 @@
 
 				tempDataUpdated[linkId] = true;
 				filter = filters[i];
-				filterFn = filter.getFilter();
+				filterFn = filter.getProcessor();
 				type = filter.type;
 
 				if (typeof filterFn === 'function') {
@@ -157,7 +157,7 @@
 
 			for (i = 0; i < len; i++) {
 				filter = filters[i] || filters;
-				filterFn = filter.getFilter();
+				filterFn = filter.getProcessor();
 				type = filter.type;
 
 				if (typeof filterFn === 'function') {
@@ -221,12 +221,12 @@
 	};
 
 	// Function to modify data
-	dataStoreProto.modifyData = function () {
+	dataStoreProto.modifyData = function (dataSpecs, callback) {
 		var dataStore = this,
 			id = dataStore.id;
 
 		dataStorage[id] = [];
-		dataStore.setData(arguments);
+		dataStore.setData(dataSpecs, callback);
 		
 		multiChartingProto.raiseEvent('dataModified', {
 			'id': id
@@ -314,5 +314,19 @@
 		}
 
 		return (dataStore.uniqueValues[key] = Object.keys(tempUniqueValues));
+	};
+
+	//Function to modify the current JSON with the data obtained after applying dataProcessor
+	dataStoreProto.applyDataProcessor = function (dataProcessor) {
+		var dataStore = this,
+			processorFn = dataProcessor.getProcessor(),
+			type = dataProcessor.type,
+			JSONData = dataStore.getJSON();
+
+		if (typeof processorFn === 'function') {
+			dataStore.modifyData({
+				dataSource : executeProcessor(type, processorFn, JSONData)
+			});
+		}
 	};
 });

@@ -6,7 +6,7 @@
     }
 })(function (MultiCharting) {
     
-
+    /* global FusionCharts: true */
     var global = MultiCharting.prototype,
         win = global.win,
 
@@ -82,7 +82,7 @@
             hoverin : 'dataplotrollover',
             hoverout : 'dataplotrollout',
             clik : 'dataplotclick'
-        }
+        },
 
         EventTarget = {
 
@@ -483,4 +483,4 @@
     global.removeEventListener = function (type, listener) {
         return EventTarget.removeListener(type, listener);
     };
-})
+});

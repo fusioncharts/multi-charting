@@ -78,7 +78,7 @@
 	};
 
 	// Funtion to get the filter method.
-	dataProcessorProto.getFilter = function () {
+	dataProcessorProto.getProcessor = function () {
 		return filterStore[this.id];
 	};
 
@@ -88,7 +88,7 @@
 	};
 
 
-	dataProcessorProto.deleteFilter = function () {
+	dataProcessorProto.deleteProcessor = function () {
 		var filter = this,
 			id = filter.id;
 
