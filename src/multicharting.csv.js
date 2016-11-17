@@ -82,7 +82,7 @@
     MultiCharting.prototype.convertToArray = function (data, delimiter, outputFormat, callback) {
         if (typeof data === 'object') {
             delimiter = data.delimiter;
-            structure = data.outputFormat;
+            outputFormat = data.outputFormat;
             callback = data.callback;
             data = data.string;
         }
@@ -120,10 +120,10 @@
                     //take min of header length and total columns
                     jlen = min(header.length, cell.length);
 
-                    if(structure === 1){
+                    if (outputFormat === 1) {
                         finalOb.push(cell);
                     }
-                    else if (structure === 2){
+                    else if (outputFormat === 2) {
                         for (j = 0; j < jlen; ++j) {                    
                             //creating the final object
                             obj[header[j]] = cell[j];
@@ -148,7 +148,7 @@
                 }
             };
 
-        structure = structure || 1;
+        outputFormat = outputFormat || 1;
         header = header && header[0];
 
         //if the value is empty
@@ -156,12 +156,12 @@
             splitedData.splice((splitedData.length - 1), 1);
             len--;
         }
-        if (structure === 1){
+        if (outputFormat === 1) {
             finalOb = [];
             finalOb.push(header);
-        } else if(structure === 2) {
+        } else if (outputFormat === 2) {
             finalOb = [];
-        }else if(structure === 3){
+        } else if (outputFormat === 3) {
             finalOb = {};
             for (k = 0, klen = header.length; k < klen; ++k) {
                 finalOb[header[k]] = [];
