@@ -266,12 +266,35 @@
         return this.aggregatedData;
     };
 
-    protoDataadapter.getDimension = function () {
+    protoDataadapter.getDimension = function() {
         return this.configuration.dimension;
     };
 
-    protoDataadapter.getMeasure = function () {
+    protoDataadapter.getMeasure = function() {
         return this.configuration.measure;
+    };
+
+    protoDataadapter.getLimit = function() {
+        var dataadapter = this,
+            max = -Infinity,
+            min = +Infinity,
+            i,
+            j,
+            lenR,
+            lenC,
+            value,
+            data = dataadapter.aggregatedData;
+        for(i = 0, lenR = data.length; i < lenR; i++){
+            for(j = 0, lenC = data[i].length; j < lenC; j++){
+                value = +data[i][j];
+                value && (max = max < value ? value : max);
+                value && (min = min > value ? value : min);
+            }
+        }
+        return {
+            'min' : min,
+            'max' : max
+        };
     };
 
     protoDataadapter.highlight = function() {
