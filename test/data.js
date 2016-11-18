@@ -8,15 +8,20 @@ var START_YEAR = 1971,
 	length = (END_YEAR - START_YEAR) * 365,
     hcdata = [];
 
+length = 1000000;
 
 for (var i = 0; i <= length; i++) {
 	D = new Date(start + (86400000 * i));
     date = D.getFullYear() + '-' + (D.getMonth() + 1) + '-' + D.getDate();
-	// date = D.getTime();
+	date = D.getTime();
 	min = i + 100;
 	max = i + 110;
 	value = Math.round(min + (Math.random() * max - min));
 
+    // if (i == 575875 || i == 1 || i == 200 || i == 3000) {
+    //     value = value * -1;
+    //     console.log(value);
+    // }
 	// val += value + ", ";
 	// dt += '"' + date + '", ';
 	val.push(value);;
@@ -47,7 +52,9 @@ data = {
                         "uid": "ds-1",
                         "series": [{
                             // "plottype": "line",
-                            "plottype": "column",
+                            "plot": {
+                                "type": 'column'
+                            },
                             "name": "Series 1",
                         	data: val
                         }]
