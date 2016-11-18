@@ -14,7 +14,7 @@
             dataadapter = this;
 
         dataadapter.dataStore = argument.datastore;       
-        dataadapter.dataJSON = dataadapter.dataStore.getJsonData();
+        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
         dataadapter.configuration = argument.config;
         dataadapter.callback = argument.callback;
         dataadapter.FCjson = dataadapter.convertData();
@@ -159,7 +159,7 @@
             },
             setDefaultAttr = function (json) {
                 json.chart || (json.chart = {});
-                json.chart.animation = 0;
+                //json.chart.animation = 0;
                 return json;
             },
             getAggregateData = function (data, key, aggregateMode) {
