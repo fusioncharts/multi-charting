@@ -10,6 +10,7 @@
 	var	multiChartingProto = MultiCharting.prototype,
 		lib = multiChartingProto.lib,
 		dataStorage = lib.dataStorage = {},
+		outputDataStorage = lib.outputDataStorage = {},
 		// For storing the child of a parent
 		linkStore = {},
 		//For storing the parent of a child
@@ -126,7 +127,8 @@
 
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
-		return dataStorage[this.id];
+		var id = this.id;
+		return (outputDataStorage[id] || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
@@ -324,9 +326,7 @@
 			JSONData = dataStore.getJSON();
 
 		if (typeof processorFn === 'function') {
-			dataStore.modifyData({
-				dataSource : executeProcessor(type, processorFn, JSONData)
-			});
+			return (outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData));
 		}
 	};
 });
