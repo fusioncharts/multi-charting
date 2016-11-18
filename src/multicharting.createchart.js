@@ -23,7 +23,8 @@
 
     chartProto.render = function () {
         var chart = this,
-            argument = arguments[0] || {};
+            argument = arguments[0] || {},
+            dataAdapterObj = argument.configuration || {};
 
         //get fc supported json            
         chart.getJSON(argument);        
@@ -31,6 +32,8 @@
         chart.chartObj = new FusionCharts(chart.chartConfig);
         chart.chartObj.render();
 
+        dataAdapterObj.chart = chart.chartObj;
+        
         chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
             var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, chart.dimension, chart.measure, d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
@@ -44,18 +47,18 @@
     chartProto.getJSON = function () {
         var chart = this,
             argument =arguments[0] || {},
-            configuration,
+            dataAdapterObj,
             chartConfig = {},
             dataSource = {},
             configData = {};
         //parse argument into chartConfig 
         extend2(chartConfig,argument);
         
-        //data configuration 
-        configuration = argument.configuration || {};
+        //dataAdapterObj 
+        dataAdapterObj = argument.configuration || {};
 
         //store fc supported json to render charts
-        dataSource = configuration.getFCjson();
+        dataSource = dataAdapterObj.getFCjson();
 
         //delete data configuration parts for FC json converter
         delete chartConfig.configuration;

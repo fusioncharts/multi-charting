@@ -275,7 +275,11 @@
     };
 
     protoDataadapter.highlight = function() {
-
+        var dataadapter = this,
+            categoryLabel = arguments[0] && arguments[0].toString(),
+            categoryArr = dataadapter.configuration.categories,
+            index = categoryLabel && categoryArr.indexOf(categoryLabel);
+        dataadapter.chart.drawTrendRegion(index);
     };
 
     MultiCharting.prototype.dataadapter = function () {
