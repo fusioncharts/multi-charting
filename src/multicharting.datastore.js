@@ -374,4 +374,14 @@
 	dataStoreProto.getMetaData = function () {
 		return metaStorage[this.id];
 	};
+
+	// Function to add event listener at dataStore level.
+	dataStoreProto.addEventListener = function (type, listener) {
+		return multiChartingProto.addEventListener(type, listener, this);
+	};
+
+	// Function to remove event listener at dataStore level.
+	dataStoreProto.removeEventListener = function (type, listener) {
+		return multiChartingProto.removeEventListener(type, listener, this);
+	};
 });
