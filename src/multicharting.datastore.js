@@ -81,7 +81,7 @@
 			}
 		},
 
-		//Function to update metaData
+		//Function to update metaData of the child data recurssively
 		updateMetaData = function (id, metaData) {
 			var links = linkStore[id].link,
 				length = links.length,
@@ -232,6 +232,9 @@
 			delete linkStore[id];
 		}
 
+		delete metaStorage[id];
+		delete outputDataStorage[id];
+
 		flag = delete dataStorage[id];
 		multiChartingProto.raiseEvent('dataDeleted', {
 			'id': id,
@@ -340,18 +343,20 @@
 		return (dataStore.uniqueValues[key] = Object.keys(tempUniqueValues));
 	};
 
-	//Function to modify the current JSON with the data obtained after applying dataProcessor
+	//Function to change the output of getJSON() based on the dataProcessor applied
 	dataStoreProto.applyDataProcessor = function (dataProcessor) {
 		var dataStore = this,
 			processorFn = dataProcessor.getProcessor(),
 			type = dataProcessor.type,
-			JSONData = dataStore.getJSON();
+			id = dataStore.id,
+			JSONData = dataStorage[id];
 
 		if (typeof processorFn === 'function') {
 			return (outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData));
 		}
 	};
 
+	// Function to add metadata
 	dataStoreProto.addMetaData = function (metaData, merge) {
 		var dataStore = this,
 			id = dataStore.id,
@@ -365,6 +370,7 @@
 		linkStore[id] && updateMetaData(id, newMetaData);
 	};
 
+	// Function to get the added metaData
 	dataStoreProto.getMetaData = function () {
 		return metaStorage[this.id];
 	};
