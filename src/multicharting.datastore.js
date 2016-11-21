@@ -10,6 +10,9 @@
 	var	multiChartingProto = MultiCharting.prototype,
 		lib = multiChartingProto.lib,
 		dataStorage = lib.dataStorage = {},
+		outputDataStorage = lib.outputDataStorage = {},
+		metaStorage = lib.metaStorage = {},
+		extend2 = lib.extend2,
 		// For storing the child of a parent
 		linkStore = {},
 		//For storing the parent of a child
@@ -76,6 +79,23 @@
 					updataData(linkId);
 				}
 			}
+		},
+
+		//Function to update metaData
+		updateMetaData = function (id, metaData) {
+			var links = linkStore[id].link,
+				length = links.length,
+				i,
+				newMetaData,
+				link;
+
+			for (i = 0; i < length; i++) {
+				link = links[i];
+				newMetaData = metaStorage[link] = extend2({}, metaData);
+				if (linkStore[link]) {
+					updateMetaData(link, newMetaData);
+				}
+			}
 		};
 
 	multiChartingProto.createDataStore = function () {
@@ -126,7 +146,8 @@
 
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
-		return dataStorage[this.id];
+		var id = this.id;
+		return (outputDataStorage[id] || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
@@ -165,6 +186,9 @@
 
 					newDataObj = new DataStore({dataSource : newData});
 					newId = newDataObj.id;
+
+					//Passing the metaData to the child.
+					newDataObj.addMetaData(metaStorage[id]);
 					parentStore[newId] = data;
 
 					result.push(newDataObj);
@@ -324,9 +348,24 @@
 			JSONData = dataStore.getJSON();
 
 		if (typeof processorFn === 'function') {
-			dataStore.modifyData({
-				dataSource : executeProcessor(type, processorFn, JSONData)
-			});
+			return (outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData));
 		}
+	};
+
+	dataStoreProto.addMetaData = function (metaData, merge) {
+		var dataStore = this,
+			id = dataStore.id,
+			newMetaData;
+		if (merge) {
+			newMetaData = metaStorage[id] = extend2(metaStorage[id] || {}, metaData);
+		}
+		else {
+			newMetaData = metaStorage[id] = metaData;
+		}
+		linkStore[id] && updateMetaData(id, newMetaData);
+	};
+
+	dataStoreProto.getMetaData = function () {
+		return metaStorage[this.id];
 	};
 });
