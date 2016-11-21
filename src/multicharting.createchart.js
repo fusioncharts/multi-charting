@@ -19,7 +19,53 @@
             chart.render(arguments[0]);
         },
         chartProto = Chart.prototype,
-        extend2 = MultiCharting.prototype.lib.extend2;
+        extend2 = MultiCharting.prototype.lib.extend2,
+        getRowData = function(data, aggregatedData, dimension, measure, key) {
+            var i = 0,
+                j = 0,
+                k,
+                kk,
+                l,
+                lenR,
+                len,
+                lenC,
+                isArray = Array.isArray(data[0]),
+                index = -1,
+                matchObj = {},
+                indexOfDimension = aggregatedData[0].indexOf(dimension[0]);
+        
+            for(lenR = data.length; i < lenR; i++) {
+                isArray && (index = data[i].indexOf(key));
+                if(index !== -1 && isArray) {
+                    for(l = 0, lenC = data[i].length; l < lenC; l++){
+                        matchObj[data[0][l]] = data[i][l];
+                    }
+                    for(j = 0, len = measure.length; j < len; j++) {
+                        index = aggregatedData[0].indexOf(measure[j]);
+                        for (k = 0, kk = aggregatedData.length; k < kk; k++) {
+                            if(aggregatedData[k][indexOfDimension] == key) {
+                                matchObj[measure[j]] = aggregatedData[k][index];
+                            }
+                        }
+                    }
+                    return matchObj;
+                }
+
+                if(!isArray && data[i][dimension[0]] == key) {
+                    matchObj = data[i];
+
+                    for(j = 0, len = measure.length; j < len; j++) {
+                        index = aggregatedData[0].indexOf(measure[j]);
+                        for (k = 0, kk = aggregatedData.length; k < kk; k++) {
+                            if(aggregatedData[k][indexOfDimension] == key) {
+                                matchObj[measure[j]] = aggregatedData[k][index];
+                            }
+                        }
+                    }
+                    return matchObj;
+                }
+            }
+        };
 
     chartProto.render = function () {
         var chart = this,
@@ -35,11 +81,11 @@
         dataAdapterObj.chart = chart.chartObj;
         
         chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
-            var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, chart.dimension, chart.measure, d.categoryLabel);
+            var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, 
+                                        chart.dimension, chart.measure, d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
                 data : dataObj,
-                categoryLabel : d.categoryLabel,
-                d : d 
+                categoryLabel : d.categoryLabel
             }, chart);
         });
     };
@@ -49,8 +95,7 @@
             argument =arguments[0] || {},
             dataAdapterObj,
             chartConfig = {},
-            dataSource = {},
-            configData = {};
+            dataSource = {};
         //parse argument into chartConfig 
         extend2(chartConfig,argument);
         
@@ -70,62 +115,13 @@
 
     chartProto.update = function () {
         var chart = this,
-            argument =arguments[0] || {};
-
+            argument =arguments[0] || {},
+            dataAdapterObj = argument.configuration || {};
         chart.getJSON(argument);
         chart.chartObj.chartType(chart.chartConfig.type);
         chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+        dataAdapterObj.chart = chart.chartObj;
     };
-
-    function getRowData (data, aggregatedData, dimension, measure, key) {
-        var i = 0,
-            j = 0,
-            k,
-            l,
-            lenR,
-            len,
-            lenC,
-            isArray = Array.isArray(data[0]),
-            index = -1,
-            keys,
-            row = [],
-            matchObj = {},
-            indexOfDimension = aggregatedData[0].indexOf(dimension[0]),
-            indexOfMeasure;
-    
-        for(lenR = data.length; i < lenR; i++) {
-            isArray && (index = data[i].indexOf(key));
-            if(index !== -1 && isArray) {
-                for(l = 0, lenC = data[i].length; l < lenC; l++){
-                    matchObj[data[0][l]] = data[i][l];
-                }
-                for(j = 0, len = measure.length; j < len; j++) {
-                    index = aggregatedData[0].indexOf(measure[j]);
-                    for (k = 0, kk = aggregatedData.length; k < kk; k++) {
-                        if(aggregatedData[k][indexOfDimension] == key) {
-                            matchObj[measure[j]] = aggregatedData[k][index];
-                        }
-                    }
-                }
-                return matchObj;
-            }
-
-            if(!isArray && data[i][dimension[0]] == key) {
-                matchObj = data[i];
-
-                for(j = 0, len = measure.length; j < len; j++) {
-                    index = aggregatedData[0].indexOf(measure[j]);
-                    for (k = 0, kk = aggregatedData.length; k < kk; k++) {
-                        if(aggregatedData[k][indexOfDimension] == key) {
-                            matchObj[measure[j]] = aggregatedData[k][index];
-                        }
-                    }
-                }
-                return matchObj;
-            }
-        }
-    
-    }
 
     MultiCharting.prototype.createChart = function () {
         return new Chart(arguments[0]);

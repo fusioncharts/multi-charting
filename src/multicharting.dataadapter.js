@@ -14,7 +14,7 @@
             dataadapter = this;
 
         dataadapter.dataStore = argument.datastore;       
-        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
+        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore/*.getJSON()*/;
         dataadapter.configuration = argument.config;
         dataadapter.callback = argument.callback;
         dataadapter.FCjson = dataadapter.convertData();
@@ -26,17 +26,17 @@
             aggregatedData,
             generalData,
             json = {},
-            predefinedJson = {};
-
-            jsonData = dataadapter.dataJSON;
-            configuration = dataadapter.configuration;
+            predefinedJson = {},
+            jsonData = dataadapter.dataJSON,
+            configuration = dataadapter.configuration,
             callback = dataadapter.callback;
 
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
             generalData = dataadapter.generalDataFormat(jsonData, configuration);
-            configuration.categories && (aggregatedData = dataadapter.getSortedData(generalData, configuration.categories, configuration.dimension, configuration.aggregateMode));
+            configuration.categories && (aggregatedData = dataadapter.getSortedData(generalData, 
+                                configuration.categories, configuration.dimension, configuration.aggregateMode));
             dataadapter.aggregatedData = aggregatedData;
             json = dataadapter.jsonCreator(aggregatedData, configuration);            
         }
@@ -93,7 +93,7 @@
                     aggregatedData = data[0];
                 for(i = 1, lenR = data.length; i < lenR; i++) {
                     for(j = 0, lenC = data[i].length; j < lenC; j++) {
-                        (data[i][j] != key) && (aggregatedData[j] = +aggregatedData[j] + +data[i][j]);
+                        (data[i][j] != key) && (aggregatedData[j] = Number(aggregatedData[j]) + Number(data[i][j]));
                     }
                 }
                 return aggregatedData;
@@ -106,7 +106,9 @@
                     len,
                     aggregatedData = [];
                 for(i = 0, len = aggregatedSumArr.length; i < len; i++){
-                    ((aggregatedSumArr[i] != key) && (aggregatedData[i] = (+aggregatedSumArr[i]) / lenR)) || (aggregatedData[i] = aggregatedSumArr[i]);
+                    ((aggregatedSumArr[i] != key) && 
+                        (aggregatedData[i] = (Number(aggregatedSumArr[i])) / lenR)) || 
+                                                (aggregatedData[i] = aggregatedSumArr[i]);
                 }
                 return aggregatedData;
             }
