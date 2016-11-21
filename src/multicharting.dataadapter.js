@@ -14,7 +14,7 @@
             dataadapter = this;
 
         dataadapter.dataStore = argument.datastore;       
-        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore/*.getJSON()*/;
+        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
         dataadapter.configuration = argument.config;
         dataadapter.callback = argument.callback;
         dataadapter.FCjson = dataadapter.convertData();
