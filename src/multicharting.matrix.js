@@ -15,7 +15,6 @@
         EMPTY_STRING = '',
         ABSOLUTE = 'absolute',
         MAX_PERCENT = '100%',
-        BLOCK = 'block',
         RELATIVE = 'relative',
         ID = 'id',
         BORDER_BOX = 'border-box';
@@ -54,7 +53,7 @@
         if(cell.chart) {
             cell.chart.update(cell.config.chart);
         } else {
-            cell.chart = createChart(cell.config.chart);            
+            cell.chart = createChart(cell.config.chart);
         }
         return cell.chart;
     };
@@ -74,6 +73,7 @@
             cell.graphics.style.left = cell.config.left + PX;
             cell.graphics.style.position = ABSOLUTE;
             !cell.config.chart && (cell.graphics.innerHTML = cell.config.html || EMPTY_STRING);
+            cell.container.appendChild(cell.graphics);
             if(cell.config.chart) {
                 cell.chart = cell.renderChart();             
             } else {
@@ -91,7 +91,7 @@
             matrix.configuration = configuration;
             matrix.defaultH = 100;
             matrix.defaultW = 100;
-
+            matrix.disposalBox = [];
             //dispose matrix context
             matrix.dispose();
             //set style, attr on matrix container 
@@ -129,6 +129,8 @@
 
     //function to draw matrix
     protoMatrix.draw = function(){
+        this.dispose();
+        this.disposalBox = [];
         var matrix = this,
             configuration = matrix && matrix.configuration || {},
             //store virtual matrix for user given configuration
@@ -140,7 +142,7 @@
             i,
             j,
             callBack = arguments[0];
-        
+
         for(i = 0; i < len; i++) {
             placeHolder[i] = [];
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
@@ -374,62 +376,128 @@
     protoMatrix.update = function (configuration) {
         var matrix = this,
             configManager = configuration && matrix && matrix.drawManager(configuration),
-            len = configManager && configManager.length,
-            lenC,
-            lenPlcHldr,
+            lenConfigR,
+            lenConfigC,
+            lenPlaceHldrR,
+            lenPlaceHldrC,
             i,
             j,
-            k,
             placeHolder = matrix && matrix.placeHolder,
-            parentContainer  = matrix && matrix.matrixContainer,
-            disposalBox = [],
+            container = matrix && matrix.matrixContainer,            
             recycledCell;
 
-        lenPlcHldr = placeHolder.length;
-        for (k = len; k < lenPlcHldr; k++) {
-            disposalBox = disposalBox.concat(placeHolder.pop());            
-        }        
-        for(i = 0; i < len; i++) {    
-            if(!placeHolder[i]) {
-                placeHolder[i] = [];
+        while(container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
+
+        for(i = 0, lenPlaceHldrR = placeHolder.length; i < lenPlaceHldrR; i++) {
+            lenPlaceHldrC = placeHolder[i].length;
+            for(j = lenPlaceHldrC - 1; j >= 0; j--) {
+                if(placeHolder[i][j].chart) {
+                    matrix.disposalBox = matrix.disposalBox.concat(placeHolder[i].pop());
+                } else {
+                    delete placeHolder[i][j];
+                    placeHolder[i].pop();
+                }
             }
-            for(j = 0, lenC = configManager[i].length; j < lenC; j++){
-                if(placeHolder[i][j]) {
-                    placeHolder[i][j].update(configManager[i][j]);
-                } else {                   
-                    recycledCell = disposalBox.pop();
+        }
+
+        for(i = 0, lenConfigR = configManager.length; i < lenConfigR; i++) {
+            placeHolder[i] = [];
+            for(j = 0, lenConfigC = configManager[i].length; j < lenConfigC; j++) {
+                if(configManager[i][j].chart) {
+                    recycledCell = matrix.disposalBox.pop();
                     if(recycledCell) {
                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
-                        
                     } else {
-                        placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
+                        placeHolder[i][j] = new Cell(configManager[i][j], container);
                     }
                 }
             }
-
-            lenPlcHldr = placeHolder[i].length;
-            lenC = configManager[i].length;
-
-            for (k = lenC; k < lenPlcHldr; k++) {
-                disposalBox = disposalBox.concat(placeHolder[i].pop());    
-            }
         }
-        for(i = 0, len = disposalBox.length; i < len; i++) {
-            if(disposalBox[i] !== undefined) {
-                disposalBox[i].chart && disposalBox[i].chart.chartObj.dispose();
-                parentContainer.removeChild(disposalBox[i] && disposalBox[i].graphics);
-                delete disposalBox[i];
-            }
-            delete disposalBox[i];
-        }   
     };
+
+//     protoMatrix.update = function (configuration) {
+//         var matrix = this,
+//             configManager = configuration && matrix && matrix.drawManager(configuration),
+//             len = configManager && configManager.length,
+//             lenC,
+//             lenPlcHldr,
+//             i,
+//             j,
+//             k,
+//             placeHolder = matrix && matrix.placeHolder,
+//             parentContainer  = matrix && matrix.matrixContainer,
+//             disposalBoxChart = matrix.disposalBoxChart = [],
+//             disposalBoxGen = matrix.disposalBoxGen = [],
+//             recycledCell,
+//             node = parentContainer;
+
+//         while (node.hasChildNodes()) {
+//             node.removeChild(node.lastChild);
+//         }
+
+//         lenPlcHldr = placeHolder.length;
+//         for (k = 0; k < lenPlcHldr; k++) {
+//             lenC = placeHolder[k].length;
+//             for(j = lenC - 1; j >= 0 ; j--) {
+//                 placeHolder[k][j].chart && (disposalBoxChart = disposalBoxChart.concat(placeHolder[k].pop()));
+//                 placeHolder[k][j] && (placeHolder[k][j].chart || (disposalBoxGen = 
+//                                                                 disposalBoxGen.concat(placeHolder[k].pop())));
+//             }
+//         }        
+//         for(i = 0; i < len; i++) {    
+// /*            if(!placeHolder[i]) {
+//                 placeHolder[i] = [];
+//             }*/
+//             placeHolder[i] = [];
+//             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
+//                 if(placeHolder[i][j]) {
+//                     placeHolder[i][j].update(configManager[i][j]);
+//                     parentContainer.appendChild(placeHolder[i][j].graphics);
+//                 } else {                    
+//                     configManager[i][j].chart && (recycledCell = disposalBoxChart.pop());
+//                     configManager[i][j].chart || (recycledCell = disposalBoxGen.pop())
+//                     if(recycledCell) {
+//                     console.log(11,'update',configManager[i][j]);
+//                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
+//                         parentContainer.appendChild(placeHolder[i][j].graphics);
+//                     } else {
+//                         console.log(22,'new',configManager[i][j]);
+//                         placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
+//                     }
+//                 /*}*/
+//             }
+
+// /*            lenPlcHldr = placeHolder[i].length;
+//             lenC = configManager[i].length;
+
+//             for (k = lenPlcHldr - 1; k >= lenC; k--) {
+//                 placeHolder[i][k].chart && (disposalBoxChart = disposalBoxChart.concat(placeHolder[i].pop()));
+//                 placeHolder[i][k] && (placeHolder[i][k].chart || (disposalBoxGen = 
+//                                                                 disposalBoxGen.concat(placeHolder[i].pop())));
+//             }*/
+//         }
+// /*        for(i = 0, len = disposalBox.length; i < len; i++) {
+//             if(disposalBox[i] !== undefined) {
+//                 disposalBox[i].chart && disposalBox[i].chart.chartObj.dispose();
+//                 parentContainer.removeChild(disposalBox[i] && disposalBox[i].graphics);
+//                 delete disposalBox[i];
+//             }
+//             delete disposalBox[i];
+//         }*/   
+//     };
+
+
 
     protoMatrix.dispose = function () {
         var matrix = this,
             node  = matrix && matrix.matrixContainer,
             placeHolder = matrix && matrix.placeHolder,
             i,
-            j;
+            j,
+            lenC,
+            lenR;
         for(i = 0, lenR = placeHolder && placeHolder.length; i < lenR; i++) {
             for (j = 0, lenC = placeHolder[i] && placeHolder[i].length; j < lenC; j++) {
                 placeHolder[i][j].chart && placeHolder[i][j].chart.chartObj && 
