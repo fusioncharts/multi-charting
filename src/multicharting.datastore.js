@@ -40,7 +40,7 @@
 		updataData = function (id) {
 			var i,
 				linkData = linkStore[id],
-				parentData = dataStorage[id],
+				parentData = outputDataStorage[id].data || dataStorage[id],
 				filterStore = lib.filterStore,
 				len,
 				linkIds,
@@ -49,6 +49,8 @@
 				filter,
 				filterFn,
 				type,
+				outSpecs,
+				processor,
 				// Store all the dataObjs that are updated.
 				tempDataUpdated = lib.tempDataUpdated = {};
 
@@ -57,7 +59,7 @@
 			len = linkIds.length;
 
 			for (i = 0; i < len; i++) {
-				linkId = linkIds[i];
+				linkId = linkIds[i].id;
 
 				tempDataUpdated[linkId] = true;
 				filter = filters[i];
@@ -72,6 +74,13 @@
 						dataStorage[linkId] = parentData;
 						filter.splice(i, 1);
 						i -= 1;
+					}
+
+					// Modifying data of self applied processor.
+					if (outSpecs =  outputDataStorage[linkId]) {
+						processor = outSpecs.processor;
+						outputDataStorage[linkId] = executeProcessor(processor.type, processor.getProcessor(),
+							dataStorage[linkId]);
 					}
 				}
 				
@@ -90,7 +99,7 @@
 				link;
 
 			for (i = 0; i < length; i++) {
-				link = links[i];
+				link = links[i].id;
 				newMetaData = metaStorage[link] = extend2({}, metaData);
 				if (linkStore[link]) {
 					updateMetaData(link, newMetaData);
@@ -147,7 +156,7 @@
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
 		var id = this.id;
-		return (outputDataStorage[id] || dataStorage[id]);
+		return (outputDataStorage[id].data || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
@@ -203,7 +212,7 @@
 						link : [],
 						filter : []
 					});
-					linkData.link.push(newId);
+					linkData.link.push(newDataObj);
 					linkData.filter.push(filter);
 
 					// Storing the data on which the filter is applied under the filter id.
@@ -232,7 +241,7 @@
 				link = linkData.link,
 				len = link.length;
 			for (i = 0; i < len; i ++) {
-				dataStore.deleteData(link[i]);
+				link[i].deleteData();
 			}
 			delete linkStore[id];
 		}
@@ -300,7 +309,7 @@
 	// Funtion to get all the keys of the JSON data
 	dataStoreProto.getKeys = function () {
 		var dataStore = this,
-			data = dataStorage[dataStore.id],
+			data = dataStore.getJSON(),
 			internalData = data[0],
 			keys = dataStore.keys;
 
@@ -318,7 +327,7 @@
 	// Funtion to get all the unique values corresponding to a key
 	dataStoreProto.getUniqueValues = function (key) {
 		var dataStore = this,
-			data = dataStorage[dataStore.id],
+			data = dataStore.getJSON(),
 			internalData = data[0],
 			isArray = internalData instanceof Array,
 			uniqueValues = dataStore.uniqueValues[key],
@@ -358,17 +367,24 @@
 			JSONData = dataStorage[id];
 
 		if (typeof processorFn === 'function') {
-			output = outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData);
+			output = outputDataStorage[dataStore.id] = {
+				data : executeProcessor(type, processorFn, JSONData),
+				processor : dataProcessor
+			};
 
 			delete dataStore.keys;
 			dataStore.uniqueValues = {};
+
+			if (linkStore[id]) {
+				updataData(id);
+			}
 
 			multiChartingProto.raiseEvent('tempEvent', {
 				'dataStore': dataStore,
 				'dataProcessor' : dataProcessor
 			}, dataStore);
 
-			return output;
+			return output.data;
 		}
 	};
 
