@@ -360,7 +360,10 @@
 		if (typeof processorFn === 'function') {
 			output = outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData);
 
-			multiChartingProto.raiseEvent('dataProcessorApplied', {
+			delete dataStore.keys;
+			dataStore.uniqueValues = {};
+
+			multiChartingProto.raiseEvent('tempEvent', {
 				'dataStore': dataStore,
 				'dataProcessor' : dataProcessor
 			}, dataStore);
