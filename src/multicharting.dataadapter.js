@@ -82,7 +82,7 @@
     };
 
     protoDataadapter.setDefaultAttr = function (json) {
-        var dataadapter = this,
+/*        var dataadapter = this,
             keyExcludedJsonStr = '',
             paletteColors = [],
             i,
@@ -109,7 +109,7 @@
                                                             : metaDataMeasure[COLOR];
         }
 
-        json.chart[PALETTECOLORS] = paletteColors;
+        json.chart[PALETTECOLORS] = paletteColors;*/
         return json;
     };
 
