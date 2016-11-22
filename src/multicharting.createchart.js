@@ -118,8 +118,15 @@
             argument =arguments[0] || {},
             dataAdapterObj = argument.configuration || {};
         chart.getJSON(argument);
-        chart.chartObj.chartType(chart.chartConfig.type);
-        chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+        if(chart.chartObj.chartType() == 'axis') {
+            chart.chartObj.dispose();
+            //render FC 
+            chart.chartObj = new FusionCharts(chart.chartConfig);
+            chart.chartObj.render();
+        } else {
+            chart.chartObj.chartType(chart.chartConfig.type);
+            chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+        }
         dataAdapterObj.chart = chart.chartObj;
     };
 
