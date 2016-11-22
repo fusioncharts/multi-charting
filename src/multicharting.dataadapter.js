@@ -7,7 +7,9 @@
     }
 })(function (MultiCharting) {
 
-    var extend2 = MultiCharting.prototype.lib.extend2;
+    var extend2 = MultiCharting.prototype.lib.extend2,
+        NULL = null,
+        UNDEFINED = undefined;
     //function to convert data, it returns fc supported JSON
     var DataAdapter = function () {
         var argument = arguments[0] || {},
@@ -41,7 +43,8 @@
             json = dataadapter.jsonCreator(aggregatedData, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;
-        return (callback && callback(json)) || dataadapter.setDefaultAttr(json); 
+        json = (callback && callback(json)) || json;
+        return dataadapter.setDefaultAttr(json);
     };
 
     protoDataadapter.getSortedData = function (data, categoryArr, dimension, aggregateMode) {
@@ -78,8 +81,34 @@
     };
 
     protoDataadapter.setDefaultAttr = function (json) {
+        var dataadapter = this,
+            keyExcludedJsonStr = '',
+            paletteColors = [],
+            i,
+            dataStore = dataadapter.dataStore,
+            len,
+            measure = dataadapter.configuration && dataadapter.configuration.measure,
+            metaData = dataStore && dataStore.getMetaData(),
+            metaDataMeasure;
+
         json.chart || (json.chart = {});
-        //json.chart.animation = 0;
+        
+        keyExcludedJsonStr = (metaData && JSON.stringify(json, function(k,v){
+            if(k == 'color') {
+                return NULL;
+            }
+            return v;
+        })) || UNDEFINED;
+
+        json = (keyExcludedJsonStr && JSON.parse(keyExcludedJsonStr)) || json;
+
+        for(i = 0, len = measure.length; i < len && metaData; i++) {
+            metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
+            paletteColors[i] = (metaDataMeasure['color'] instanceof Function) ? metaDataMeasure['color']() 
+                                                            : metaDataMeasure['color'];
+        }
+
+        json.chart['paletteColors'] = paletteColors;
         return json;
     };
 
@@ -127,11 +156,13 @@
             j,
             len,
             lenGeneralDataArray,
-            value;
+            value,
+            dimension = configuration.dimension || [],
+            measure = configuration.measure || [];
         if (!isArray){
             generalDataArray[0] = [];
-            generalDataArray[0].push(configuration.dimension);
-            generalDataArray[0] = generalDataArray[0][0].concat(configuration.measure);
+            generalDataArray[0].push(dimension);
+            generalDataArray[0] = generalDataArray[0][0].concat(measure);
             for (i = 0, len = jsonData.length; i < len; i++) {
                 generalDataArray[i+1] = [];
                 for (j = 0, lenGeneralDataArray = generalDataArray[0].length; j < lenGeneralDataArray; j++) {
