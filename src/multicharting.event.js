@@ -161,6 +161,7 @@
                 // Add the listener to the queue.
                 EventTarget.listeners[type].push([listener, bind]);
 
+                // Events of fusionChart raised via MultiCharting.
                 if (FCEventType = eventMap[type]) {
                     FusionCharts.addEventListener(FCEventType, function (e, d) {
                         raiseEvent(type, {
@@ -478,10 +479,10 @@
     };
 
     // Extend the eventlisteners to internal global.
-    global.addEventListener = function (type, listener) {
-        return EventTarget.addListener(type, listener);
+    global.addEventListener = function (type, listener, bind) {
+        return EventTarget.addListener(type, listener, bind);
     };
-    global.removeEventListener = function (type, listener) {
-        return EventTarget.removeListener(type, listener);
+    global.removeEventListener = function (type, listener, bind) {
+        return EventTarget.removeListener(type, listener, bind);
     };
 });
