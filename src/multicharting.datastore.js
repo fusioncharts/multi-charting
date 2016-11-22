@@ -103,7 +103,7 @@
 	};
 
 	// Function to add data in the data store
-	dataStoreProto.setData = function (dataSpecs, callback) {
+	dataStoreProto.setData = function (dataSpecs, callback, noRaiseEventFlag) {
 		var dataStore = this,
 			oldId = dataStore.id,
 			id = dataSpecs.id,
@@ -112,7 +112,7 @@
 			oldJSONData = dataStorage[oldId] || [],
 			callbackHelperFn = function (JSONData) {
 				dataStorage[id] = oldJSONData.concat(JSONData || []);
-				JSONData && multiChartingProto.raiseEvent('dataAdded', {
+				!noRaiseEventFlag && JSONData && multiChartingProto.raiseEvent('dataAdded', {
 					'id': id,
 					'data' : JSONData
 				}, dataStore);
@@ -184,6 +184,11 @@
 				if (typeof filterFn === 'function') {
 					newData = executeProcessor(type, filterFn, dataStorage[id]);
 
+					multiChartingProto.raiseEvent('dataProcessorApplied', {
+						'dataStore': data,
+						'dataProcessor' : filter
+					}, data);
+
 					newDataObj = new DataStore({dataSource : newData});
 					newId = newDataObj.id;
 
@@ -253,7 +258,7 @@
 			id = dataStore.id;
 
 		dataStorage[id] = [];
-		dataStore.setData(dataSpecs, callback);
+		dataStore.setData(dataSpecs, callback, true);
 		
 		multiChartingProto.raiseEvent('dataModified', {
 			'id': id
@@ -349,10 +354,18 @@
 			processorFn = dataProcessor.getProcessor(),
 			type = dataProcessor.type,
 			id = dataStore.id,
+			output,
 			JSONData = dataStorage[id];
 
 		if (typeof processorFn === 'function') {
-			return (outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData));
+			output = outputDataStorage[dataStore.id] = executeProcessor(type, processorFn, JSONData);
+
+			multiChartingProto.raiseEvent('dataProcessorApplied', {
+				'dataStore': dataStore,
+				'dataProcessor' : dataProcessor
+			}, dataStore);
+
+			return output;
 		}
 	};
 
