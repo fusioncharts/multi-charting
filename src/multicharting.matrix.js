@@ -390,7 +390,9 @@
             container.removeChild(container.lastChild);
         }
 
-        for(i = 0, lenPlaceHldrR = placeHolder.length; i < lenPlaceHldrR; i++) {
+        lenPlaceHldrR = placeHolder.length;
+
+        for(i = lenPlaceHldrR - 1; i >= 0; i--) {
             lenPlaceHldrC = placeHolder[i].length;
             for(j = lenPlaceHldrC - 1; j >= 0; j--) {
                 if(placeHolder[i][j].chart) {
@@ -400,6 +402,7 @@
                     placeHolder[i].pop();
                 }
             }
+            placeHolder.pop();
         }
 
         for(i = 0, lenConfigR = configManager.length; i < lenConfigR; i++) {
@@ -412,6 +415,8 @@
                     } else {
                         placeHolder[i][j] = new Cell(configManager[i][j], container);
                     }
+                } else {
+                    placeHolder[i][j] = new Cell(configManager[i][j], container);
                 }
             }
         }
