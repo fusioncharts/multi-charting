@@ -9,7 +9,8 @@
 
     var extend2 = MultiCharting.prototype.lib.extend2,
         NULL = null,
-        UNDEFINED = undefined;
+        COLOR = 'color',
+        PALETTECOLORS = 'paletteColors';
     //function to convert data, it returns fc supported JSON
     var DataAdapter = function () {
         var argument = arguments[0] || {},
@@ -98,17 +99,17 @@
                 return NULL;
             }
             return v;
-        })) || UNDEFINED;
+        })) || undefined;
 
         json = (keyExcludedJsonStr && JSON.parse(keyExcludedJsonStr)) || json;
 
         for(i = 0, len = measure.length; i < len && metaData; i++) {
             metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
-            paletteColors[i] = (metaDataMeasure['color'] instanceof Function) ? metaDataMeasure['color']() 
-                                                            : metaDataMeasure['color'];
+            paletteColors[i] = (metaDataMeasure[COLOR] instanceof Function) ? metaDataMeasure[COLOR]() 
+                                                            : metaDataMeasure[COLOR];
         }
 
-        json.chart['paletteColors'] = paletteColors;
+        json.chart[PALETTECOLORS] = paletteColors;
         return json;
     };
 
