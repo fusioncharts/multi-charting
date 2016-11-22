@@ -40,7 +40,7 @@
 		updataData = function (id) {
 			var i,
 				linkData = linkStore[id],
-				parentData = outputDataStorage[id].data || dataStorage[id],
+				parentData = (outputDataStorage && outputDataStorage[id].data) || dataStorage[id],
 				filterStore = lib.filterStore,
 				len,
 				linkIds,
@@ -50,6 +50,7 @@
 				filterFn,
 				type,
 				outSpecs,
+				dataStore,
 				processor,
 				// Store all the dataObjs that are updated.
 				tempDataUpdated = lib.tempDataUpdated = {};
@@ -59,7 +60,8 @@
 			len = linkIds.length;
 
 			for (i = 0; i < len; i++) {
-				linkId = linkIds[i].id;
+				dataStore = linkIds[i];
+				linkId = dataStore.id;
 
 				tempDataUpdated[linkId] = true;
 				filter = filters[i];
@@ -82,6 +84,8 @@
 						outputDataStorage[linkId] = executeProcessor(processor.type, processor.getProcessor(),
 							dataStorage[linkId]);
 					}
+					delete dataStore.keys;
+					dataStore.uniqueValues = {};
 				}
 				
 				if (linkStore[linkId]) {
@@ -156,7 +160,7 @@
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
 		var id = this.id;
-		return (outputDataStorage[id].data || dataStorage[id]);
+		return ((outputDataStorage && outputDataStorage[id].data) || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
