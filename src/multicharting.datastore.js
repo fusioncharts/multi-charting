@@ -40,7 +40,7 @@
 		updataData = function (id) {
 			var i,
 				linkData = linkStore[id],
-				parentData = (outputDataStorage && outputDataStorage[id].data) || dataStorage[id],
+				parentData = (outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id],
 				filterStore = lib.filterStore,
 				len,
 				linkIds,
@@ -160,7 +160,7 @@
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
 		var id = this.id;
-		return ((outputDataStorage && outputDataStorage[id].data) || dataStorage[id]);
+		return ((outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
