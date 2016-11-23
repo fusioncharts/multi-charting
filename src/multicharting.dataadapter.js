@@ -124,10 +124,9 @@
 
                     for(i = 0; i < len; i++) {
                         metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
-                        color = metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
-                                                            ((metaDataMeasure[COLOR] instanceof Function) ?
+                        color = metaDataMeasure[COLOR] && ((metaDataMeasure[COLOR] instanceof Function) ?
                                                                                 metaDataMeasure[COLOR]() :
-                                                                                metaDataMeasure[COLOR]));
+                                                                                metaDataMeasure[COLOR]);
                         color && (json.chart.datasets[0].dataset[0].series[i].plot[COLOR] = color);
                     }
                 }
