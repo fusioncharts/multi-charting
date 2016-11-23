@@ -92,9 +92,23 @@
 
 
 
+            dataStore.addEventListener('onloadstart', function(e, a) {
+                console.log('Event onloadstart...', e, a)
+            });
+
+            dataStore.addEventListener('onprogress', function(e, a) {
+                console.log('Event onprogress...', e, a);
+            });
+
+            dataStore.addEventListener('onloadend', function(e, a) {
+                console.log('Event onloadend...', e, a);
+            });
+
+
+
             dataStore.setDataUrl({
-                // dataSource: 'airline-small.csv',
-                dataSource: 'airline.csv',
+                dataSource: 'airline-small.csv',
+                // dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2,
                 callback: function (data) {
@@ -225,11 +239,11 @@
                     distanceDataProcessor.addRule({rule: filterByDistance});
                     flightByDistance = dataStore.getData(distanceDataProcessor);
 
-                    window.nd = newData.getJSON();
-                    window.dt = flightByDate.getJSON();
-                    window.t = flightByTime.getJSON();
-                    window.a = flightByArrival.getJSON();
-                    window.di = flightByDistance.getJSON();
+                    window.nd = newData;
+                    window.dt = flightByDate;
+                    window.t = flightByTime;
+                    window.a = flightByArrival;
+                    window.di = flightByDistance;
 
                     console.log('done');
 
@@ -241,17 +255,13 @@
                             "html": "Chart 1",
                             "chart": {
                                 "type": "mscolumn2d",
-                                // "renderAt": "chart1",
                                 "width": "100%",
                                 "height": "100%",
-                                "configuration": {
-                                    "data": {
-                                        "dimension": [
-                                            "Time"
-                                        ],
-                                        "measure": [
-                                            "Flights"
-                                        ],
+                                "datastore": flightByTime,
+                                "configuration": MultiChartObj.dataAdapter({
+                                    "config": {
+                                        "dimension": ["Time"],
+                                        "measure": ["Flights"],
                                         "seriesType": "MS",
                                         "config": {
                                             "chart": {
@@ -263,8 +273,7 @@
                                             }
                                         }
                                     }
-                                },
-                                "jsonData": window.t
+                                })
                             }
                         }, {
                             "height": 120,
@@ -273,18 +282,13 @@
                             "html": "Chart 2",
                             "chart": {
                                 "type": "mscolumn2d",
-                                // "renderAt": "2",
                                 "width": "100%",
                                 "height": "100%",
-                                "jsonData": window.a,
-                                "configuration": {
+                                "datastore": flightByArrival,
+                                "configuration": MultiChartObj.dataAdapter({
                                     "data": {
-                                        "dimension": [
-                                            "Arrival"
-                                        ],
-                                        "measure": [
-                                            "Flights"
-                                        ],
+                                        "dimension": ["Arrival"],
+                                        "measure": ["Flights"],
                                         "seriesType": "MS",
                                         "config": {
                                             "chart": {
@@ -296,7 +300,7 @@
                                             }
                                         }                    
                                     }
-                                }
+                                })
                             }
                         }, {
                             "height": 120,
@@ -305,15 +309,11 @@
                             "html": "html3",
                             "chart": {
                                 "type": "mscolumn2d",
-                                "jsonData": window.di,
-                                "configuration": {
-                                    "data": {
-                                        "dimension": [
-                                            "Distance"
-                                        ],
-                                        "measure": [
-                                            "Flights"
-                                        ],
+                                "datastore": flightByDistance,
+                                "configuration": MultiChartObj.dataAdapter({
+                                    "config": {
+                                        "dimension": ["Distance"],
+                                        "measure": ["Flights"],
                                         "seriesType": "MS",
                                         "config": {
                                             "chart": {
@@ -325,7 +325,7 @@
                                             }
                                         }                    
                                     }
-                                }
+                                })
                             }
                         }], [{
                             "height": 200,
@@ -334,18 +334,13 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "timeseries",
-                                "jsonData": window.dt,
-                                "plottype": 'column',
+                                "type": "mscolumn2d",
+                                "datastore": flightByDate,
                                 "configuration": {
-                                    "data": {
-                                        "dimension": [
-                                            "Date"
-                                        ],
-                                        "measure": [
-                                            "Flights"
-                                        ],
-                                        "seriesType": "ts",
+                                    "config": {
+                                        "dimension": ["Date"],
+                                        "measure": ["Flights"],
+                                        "seriesType": "ms",
                                         "config": confTS
                                     },
                                     "callback": function (data) {
@@ -363,6 +358,10 @@
 
                     matrix = MultiChartObj.createMatrix('matrix', configuration);
                     matrix.draw();
+
+
+
+
 
                 }
             })
