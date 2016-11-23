@@ -78,8 +78,10 @@
         return( arrData );
     }
     /* jshint ignore:end */
+    var MultiChartingProto = MultiCharting.prototype;
 
-    MultiCharting.prototype.convertToArray = function (data, delimiter, outputFormat, callback) {
+    MultiChartingProto.convertToArray = function (data, delimiter, outputFormat, callback) {
+        var csvToArr = this;
         if (typeof data === 'object') {
             delimiter = data.delimiter;
             outputFormat = data.outputFormat;
@@ -107,6 +109,22 @@
                     jlen = 0,
                     obj = {};
                     lim = i + 3000;
+                if(i === 1){
+                    MultiChartingProto.raiseEvent('onParsingStart', {
+                        Event: {
+                            loaded: 0,
+                            type:'loadstart',
+                            total: len
+                        }
+                    }, csvToArr);
+                }
+                MultiChartingProto.raiseEvent('onParsingProgress', {
+                    Event: {
+                            loaded: i,
+                            type:'progress',
+                            total: len
+                        }
+                }, csvToArr);
                 
                 if (lim > len) {
                     lim = len;
@@ -144,6 +162,13 @@
                     // setTimeout(updateManager, 0);
                     updateManager();
                 } else {
+                    MultiChartingProto.raiseEvent('onParsingEnd', {
+                        Event: {
+                            loaded: i,
+                            type:'loadend',
+                            total: len
+                        }
+                    }, csvToArr);
                     callback && callback(finalOb);
                 }
             };
