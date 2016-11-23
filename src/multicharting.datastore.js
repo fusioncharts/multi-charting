@@ -8,139 +8,258 @@
 })(function (MultiCharting) {
 
 	var	multiChartingProto = MultiCharting.prototype,
-		lib = multiChartingProto.lib,
-		dataStorage = lib.dataStorage = {},
-		outputDataStorage = lib.outputDataStorage = {},
-		metaStorage = lib.metaStorage = {},
-		extend2 = lib.extend2,
-		// For storing the child of a parent
-		linkStore = {},
-		//For storing the parent of a child
-		parentStore = lib.parentStore = {},
-		idCount = 0,
-		// Constructor class for DataStore.
-		DataStore = function () {
-	    	var manager = this;
-	    	manager.uniqueValues = {};
-	    	manager.setData(arguments[0]);
+		//lib = multiChartingProto.lib,
+        eventList = {
+            'modelUpdate': 'modelupdate',
+            'modelDeleted': 'modeldeleted',
+            'metaInfoUpdate': 'metainfoupdated',
+            'processorUpdated': 'processorupdated',
+            'processorDeleted': 'processordeleted'
+        },
+        uidCounter = 0,
+        gerateUID = function () {
+            return 'model_id_' + (uidCounter++);
+        },
+        getProcessorStoreObj = function (processor, ds) {
+            var storeObj = {
+	                processor: processor,
+	                listners: {}
+	            },
+	            listners;
+
+            listners = storeObj.listners;
+            listners[eventList.processorUpdated] = function () {
+                ds._generateInputData();
+            };
+            listners[eventList.processorDeleted] =  function () {
+                ds.removeDataProcessor(processor);
+            };
+            return storeObj;
+        },
+        addListners = function (element, listnersObj) {
+            var eventName;
+            if (listnersObj && element.addEventListener) {
+                for (eventName in listnersObj) {
+                    element.addEventListener(eventName, listnersObj[eventName]);
+                }
+            }
+        },
+        removeListners = function (element, listnersObj) {
+            var eventName;
+            if (listnersObj && element.removeEventListener) {
+                for (eventName in listnersObj) {
+                    element.removeEventListener(eventName, listnersObj[eventName]);
+                }
+            }
+        },
+		// Constructor class for DataModel.
+		DataModel = function () {
+	    	var ds = this;
+	    	ds.links = {
+              inputStore: undefined,
+              inputJSON: undefined,
+              inputData: [],
+              processors: [],
+              metaObj: {}
+            };
+            // add the unicId
+            ds.id = gerateUID();
+	    	arguments[0] && ds.setData(arguments[0]);
 		},
-		dataStoreProto = DataStore.prototype,
+		DataModelProto = DataModel.prototype;
 
-		// Function to execute the dataProcessor over the data
-		executeProcessor = function (type, filterFn, JSONData) {
-			switch (type) {
-				case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
-				case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
-				case 'map' : return Array.prototype.map.call(JSONData, filterFn);
-				default : return filterFn(JSONData);
-			}
-		},
+        //
+        multiChartingProto.createDataStore = function () {
+            return new DataModel(arguments[0]);
+        };
 
-		//Function to update all the linked child data
-		updataData = function (id) {
-			var i,
-				linkData = linkStore[id],
-				parentData = (outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id],
-				filterStore = lib.filterStore,
-				len,
-				linkIds,
-				filters,
-				linkId,
-				filter,
-				filterFn,
-				type,
-				outSpecs,
-				dataStore,
-				processor,
-				// Store all the dataObjs that are updated.
-				tempDataUpdated = lib.tempDataUpdated = {};
+    DataModelProto.getId = function () {
+        return this.id;
+    };
+    DataModelProto._generateInputData = function() {
+        var ds = this;
+        // remove all old data
+        ds.links.inputData.length = 0;
 
-			linkIds = linkData.link;
-			filters = linkData.filter;
-			len = linkIds.length;
+        // get the data from the input Store
+        if (ds.links.inputStore && ds.links.inputStore.getJSON) {
+        	ds.links.inputData = ds.links.inputData.concat(ds.links.inputStore.getJSON());
+            // ds.links.inputData.push.apply(ds.links.inputData, ds.links.inputStore.getJSON());
+        }
 
-			for (i = 0; i < len; i++) {
-				dataStore = linkIds[i];
-				linkId = dataStore.id;
+        // add the input JSON (seperately added)
+        if (ds.links.inputJSON && ds.links.inputJSON.length) {
+        	ds.links.inputData = ds.links.inputData.concat(ds.links.inputJSON);
+        	// ds.links.inputData.push.apply(ds.links.inputData, ds.links.inputJSON);
+        }
 
-				tempDataUpdated[linkId] = true;
-				filter = filters[i];
-				filterFn = filter.getProcessor();
-				type = filter.type;
 
-				if (typeof filterFn === 'function') {
-					if (filterStore[filter.id]) {
-						dataStorage[linkId] = executeProcessor(type, filterFn, parentData);
-					}
-					else {
-						dataStorage[linkId] = parentData;
-						filter.splice(i, 1);
-						i -= 1;
-					}
+        // for simplecity call the output JSON creation method as well
+        ds._generateOutputData();
 
-					// Modifying data of self applied processor.
-					if (outSpecs =  outputDataStorage[linkId]) {
-						processor = outSpecs.processor;
-						outputDataStorage[linkId] = executeProcessor(processor.type, processor.getProcessor(),
-							dataStorage[linkId]);
-					}
-					delete dataStore.keys;
-					dataStore.uniqueValues = {};
-				}
-				
-				if (linkStore[linkId]) {
-					updataData(linkId);
-				}
-			}
-		},
+    };
 
-		//Function to update metaData of the child data recurssively
-		updateMetaData = function (id, metaData) {
-			var links = linkStore[id].link,
-				length = links.length,
-				i,
-				newMetaData,
-				link;
 
-			for (i = 0; i < length; i++) {
-				link = links[i].id;
-				newMetaData = metaStorage[link] = extend2({}, metaData);
-				if (linkStore[link]) {
-					updateMetaData(link, newMetaData);
-				}
-			}
-		};
+    DataModelProto._generateOutputData = function () {
+        var ds = this,
+        links = ds.links,
+        outputData = links.inputData,
+        i,
+        l = links.processors.length,
+        storeObj;
 
-	multiChartingProto.createDataStore = function () {
-		return new DataStore(arguments);
+        if (l && outputData.length) {
+            for (i = 0; i < l; i += 1) {
+                storeObj = links.processors[i];
+                if (storeObj && storeObj.processor && storeObj.processor.getProcessedData) {
+                    // @todo: we have to create this new method in the processor to return a processed JSON data
+                    outputData = storeObj.processor.getProcessedData(outputData);
+                }
+            }
+        }
+        ds.links.outputData = outputData;
+
+        // raise the event for OutputData modified event
+        ds.raiseEvent(eventList.modelUpdate, {
+            'data': ds.links.outputData
+        }, ds);
+    };
+
+
+    // Function to get the jsondata of the data object
+	DataModelProto.getJSON = function () {
+		var ds = this;
+		return (ds.links.outputData || ds.links.inputData);
 	};
 
-	// Function to add data in the data store
-	dataStoreProto.setData = function (dataSpecs, callback, noRaiseEventFlag) {
-		var dataStore = this,
-			oldId = dataStore.id,
-			id = dataSpecs.id,
+    // Function to get child data Store object after applying filter on the parent data.
+	// @params {filters} - This can be a filter function or an array of filter functions.
+	DataModelProto.getChildModel = function (filters) {
+		var ds = this,
+			newDs,
+            metaInfo = ds.links.metaObj,
+            key,
+            newDSLink,
+            MetaConstructor,
+			metaConstractor,
+            inputStoreListners;
+        newDs = new DataModel();
+        newDSLink = newDs.links;
+        newDSLink.inputStore = ds;
+
+        // create listners
+        inputStoreListners = newDSLink.inputStoreListners = {};
+        inputStoreListners[eventList.modelUpdate] = function () {
+            newDs._generateInputData();
+        };
+        inputStoreListners[eventList.modelUpdate] = function () {
+            newDs.dispose();
+        };
+        inputStoreListners[eventList.metaInfoUpdate] = function () {
+            newDs.raiseEvent(eventList.metaInfoUpdate, {});
+        };
+
+        // inherit metaInfos
+        for (key in metaInfo) {
+            MetaConstructor = function () {};
+            metaConstractor.prototype = metaInfo[key];
+            metaConstractor.prototype.constructor = MetaConstructor;
+            newDSLink.metaObj[key] = new MetaConstructor();
+        }
+
+        // attached event listener on parent data
+        addListners(ds, inputStoreListners);
+        newDs._generateInputData();
+
+        newDs.addDataProcessor(filters);
+        return newDs;
+	};
+
+    // Function to add processor in the data store
+    DataModelProto.addDataProcessor = function (processors) {
+        var ds = this,
+        i,
+        l,
+        processor,
+        storeObj;
+        // if single filter is passed make it an Array
+        if (!(processors instanceof Array)) {
+            processors = [processors];
+        }
+        l = processors.length;
+        for (i = 0; i < l; i += 1) {
+            processor = processors[i];
+            if (processor && processor.addEventListener) {
+                storeObj = getProcessorStoreObj(processor, ds);
+                // add the listners
+                addListners(processor, storeObj.listners);
+                ds.links.processors.push(storeObj);
+            }
+        }
+        // update the outputData
+        ds._generateOutputData();
+    };
+    //Function to remove processor in the data store
+    DataModelProto.removeDataProcessor = function (processors) {
+        var ds = this,
+        processorsStore = ds.links.processors,
+        storeObj,
+        i,
+        l,
+        j,
+        k,
+        processor,
+        foundMatch;
+        // if single filter is passed make it an Array
+        if (!(processors instanceof Array)) {
+            processors = [processors];
+        }
+        k = processors.length;
+        for (j = 0; j < k; j += 1) {
+            processor = processors[j];
+            l = processorsStore.length;
+            foundMatch = false;
+            for (i = 0; i < l && !foundMatch; i += 1) {
+                storeObj = processorsStore[i];
+                if  (storeObj && storeObj.processor === processor) {
+                    foundMatch = true;
+                    // remove the listeners
+                    removeListners(processor, storeObj.listners);
+                    // remove the precessor store Obj
+                    processorsStore.splice(i, 1);
+                }
+            }
+        }
+        // update the outputData
+        ds._generateOutputData();
+    };
+
+    // Function to add event listener at dataStore level.
+	DataModelProto.addEventListener = function (type, listener) {
+		return multiChartingProto.addEventListener(type, listener, this);
+	};
+
+	// Function to remove event listener at dataStore level.
+    DataModelProto.removeEventListener = function (type, listener) {
+		return multiChartingProto.removeEventListener(type, listener, this);
+	};
+
+    DataModelProto.raiseEvent = function (type, dataObj) {
+		return multiChartingProto.raiseEvent(type, dataObj, this);
+	};
+
+    // Function to add data in the data store
+	DataModelProto.setData = function (dataSpecs, callback) {
+		var ds = this,
 			dataType = dataSpecs.dataType,
 			dataSource = dataSpecs.dataSource,
-			oldJSONData = dataStorage[oldId] || [],
 			callbackHelperFn = function (JSONData) {
-				dataStorage[id] = oldJSONData.concat(JSONData || []);
-				!noRaiseEventFlag && JSONData && multiChartingProto.raiseEvent('dataAdded', {
-					'id': id,
-					'data' : JSONData
-				}, dataStore);
-				if (linkStore[id]) {
-					updataData(id);
-				}
+				ds.links.inputJSON = JSONData;
+				ds._generateInputData();
 				if (typeof callback === 'function') {
 					callback(JSONData);
-				}	
+				}
 			};
-
-		id = oldId || id || 'dataStorage' + idCount ++;
-		dataStore.id = id;
-		delete dataStore.keys;
-		dataStore.uniqueValues = {};
 
 		if (dataType === 'csv') {
 			multiChartingProto.convertToArray({
@@ -156,196 +275,75 @@
 			callbackHelperFn(dataSource);
 		}
 	};
+    // Function to remove all data (not the data linked from the parent) in the data store
+    DataModelProto.clearData = function (){
+        var ds = this;
+        // clear inputData store
+        ds.links.inputData && (ds.links.inputData.length = 0);
+        // re-generate the store's data
+        ds._generateInputData();
+    };
 
-	// Function to get the jsondata of the data object
-	dataStoreProto.getJSON = function () {
-		var id = this.id;
-		return ((outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id]);
-	};
+    // Function to dispose a store
+    DataModelProto.dispose = function (){
+        var ds = this,
+        links = ds.links,
+        inputStore = links.inputStore,
+        processorsStore = links.processors,
+        storeObj,
+        i;
 
-	// Function to get child data object after applying filter on the parent data.
-	// @params {filters} - This can be a filter function or an array of filter functions.
-	dataStoreProto.getData = function (filters) {
-		var data = this,
-			id = data.id,
-			filterLink = lib.filterLink;
-		// If no parameter is present then return the unfiltered data.
-		if (!filters) {
-			return dataStorage[id];
-		}
-		// If parameter is an array of filter then return the filtered data after applying the filter over the data.
-		else {
-			let result = [],
-				i,
-				newData,
-				linkData,
-				newId,
-				filter,
-				filterFn,
-				datalinks,
-				filterID,
-				type,
-				newDataObj,
-				isFilterArray = filters instanceof Array,
-				len = isFilterArray ? filters.length : 1;
+        // remove inoutStore listeners
+        if (inputStore && inputStore.removeEventListener) {
+            removeListners(inputStore, links.inputStoreListners);
+        }
 
-			for (i = 0; i < len; i++) {
-				filter = filters[i] || filters;
-				filterFn = filter.getProcessor();
-				type = filter.type;
+        // remove all filters and thir listeners
+        for (i = processorsStore.length - 1; i >= 0; i -= 1) {
+            storeObj = processorsStore[i];
+            // remove the listeners
+            removeListners(storeObj.processor, storeObj.listners);
+        }
+        processorsStore.length = 0;
 
-				if (typeof filterFn === 'function') {
-					newData = executeProcessor(type, filterFn, dataStorage[id]);
+        // raise the event for OutputData modified event
+        ds.raiseEvent(eventList.modelDeleted, {});
 
-					multiChartingProto.raiseEvent('dataProcessorApplied', {
-						'dataStore': data,
-						'dataProcessor' : filter
-					}, data);
 
-					newDataObj = new DataStore({dataSource : newData});
-					newId = newDataObj.id;
+        // @todo: delete all links
 
-					//Passing the metaData to the child.
-					newDataObj.addMetaData(metaStorage[id]);
-					parentStore[newId] = data;
+        // @todo: clear all events as they will not be used any more
 
-					result.push(newDataObj);
+    };
+    // Funtion to get all the keys of the JSON data
+    // @todo: need to improve it for performance as well as for better results
+	DataModelProto.getKeys = function () {
+		var ds = this,
+			data = ds.getJSON(),
+			firstData = data[0] || {};
 
-					//Pushing the id and filter of child class under the parent classes id.
-					linkData = linkStore[id] || (linkStore[id] = {
-						link : [],
-						filter : []
-					});
-					linkData.link.push(newDataObj);
-					linkData.filter.push(filter);
-
-					// Storing the data on which the filter is applied under the filter id.
-					filterID = filter.getID();
-					datalinks = filterLink[filterID] || (filterLink[filterID] = []);
-					datalinks.push(newDataObj);
-
-					// setting the current id as the newID so that the next filter is applied on the child data;
-					id = newId;
-					data = newDataObj;
-				}
-			}
-			return (isFilterArray ? result : result[0]);
-		}
-	};
-
-	// Function to delete the current data from the dataStorage and also all its childs recursively
-	dataStoreProto.deleteData = function (optionalId) {
-		var dataStore = this,
-			id = optionalId || dataStore.id,
-			linkData = linkStore[id],
-			flag;
-
-		if (linkData) {
-			let i,
-				link = linkData.link,
-				len = link.length;
-			for (i = 0; i < len; i ++) {
-				link[i].deleteData();
-			}
-			delete linkStore[id];
-		}
-
-		delete metaStorage[id];
-		delete outputDataStorage[id];
-
-		flag = delete dataStorage[id];
-		multiChartingProto.raiseEvent('dataDeleted', {
-			'id': id,
-		}, dataStore);
-		return flag;
-	};
-
-	// Function to get the id of the current data
-	dataStoreProto.getID = function () {
-		return this.id;
-	};
-
-	// Function to modify data
-	dataStoreProto.modifyData = function (dataSpecs, callback) {
-		var dataStore = this,
-			id = dataStore.id;
-
-		dataStorage[id] = [];
-		dataStore.setData(dataSpecs, callback, true);
-		
-		multiChartingProto.raiseEvent('dataModified', {
-			'id': id
-		}, dataStore);
-	};
-
-	// Function to add data to the dataStorage asynchronously via ajax
-	dataStoreProto.setDataUrl = function () {
-		var dataStore = this,
-			argument = arguments[0],
-			dataSource = argument.dataSource,
-			dataType = argument.dataType,
-			delimiter = argument.delimiter,
-			outputFormat = argument.outputFormat,
-			callback = argument.callback,
-			callbackArgs = argument.callbackArgs,
-			data;
-
-		multiChartingProto.ajax({
-			url : dataSource,
-			success : function(string) {
-				data = dataType === 'json' ? JSON.parse(string) : string;
-				dataStore.setData({
-					dataSource : data,
-					dataType : dataType,
-					delimiter : delimiter,
-					outputFormat : outputFormat,
-				}, callback);
-			},
-
-			error : function(){
-				if (typeof callback === 'function') {
-					callback(callbackArgs);
-				}
-			}
-		});
-	};
-
-	// Funtion to get all the keys of the JSON data
-	dataStoreProto.getKeys = function () {
-		var dataStore = this,
-			data = dataStore.getJSON(),
-			internalData = data[0],
-			keys = dataStore.keys;
-
-		if (keys) {
-			return keys;
-		}
-		if (internalData instanceof Array) {
-			return (dataStore.keys = internalData);
-		}
-		else if (internalData instanceof Object) {
-			return (dataStore.keys = Object.keys(internalData));
-		}
+		return Object.keys(firstData);
 	};
 
 	// Funtion to get all the unique values corresponding to a key
-	dataStoreProto.getUniqueValues = function (key) {
-		var dataStore = this,
-			data = dataStore.getJSON(),
+    // @todo: need to improve it for performance as well as for better results
+	DataModelProto.getUniqueValues = function (key) {
+		var ds = this,
+			data = ds.getJSON(),
 			internalData = data[0],
 			isArray = internalData instanceof Array,
-			uniqueValues = dataStore.uniqueValues[key],
+			//uniqueValues = ds.uniqueValues[key],
 			tempUniqueValues = {},
 			len = data.length,
 			i;
 
-		if (uniqueValues) {
-			return uniqueValues;
-		}
+		// if (uniqueValues) {
+		// 	return uniqueValues;
+		// }
 
 		if (isArray) {
 			i = 1;
-			key = dataStore.getKeys().findIndex(function (element) {
+			key = ds.getKeys().findIndex(function (element) {
 				return element.toUpperCase() === key.toUpperCase();
 			});
 		}
@@ -358,66 +356,67 @@
 			!tempUniqueValues[internalData] && (tempUniqueValues[internalData] = true);
 		}
 
-		return (dataStore.uniqueValues[key] = Object.keys(tempUniqueValues));
+		return Object.keys(tempUniqueValues);
 	};
 
-	//Function to change the output of getJSON() based on the dataProcessor applied
-	dataStoreProto.applyDataProcessor = function (dataProcessor) {
-		var dataStore = this,
-			processorFn = dataProcessor.getProcessor(),
-			type = dataProcessor.type,
-			id = dataStore.id,
-			output,
-			JSONData = dataStorage[id];
-
-		if (typeof processorFn === 'function') {
-			output = outputDataStorage[dataStore.id] = {
-				data : executeProcessor(type, processorFn, JSONData),
-				processor : dataProcessor
-			};
-
-			delete dataStore.keys;
-			dataStore.uniqueValues = {};
-
-			if (linkStore[id]) {
-				updataData(id);
-			}
-
-			multiChartingProto.raiseEvent('tempEvent', {
-				'dataStore': dataStore,
-				'dataProcessor' : dataProcessor
-			}, dataStore);
-
-			return output.data;
-		}
+    // Function to add / update metadata
+	DataModelProto.updateMetaData = function (fieldName, metaInfo) {
+        var ds = this,
+        metaObj = ds.links.metaObj,
+        fieldMetaInfo, key;
+		if (fieldMetaInfo = metaObj[fieldName]) {
+            for (key in metaInfo) {
+                fieldMetaInfo[key] = metaInfo[key];
+            }
+        }
+        ds.raiseEvent(eventList.metaInfoUpdate, {});
 	};
-
-	// Function to add metadata
-	dataStoreProto.addMetaData = function (metaData, merge) {
-		var dataStore = this,
-			id = dataStore.id,
-			newMetaData;
-		if (merge) {
-			newMetaData = metaStorage[id] = extend2(metaStorage[id] || {}, metaData);
-		}
-		else {
-			newMetaData = metaStorage[id] = metaData;
-		}
-		linkStore[id] && updateMetaData(id, newMetaData);
-	};
+    // Function to add metadata
+    // Not required
+	// DataModelProto.deleteMetaData = function (fieldName, metaInfoKey) {
+    //     var ds = this,
+    //     metaObj = ds.links.metaObj;
+    //     if (metaObj[fieldName]) {
+    //         metaObj[fieldName][metaInfoKey] = undefined;
+    //     }
+	// };
 
 	// Function to get the added metaData
-	dataStoreProto.getMetaData = function () {
-		return metaStorage[this.id];
+	DataModelProto.getMetaData = function (fieldName) {
+		var ds = this,
+        metaObj = ds.links.metaObj;
+        return fieldName ? (metaObj[fieldName] || {}) : metaObj;
 	};
 
-	// Function to add event listener at dataStore level.
-	dataStoreProto.addEventListener = function (type, listener) {
-		return multiChartingProto.addEventListener(type, listener, this);
-	};
+	// Function to add data to the dataStorage asynchronously via ajax
+    DataModelProto.setDataUrl = function () {
+        var dataStore = this,
+            argument = arguments[0],
+            dataSource = argument.dataSource,
+            dataType = argument.dataType,
+            delimiter = argument.delimiter,
+            outputFormat = argument.outputFormat,
+            callback = argument.callback,
+            callbackArgs = argument.callbackArgs,
+            data;
 
-	// Function to remove event listener at dataStore level.
-	dataStoreProto.removeEventListener = function (type, listener) {
-		return multiChartingProto.removeEventListener(type, listener, this);
-	};
+        multiChartingProto.ajax({
+            url : dataSource,
+            success : function(string) {
+                data = dataType === 'json' ? JSON.parse(string) : string;
+                dataStore.setData({
+                    dataSource : data,
+                    dataType : dataType,
+                    delimiter : delimiter,
+                    outputFormat : outputFormat,
+                }, callback);
+            },
+
+            error : function(){
+                if (typeof callback === 'function') {
+                    callback(callbackArgs);
+                }
+            }
+        });
+    };
 });
