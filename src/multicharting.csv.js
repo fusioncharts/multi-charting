@@ -81,7 +81,7 @@
     var MultiChartingProto = MultiCharting.prototype;
 
     MultiChartingProto.convertToArray = function (data, delimiter, outputFormat, callback) {
-        csvToArr = this;
+        var csvToArr = this;
         if (typeof data === 'object') {
             delimiter = data.delimiter;
             outputFormat = data.outputFormat;
@@ -92,7 +92,6 @@
         if (typeof data !== 'string') {
             throw new Error('CSV string not provided');
         }
-
         var splitedData = data.split(/\r\n|\r|\n/),
             //total number of rows
             len = splitedData.length,
@@ -119,7 +118,6 @@
                         }
                     }, csvToArr);
                 }
-
                 MultiChartingProto.raiseEvent('onParsingProgress', {
                     Event: {
                             loaded: i,
