@@ -40,6 +40,7 @@
             generalData = dataadapter.generalDataFormat(jsonData, configuration);
             configuration.categories && (aggregatedData = dataadapter.getSortedData(generalData, 
                                 configuration.categories, configuration.dimension, configuration.aggregateMode));
+            aggregatedData = aggregatedData || generalData;
             dataadapter.aggregatedData = aggregatedData;
             json = dataadapter.jsonCreator(aggregatedData, configuration);            
         }
@@ -61,9 +62,13 @@
             j,
             k,
             i,
-            arr = [];
-        (!Array.isArray(dimension) && (key = [dimension])) || (key = dimension);
-        (!Array.isArray(categoryArr[0]) && (categories = [categoryArr])) || (categories = categoryArr);
+            arr = [],
+            dataStore = dataadapter.dataStore;
+  
+        (Array.isArray(dimension) && (key = dimension)) || (key = [dimension]);
+
+        (categoryArr && !categoryArr.length) || (categoryArr = dataStore.getUniqueValues(key[0]));
+        (Array.isArray(categoryArr[0]) && (categories = categoryArr)) || (categories = [categoryArr]);
 
         newData.push(data[0]);
         for(k = 0, lenKey = key.length; k < lenKey; k++) {
