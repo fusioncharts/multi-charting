@@ -10,6 +10,9 @@
 	var	multiChartingProto = MultiCharting.prototype,
 		lib = multiChartingProto.lib,
 		dataStorage = lib.dataStorage = {},
+		outputDataStorage = lib.outputDataStorage = {},
+		metaStorage = lib.metaStorage = {},
+		extend2 = lib.extend2,
 		// For storing the child of a parent
 		linkStore = {},
 		//For storing the parent of a child
@@ -37,7 +40,7 @@
 		updataData = function (id) {
 			var i,
 				linkData = linkStore[id],
-				parentData = dataStorage[id],
+				parentData = (outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id],
 				filterStore = lib.filterStore,
 				len,
 				linkIds,
@@ -46,6 +49,9 @@
 				filter,
 				filterFn,
 				type,
+				outSpecs,
+				dataStore,
+				processor,
 				// Store all the dataObjs that are updated.
 				tempDataUpdated = lib.tempDataUpdated = {};
 
@@ -54,11 +60,12 @@
 			len = linkIds.length;
 
 			for (i = 0; i < len; i++) {
-				linkId = linkIds[i];
+				dataStore = linkIds[i];
+				linkId = dataStore.id;
 
 				tempDataUpdated[linkId] = true;
 				filter = filters[i];
-				filterFn = filter.getFilter();
+				filterFn = filter.getProcessor();
 				type = filter.type;
 
 				if (typeof filterFn === 'function') {
@@ -70,10 +77,36 @@
 						filter.splice(i, 1);
 						i -= 1;
 					}
+
+					// Modifying data of self applied processor.
+					if (outSpecs =  outputDataStorage[linkId]) {
+						processor = outSpecs.processor;
+						outputDataStorage[linkId] = executeProcessor(processor.type, processor.getProcessor(),
+							dataStorage[linkId]);
+					}
+					delete dataStore.keys;
+					dataStore.uniqueValues = {};
 				}
 				
 				if (linkStore[linkId]) {
 					updataData(linkId);
+				}
+			}
+		},
+
+		//Function to update metaData of the child data recurssively
+		updateMetaData = function (id, metaData) {
+			var links = linkStore[id].link,
+				length = links.length,
+				i,
+				newMetaData,
+				link;
+
+			for (i = 0; i < length; i++) {
+				link = links[i].id;
+				newMetaData = metaStorage[link] = extend2({}, metaData);
+				if (linkStore[link]) {
+					updateMetaData(link, newMetaData);
 				}
 			}
 		};
@@ -83,7 +116,7 @@
 	};
 
 	// Function to add data in the data store
-	dataStoreProto.setData = function (dataSpecs, callback) {
+	dataStoreProto.setData = function (dataSpecs, callback, noRaiseEventFlag) {
 		var dataStore = this,
 			oldId = dataStore.id,
 			id = dataSpecs.id,
@@ -92,7 +125,7 @@
 			oldJSONData = dataStorage[oldId] || [],
 			callbackHelperFn = function (JSONData) {
 				dataStorage[id] = oldJSONData.concat(JSONData || []);
-				JSONData && multiChartingProto.raiseEvent('dataAdded', {
+				!noRaiseEventFlag && JSONData && multiChartingProto.raiseEvent('dataAdded', {
 					'id': id,
 					'data' : JSONData
 				}, dataStore);
@@ -126,7 +159,8 @@
 
 	// Function to get the jsondata of the data object
 	dataStoreProto.getJSON = function () {
-		return dataStorage[this.id];
+		var id = this.id;
+		return ((outputDataStorage[id] && outputDataStorage[id].data) || dataStorage[id]);
 	};
 
 	// Function to get child data object after applying filter on the parent data.
@@ -157,14 +191,22 @@
 
 			for (i = 0; i < len; i++) {
 				filter = filters[i] || filters;
-				filterFn = filter.getFilter();
+				filterFn = filter.getProcessor();
 				type = filter.type;
 
 				if (typeof filterFn === 'function') {
 					newData = executeProcessor(type, filterFn, dataStorage[id]);
 
+					multiChartingProto.raiseEvent('dataProcessorApplied', {
+						'dataStore': data,
+						'dataProcessor' : filter
+					}, data);
+
 					newDataObj = new DataStore({dataSource : newData});
 					newId = newDataObj.id;
+
+					//Passing the metaData to the child.
+					newDataObj.addMetaData(metaStorage[id]);
 					parentStore[newId] = data;
 
 					result.push(newDataObj);
@@ -174,7 +216,7 @@
 						link : [],
 						filter : []
 					});
-					linkData.link.push(newId);
+					linkData.link.push(newDataObj);
 					linkData.filter.push(filter);
 
 					// Storing the data on which the filter is applied under the filter id.
@@ -203,10 +245,13 @@
 				link = linkData.link,
 				len = link.length;
 			for (i = 0; i < len; i ++) {
-				dataStore.deleteData(link[i]);
+				link[i].deleteData();
 			}
 			delete linkStore[id];
 		}
+
+		delete metaStorage[id];
+		delete outputDataStorage[id];
 
 		flag = delete dataStorage[id];
 		multiChartingProto.raiseEvent('dataDeleted', {
@@ -221,12 +266,12 @@
 	};
 
 	// Function to modify data
-	dataStoreProto.modifyData = function () {
+	dataStoreProto.modifyData = function (dataSpecs, callback) {
 		var dataStore = this,
 			id = dataStore.id;
 
 		dataStorage[id] = [];
-		dataStore.setData(arguments);
+		dataStore.setData(dataSpecs, callback, true);
 		
 		multiChartingProto.raiseEvent('dataModified', {
 			'id': id
@@ -268,7 +313,7 @@
 	// Funtion to get all the keys of the JSON data
 	dataStoreProto.getKeys = function () {
 		var dataStore = this,
-			data = dataStorage[dataStore.id],
+			data = dataStore.getJSON(),
 			internalData = data[0],
 			keys = dataStore.keys;
 
@@ -286,7 +331,7 @@
 	// Funtion to get all the unique values corresponding to a key
 	dataStoreProto.getUniqueValues = function (key) {
 		var dataStore = this,
-			data = dataStorage[dataStore.id],
+			data = dataStore.getJSON(),
 			internalData = data[0],
 			isArray = internalData instanceof Array,
 			uniqueValues = dataStore.uniqueValues[key],
@@ -314,5 +359,65 @@
 		}
 
 		return (dataStore.uniqueValues[key] = Object.keys(tempUniqueValues));
+	};
+
+	//Function to change the output of getJSON() based on the dataProcessor applied
+	dataStoreProto.applyDataProcessor = function (dataProcessor) {
+		var dataStore = this,
+			processorFn = dataProcessor.getProcessor(),
+			type = dataProcessor.type,
+			id = dataStore.id,
+			output,
+			JSONData = dataStorage[id];
+
+		if (typeof processorFn === 'function') {
+			output = outputDataStorage[dataStore.id] = {
+				data : executeProcessor(type, processorFn, JSONData),
+				processor : dataProcessor
+			};
+
+			delete dataStore.keys;
+			dataStore.uniqueValues = {};
+
+			if (linkStore[id]) {
+				updataData(id);
+			}
+
+			multiChartingProto.raiseEvent('tempEvent', {
+				'dataStore': dataStore,
+				'dataProcessor' : dataProcessor
+			}, dataStore);
+
+			return output.data;
+		}
+	};
+
+	// Function to add metadata
+	dataStoreProto.addMetaData = function (metaData, merge) {
+		var dataStore = this,
+			id = dataStore.id,
+			newMetaData;
+		if (merge) {
+			newMetaData = metaStorage[id] = extend2(metaStorage[id] || {}, metaData);
+		}
+		else {
+			newMetaData = metaStorage[id] = metaData;
+		}
+		linkStore[id] && updateMetaData(id, newMetaData);
+	};
+
+	// Function to get the added metaData
+	dataStoreProto.getMetaData = function () {
+		return metaStorage[this.id];
+	};
+
+	// Function to add event listener at dataStore level.
+	dataStoreProto.addEventListener = function (type, listener) {
+		return multiChartingProto.addEventListener(type, listener, this);
+	};
+
+	// Function to remove event listener at dataStore level.
+	dataStoreProto.removeEventListener = function (type, listener) {
+		return multiChartingProto.removeEventListener(type, listener, this);
 	};
 });

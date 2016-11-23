@@ -6,7 +6,7 @@
     }
 })(function (MultiCharting) {
     
-
+    /* global FusionCharts: true */
     var global = MultiCharting.prototype,
         win = global.win,
 
@@ -82,7 +82,8 @@
             hoverin : 'dataplotrollover',
             hoverout : 'dataplotrollout',
             clik : 'dataplotclick'
-        }
+        },
+        raiseEvent,
 
         EventTarget = {
 
@@ -160,6 +161,7 @@
                 // Add the listener to the queue.
                 EventTarget.listeners[type].push([listener, bind]);
 
+                // Events of fusionChart raised via MultiCharting.
                 if (FCEventType = eventMap[type]) {
                     FusionCharts.addEventListener(FCEventType, function (e, d) {
                         raiseEvent(type, {
@@ -372,13 +374,6 @@
             }
         },
 
-        // Facilitate for raising events internally.
-        raiseEvent = global.raiseEvent = function (type, args, obj, eventScope,
-                defaultFn, cancelledFn) {
-            return EventTarget.triggerEvent(type, obj, args, eventScope,
-                defaultFn, cancelledFn);
-        },
-
         /**
          * List of events that has an equivalent legacy event. Used by the
          * raiseEvent method to check whether a particular event raised
@@ -393,6 +388,13 @@
          * @type object
          */
         conditionChecks = {};
+
+    // Facilitate for raising events internally.
+    raiseEvent = global.raiseEvent = function (type, args, obj, eventScope,
+            defaultFn, cancelledFn) {
+        return EventTarget.triggerEvent(type, obj, args, eventScope,
+            defaultFn, cancelledFn);
+    };
 
     global.disposeEvents = function (target) {
         var type, i;
@@ -477,10 +479,10 @@
     };
 
     // Extend the eventlisteners to internal global.
-    global.addEventListener = function (type, listener) {
-        return EventTarget.addListener(type, listener);
+    global.addEventListener = function (type, listener, bind) {
+        return EventTarget.addListener(type, listener, bind);
     };
-    global.removeEventListener = function (type, listener) {
-        return EventTarget.removeListener(type, listener);
+    global.removeEventListener = function (type, listener, bind) {
+        return EventTarget.removeListener(type, listener, bind);
     };
-})
+});

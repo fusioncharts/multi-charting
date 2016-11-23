@@ -23,7 +23,8 @@
         MSXMLHTTP2 = 'Msxml2.XMLHTTP',
         GET = 'GET',
         XHREQERROR = 'XmlHttprequest Error',
-        win = MultiCharting.prototype.win, // keep a local reference of window scope
+        multiChartingProto = MultiCharting.prototype,
+        win = multiChartingProto.win, // keep a local reference of window scope
 
         // Probe IE version
         version = parseFloat(win.navigator.appVersion.split('MSIE')[1]),
@@ -111,7 +112,9 @@
             successCallback = wrapper.onSuccess,
             xRequestedBy = 'X-Requested-By',
             hasOwn = Object.prototype.hasOwnProperty,
-            i;
+            i,
+            eventList = ['onloadstart', 'ondurationchange', 'onloadedmetadata', 'onloadeddata', 'onprogress',
+                'oncanplay', 'oncanplaythrough', 'onabort', 'onerror', 'ontimeout', 'onloadend'];
 
         // X-Requested-By is removed from header during cross domain ajax call
         if (url.search(/^(http:\/\/|https:\/\/)/) !== -1 &&
@@ -144,6 +147,14 @@
                 wrapper.open = false;
             }
         };
+
+        eventList.forEach(function (eventName) {
+            xmlhttp[eventName] = function (event) {
+                multiChartingProto.raiseEvent(eventName, {
+                    Event : event
+                }, wrapper);
+            };
+        });
 
         try {
             xmlhttp.open(GET, url, true);

@@ -27,7 +27,8 @@ var gulp = require('gulp'),
 		'src/multicharting.createchart.js',
         'src/multicharting.matrix.js',
         'vendors/fusioncharts-axis/src/common-axis.js',
-		'vendors/fusioncharts-caption/src/common-caption.js'
+		'vendors/fusioncharts-caption/src/common-caption.js',
+		'src/multicharting.event.js'
 	],
     ARGUMENTS = {},
 	arg;
