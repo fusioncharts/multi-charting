@@ -35,6 +35,41 @@
         <script type='text/javascript'>
             var MultiChartObj = new MultiCharting(),
                 months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                confTS = {
+                    "chart": {
+                        "axes": [{
+                            "x": {},
+                            "y": {}
+                        }],
+                        "datasets": [{
+                            "category": {
+                                "dateformat": "%b %e %Y"
+                            },
+                            "dataset": [{
+                                "uid": "ds-1",
+                                "series": [{
+                                    "plot": {
+                                        "style": {
+                                            fill: "#FF0000"
+                                        },
+                                        "type":"column"
+                                    },
+                                    "style": {
+                                        fill: "#FF0000"
+                                    },
+                                    "name": "Series 1"
+                                }]
+                            }]
+                        }]
+                    }
+                },
+                confCol = {
+                    "chart": {
+                        "theme": "ocean",
+                        "showYAxisValues": 0,
+                        "showValues": 0
+                    }
+                },
             	dataStore,
             	dataProcessor1,
             	dataProcessor2,
@@ -58,8 +93,8 @@
 
 
             dataStore.setDataUrl({
-                dataSource: 'airline-small.csv',
-                // dataSource: 'airline.csv',
+                // dataSource: 'airline-small.csv',
+                dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2,
                 callback: function (data) {
@@ -201,10 +236,6 @@
 
                     configuration = [
                         [{
-                            // "height": 150,
-                            // "width": 50,
-                            "html": "Axis"
-                        }, {
                             "height": 150,
                             "width": 250,
                             "html": "Chart 1",
@@ -299,11 +330,11 @@
                         }], [{
                             "height": 200,
                             "width": 900,
-                            "colspan": 4,
+                            "colspan": 3,
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "TimeSeriess",
+                                "type": "timeseries",
                                 "jsonData": window.dt,
                                 "plottype": 'column',
                                 "configuration": {
@@ -314,29 +345,8 @@
                                         "measure": [
                                             "Flights"
                                         ],
-                                        "seriesType": "TS",
-                                        "config": {
-                                            "chart": {
-                                                "axes": [{
-                                                    "x": {},
-                                                    "y": {}
-                                                }],
-                                                "datasets": [{
-                                                    "category": {
-                                                        "dateformat": "%b %e %Y",
-                                                        "_data": ["Jan 1 2001", "Jan 2 2001"]
-                                                    },
-                                                    "dataset": [{
-                                                        "uid": "ds-1",
-                                                        "series": [{
-                                                            "plottype": "column",
-                                                            "name": "Series 1",
-                                                            "_data": [9, 6]
-                                                        }]
-                                                    }]
-                                                }]
-                                            }
-                                        }
+                                        "seriesType": "ts",
+                                        "config": confTS
                                     },
                                     "callback": function (data) {
                                         // console.log('2 ', JSON.stringify(data, null, 4));

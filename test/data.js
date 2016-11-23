@@ -6,9 +6,9 @@ var START_YEAR = 1971,
 	val = [],
 	start = new Date(START_YEAR + '-01-01').getTime(),
 	length = (END_YEAR - START_YEAR) * 365,
-    hcdata = [];
+    hcdata = {data: []};
 
-length = 1000000;
+length = 10000;
 
 for (var i = 0; i <= length; i++) {
 	D = new Date(start + (86400000 * i));
@@ -27,8 +27,10 @@ for (var i = 0; i <= length; i++) {
 	val.push(value);;
 	dt.push(date);
 
-    hcdata.push([D.getTime(), value]);
+    hcdata.data.push([D.getTime(), value]);
 }
+
+// hcdata._charttype = 'column';
 
 console.log('Total number of data points: ', i);
 
@@ -44,7 +46,6 @@ data = {
         "datasets": [
             {
                 "category": {
-                    "dateformat": "%Y-%m-%e",
                     "data": dt
                 },
                 "dataset": [
@@ -53,7 +54,7 @@ data = {
                         "series": [{
                             // "plottype": "line",
                             "plot": {
-                                "type": 'column'
+                                "type": 'line'
                             },
                             "name": "Series 1",
                         	data: val
