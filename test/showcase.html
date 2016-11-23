@@ -50,12 +50,9 @@
                                 "series": [{
                                     "plot": {
                                         "style": {
-                                            fill: "#FF0000"
+                                            "fill": "#0f4d8c"
                                         },
                                         "type":"column"
-                                    },
-                                    "style": {
-                                        fill: "#FF0000"
                                     },
                                     "name": "Series 1"
                                 }]
@@ -246,6 +243,29 @@
                     window.di = flightByDistance;
 
 
+                    flightByDate.addMetaData({
+                        "Flights": {
+                            "color": '#FFFF00'
+                        }
+                    });
+
+                    flightByTime.addMetaData({
+                        "Flights": {
+                            "color": '#FFFF00'
+                        }
+                    });
+
+                    flightByArrival.addMetaData({
+                        "Flights": {
+                            "color": '#FFFF00'
+                        }
+                    });
+
+                    flightByDistance.addMetaData({
+                        "Flights": {
+                            "color": '#00FFFF'
+                        }
+                    });
 
 
                     configuration = [
