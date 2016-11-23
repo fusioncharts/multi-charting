@@ -107,8 +107,8 @@
 
 
             dataStore.setDataUrl({
-                dataSource: 'airline-small.csv',
-                // dataSource: 'airline.csv',
+                // dataSource: 'airline-small.csv',
+                dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2,
                 callback: function (data) {
@@ -245,7 +245,7 @@
                     window.a = flightByArrival;
                     window.di = flightByDistance;
 
-                    console.log('done');
+
 
 
                     configuration = [
@@ -257,8 +257,8 @@
                                 "type": "mscolumn2d",
                                 "width": "100%",
                                 "height": "100%",
-                                "datastore": flightByTime,
                                 "configuration": MultiChartObj.dataAdapter({
+                                    "datastore": flightByTime,
                                     "config": {
                                         "dimension": ["Time"],
                                         "measure": ["Flights"],
@@ -284,9 +284,9 @@
                                 "type": "mscolumn2d",
                                 "width": "100%",
                                 "height": "100%",
-                                "datastore": flightByArrival,
                                 "configuration": MultiChartObj.dataAdapter({
-                                    "data": {
+                                    "datastore": flightByArrival,
+                                    "config": {
                                         "dimension": ["Arrival"],
                                         "measure": ["Flights"],
                                         "seriesType": "MS",
@@ -309,8 +309,8 @@
                             "html": "html3",
                             "chart": {
                                 "type": "mscolumn2d",
-                                "datastore": flightByDistance,
                                 "configuration": MultiChartObj.dataAdapter({
+                                    "datastore": flightByDistance,
                                     "config": {
                                         "dimension": ["Distance"],
                                         "measure": ["Flights"],
@@ -334,13 +334,13 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "mscolumn2d",
-                                "datastore": flightByDate,
-                                "configuration": {
+                                "type": "timeseries",
+                                "configuration": MultiChartObj.dataAdapter({
+                                    "datastore": flightByDate,
                                     "config": {
                                         "dimension": ["Date"],
                                         "measure": ["Flights"],
-                                        "seriesType": "ms",
+                                        "seriesType": "ts",
                                         "config": confTS
                                     },
                                     "callback": function (data) {
@@ -351,7 +351,7 @@
                                         // console.log(JSON.stringify(data, null, 4));
                                         return data;
                                     }
-                                }
+                                })
                             }
                         }]
                     ]
