@@ -70,21 +70,28 @@
     chartProto.render = function () {
         var chart = this,
             argument = arguments[0] || {},
-            dataAdapterObj = argument.configuration || {};
+            dataAdapterObj = argument.configuration || {},
+            chartObj;
 
         //get fc supported json            
         chart.getJSON(argument);        
         //render FC 
-        chart.chartObj = new FusionCharts(chart.chartConfig);
-        chart.chartObj.render();
+        chartObj = chart.chartObj = new FusionCharts(chart.chartConfig);
+        chartObj.render();
 
-        dataAdapterObj.chart = chart.chartObj;
+        dataAdapterObj.chart = chartObj;
         
-        chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
+        chartObj.addEventListener('trendRegionRollOver', function (e, d) {
             var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, 
                                         chart.dimension, chart.measure, d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
                 data : dataObj,
+                categoryLabel : d.categoryLabel
+            }, chart);
+        });
+
+        chartObj.addEventListener('trendRegionRollOut', function (e, d) {
+            MultiCharting.prototype.raiseEvent('hoverout', {
                 categoryLabel : d.categoryLabel
             }, chart);
         });
