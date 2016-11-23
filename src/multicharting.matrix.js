@@ -16,7 +16,7 @@
         ABSOLUTE = 'absolute',
         MAX_PERCENT = '100%',
         RELATIVE = 'relative',
-        ID = 'id',
+        ID = 'id-fc-mc-',
         BORDER_BOX = 'border-box';
 
     var Cell = function () {
@@ -421,79 +421,6 @@
             }
         }
     };
-
-//     protoMatrix.update = function (configuration) {
-//         var matrix = this,
-//             configManager = configuration && matrix && matrix.drawManager(configuration),
-//             len = configManager && configManager.length,
-//             lenC,
-//             lenPlcHldr,
-//             i,
-//             j,
-//             k,
-//             placeHolder = matrix && matrix.placeHolder,
-//             parentContainer  = matrix && matrix.matrixContainer,
-//             disposalBoxChart = matrix.disposalBoxChart = [],
-//             disposalBoxGen = matrix.disposalBoxGen = [],
-//             recycledCell,
-//             node = parentContainer;
-
-//         while (node.hasChildNodes()) {
-//             node.removeChild(node.lastChild);
-//         }
-
-//         lenPlcHldr = placeHolder.length;
-//         for (k = 0; k < lenPlcHldr; k++) {
-//             lenC = placeHolder[k].length;
-//             for(j = lenC - 1; j >= 0 ; j--) {
-//                 placeHolder[k][j].chart && (disposalBoxChart = disposalBoxChart.concat(placeHolder[k].pop()));
-//                 placeHolder[k][j] && (placeHolder[k][j].chart || (disposalBoxGen = 
-//                                                                 disposalBoxGen.concat(placeHolder[k].pop())));
-//             }
-//         }        
-//         for(i = 0; i < len; i++) {    
-// /*            if(!placeHolder[i]) {
-//                 placeHolder[i] = [];
-//             }*/
-//             placeHolder[i] = [];
-//             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
-//                 if(placeHolder[i][j]) {
-//                     placeHolder[i][j].update(configManager[i][j]);
-//                     parentContainer.appendChild(placeHolder[i][j].graphics);
-//                 } else {                    
-//                     configManager[i][j].chart && (recycledCell = disposalBoxChart.pop());
-//                     configManager[i][j].chart || (recycledCell = disposalBoxGen.pop())
-//                     if(recycledCell) {
-//                     console.log(11,'update',configManager[i][j]);
-//                         placeHolder[i][j] = recycledCell.update(configManager[i][j]);
-//                         parentContainer.appendChild(placeHolder[i][j].graphics);
-//                     } else {
-//                         console.log(22,'new',configManager[i][j]);
-//                         placeHolder[i][j] = new Cell(configManager[i][j],parentContainer);
-//                     }
-//                 /*}*/
-//             }
-
-// /*            lenPlcHldr = placeHolder[i].length;
-//             lenC = configManager[i].length;
-
-//             for (k = lenPlcHldr - 1; k >= lenC; k--) {
-//                 placeHolder[i][k].chart && (disposalBoxChart = disposalBoxChart.concat(placeHolder[i].pop()));
-//                 placeHolder[i][k] && (placeHolder[i][k].chart || (disposalBoxGen = 
-//                                                                 disposalBoxGen.concat(placeHolder[i].pop())));
-//             }*/
-//         }
-// /*        for(i = 0, len = disposalBox.length; i < len; i++) {
-//             if(disposalBox[i] !== undefined) {
-//                 disposalBox[i].chart && disposalBox[i].chart.chartObj.dispose();
-//                 parentContainer.removeChild(disposalBox[i] && disposalBox[i].graphics);
-//                 delete disposalBox[i];
-//             }
-//             delete disposalBox[i];
-//         }*/   
-//     };
-
-
 
     protoMatrix.dispose = function () {
         var matrix = this,

@@ -17,7 +17,7 @@
             dataadapter = this;
 
         dataadapter.dataStore = argument.datastore;       
-        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
+        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.datagetJSON();
         dataadapter.configuration = argument.config;
         dataadapter.callback = argument.callback;
         dataadapter.FCjson = dataadapter.convertData();
@@ -32,8 +32,8 @@
             predefinedJson = {},
             jsonData = dataadapter.dataJSON,
             configuration = dataadapter.configuration,
-            callback = dataadapter.callback;
-
+            callback = dataadapter.callback,
+            isMetaData = dataadapter.dataStore && (dataadapter.dataStore.getMetaData() ? true : false);
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
@@ -45,7 +45,7 @@
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;
         json = (callback && callback(json)) || json;
-        return dataadapter.setDefaultAttr(json);
+        return isMetaData ? dataadapter.setDefaultAttr(json) : json;
     };
 
     protoDataadapter.getSortedData = function (data, categoryArr, dimension, aggregateMode) {
@@ -82,15 +82,54 @@
     };
 
     protoDataadapter.setDefaultAttr = function (json) {
-/*        var dataadapter = this,
+        var dataadapter = this,
             keyExcludedJsonStr = '',
-            paletteColors = [],
-            i,
+            paletteColors = '',
             dataStore = dataadapter.dataStore,
-            len,
-            measure = dataadapter.configuration && dataadapter.configuration.measure,
+            conf = dataadapter && dataadapter.configuration,
+            measure = conf && conf.measure || [],
             metaData = dataStore && dataStore.getMetaData(),
-            metaDataMeasure;
+            metaDataMeasure,
+            seriesType = conf && conf.seriesType,
+            series = {
+                'ss' : function() {
+                    metaDataMeasure = metaData[measure[0]] && metaData[measure[0]];
+                    metaDataMeasure[COLOR] && (paletteColors = paletteColors + 
+                                                        ((metaDataMeasure[COLOR] instanceof Function) ?
+                                                                            metaDataMeasure[COLOR]() :
+                                                                            metaDataMeasure[COLOR]));
+                    json.chart[PALETTECOLORS] = paletteColors;
+                },
+                'ms' : function () {
+                    var i,
+                    len = json.dataset.length;
+                    for (i = 0; i < len; i++){
+                        metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
+
+                        metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
+                                                        ((metaDataMeasure[COLOR] instanceof Function) ?
+                                                                                metaDataMeasure[COLOR]() :
+                                                                                metaDataMeasure[COLOR]));
+                    }
+                },
+                'ts' : function () {
+                    var i,
+                        len = json.chart.datasets[0].dataset[0].series.length,
+                        color;
+
+                    for(i = 0; i < len; i++) {
+                        metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
+                        color = metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
+                                                            ((metaDataMeasure[COLOR] instanceof Function) ?
+                                                                                metaDataMeasure[COLOR]() :
+                                                                                metaDataMeasure[COLOR]));
+                        color && (json.chart.datasets[0].dataset[0].series[i].plot[COLOR] = color);
+                    }
+                }
+            };
+
+        seriesType = seriesType && seriesType.toLowerCase();
+        seriesType = (series[seriesType] && seriesType) || 'ms';
 
         json.chart || (json.chart = {});
         
@@ -103,13 +142,8 @@
 
         json = (keyExcludedJsonStr && JSON.parse(keyExcludedJsonStr)) || json;
 
-        for(i = 0, len = measure.length; i < len && metaData; i++) {
-            metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
-            paletteColors[i] = (metaDataMeasure[COLOR] instanceof Function) ? metaDataMeasure[COLOR]() 
-                                                            : metaDataMeasure[COLOR];
-        }
+        series[seriesType]();
 
-        json.chart[PALETTECOLORS] = paletteColors;*/
         return json;
     };
 
@@ -285,7 +319,7 @@
             };
         seriesType = seriesType && seriesType.toLowerCase();
         seriesType = (series[seriesType] && seriesType) || 'ms';
-        return series[seriesType](jsonData, conf);
+        return conf.measure && conf.dimension && series[seriesType](jsonData, conf);
     };
 
     protoDataadapter.getFCjson = function() {
@@ -339,7 +373,7 @@
         dataadapter.chart.drawTrendRegion(index);
     };
 
-    MultiCharting.prototype.dataadapter = function () {
+    MultiCharting.prototype.dataAdapter = function () {
         return new DataAdapter(arguments[0]);
     };
 });
