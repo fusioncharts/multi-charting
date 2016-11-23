@@ -9,11 +9,11 @@
 
     </head>
 
-    <body>
+    <body onload=''>
 
         <center style='margin: 10px'>
             <div id="matrix">
-                  Loading please wait... 
+                <progress id="progress" value="0"></progress>
             </div>
         </center>
 
@@ -88,20 +88,60 @@
             }
 
 
+            progressBar = document.getElementById("progress");
 
-            dataStore.addEventListener('onloadstart', function(e, a) {
-                console.log('Event onloadstart...', e, a)
+            // i = 0;
+            // var int = setInterval(function () {
+            //     progressBar.max = 100;
+            //     progressBar.value = i;
+            //     if (i >= 100) {
+            //         int = clearInterval(int);
+            //     }
+            //     i += 10;
+            // }, 200);
+
+
+            MultiChartObj.addEventListener('onloadstart', function(e, a) {
+                a = a.Event;
+                progressBar.value = 0;
             });
 
-            dataStore.addEventListener('onprogress', function(e, a) {
-                console.log('Event onprogress...', e, a);
+            MultiChartObj.addEventListener('onprogress', function(e, a) {
+                a = a.Event;
+                progressBar.max = a.total;
+                progressBar.value = a.loaded;
             });
 
-            dataStore.addEventListener('onloadend', function(e, a) {
-                console.log('Event onloadend...', e, a);
+            MultiChartObj.addEventListener('onloadend', function(e, a) {
+                a = a.Event;
+                progressBar.value = a.loaded;
             });
 
 
+
+
+
+
+            MultiChartObj.addEventListener('onParsingStart', function(e, a) {
+                a = a.Event;
+                // progressBar.max = a.total;
+                progressBar = document.getElementById("progress");
+                progressBar.value = 0;
+            });
+
+            MultiChartObj.addEventListener('onParsingProgress', function(e, a) {
+                a = a.Event;
+                progressBar = document.getElementById("progress");
+                progressBar.max = a.total;
+                progressBar.value = a.loaded;
+            });
+
+            MultiChartObj.addEventListener('onParsingEnd', function(e, a) {
+                a = a.Event;
+                // progressBar.max = a.total;
+                progressBar = document.getElementById("progress");
+                progressBar.value = a.loaded;
+            });
 
             dataStore.setDataUrl({
                 // dataSource: 'airline-small.csv',
