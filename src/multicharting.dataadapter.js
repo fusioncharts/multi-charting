@@ -99,6 +99,9 @@
             series = {
                 'ss' : function() {
                     metaDataMeasure = metaData[measure[0]] && metaData[measure[0]];
+                    if (!metaDataMeasure) {
+                        return;
+                    }
                     metaDataMeasure[COLOR] && (paletteColors = paletteColors + 
                                                         ((metaDataMeasure[COLOR] instanceof Function) ?
                                                                             metaDataMeasure[COLOR]() :
