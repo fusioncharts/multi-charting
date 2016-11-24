@@ -144,12 +144,15 @@
             // });
 
             dataStore.setDataUrl({
-                // dataSource: 'airline-small.csv',
-                dataSource: 'airline.csv',
+                dataSource: 'airline-small.csv',
+                // dataSource: 'airline.csv',
                 dataType: 'csv',
-                outputFormat: 2,
-                callback: function (data) {
+                outputFormat: 2
+            },
+            function (data) {
 
+                    console.log(data);
+                    // return;
                     var filterByDate = function (data) {
                             var flights = {
                                 },
@@ -253,28 +256,28 @@
                     // Parse the date and add information in the data
                     map = MultiChartObj.createDataProcessor();
                     map.map(mapFilter);
-                    newData = dataStore.getData(map);
+                    newData = dataStore.getChildModel(map);
 
                     // filter number of flights by date
                     dateDataProcessor = MultiChartObj.createDataProcessor();
                     dateDataProcessor.addRule({rule: filterByDate});
-                    flightByDate = dataStore.getData(dateDataProcessor);
+                    flightByDate = dataStore.getChildModel(dateDataProcessor);
 
                     // filter number of flights by time of day
                     timeDataProcessor = MultiChartObj.createDataProcessor();
                     timeDataProcessor.addRule({rule: filterByTime});
-                    flightByTime = dataStore.getData(timeDataProcessor);
+                    flightByTime = dataStore.getChildModel(timeDataProcessor);
                     
                     
                     // filter number of flights by arrival delay (min)
                     arrivalDataProcessor = MultiChartObj.createDataProcessor();
                     arrivalDataProcessor.addRule({rule: filterByArrival});
-                    flightByArrival = dataStore.getData(arrivalDataProcessor);
+                    flightByArrival = dataStore.getChildModel(arrivalDataProcessor);
 
                     // filter number of flights by distance
                     distanceDataProcessor = MultiChartObj.createDataProcessor();
                     distanceDataProcessor.addRule({rule: filterByDistance});
-                    flightByDistance = dataStore.getData(distanceDataProcessor);
+                    flightByDistance = dataStore.getChildModel(distanceDataProcessor);
 
                     window.nd = newData;
                     window.dt = flightByDate;
@@ -283,29 +286,29 @@
                     window.di = flightByDistance;
 
 
-                    // flightByDate.addMetaData({
-                    //     "Flights": {
-                    //         "color": '#FFFF00'
-                    //     }
-                    // });
+                    // // flightByDate.addMetaData({
+                    // //     "Flights": {
+                    // //         "color": '#FFFF00'
+                    // //     }
+                    // // });
 
-                    // flightByTime.addMetaData({
-                    //     "Flights": {
-                    //         "color": '#FFFF00'
-                    //     }
-                    // });
+                    // // flightByTime.addMetaData({
+                    // //     "Flights": {
+                    // //         "color": '#FFFF00'
+                    // //     }
+                    // // });
 
-                    // flightByArrival.addMetaData({
-                    //     "Flights": {
-                    //         "color": '#FFFF00'
-                    //     }
-                    // });
+                    // // flightByArrival.addMetaData({
+                    // //     "Flights": {
+                    // //         "color": '#FFFF00'
+                    // //     }
+                    // // });
 
-                    // flightByDistance.addMetaData({
-                    //     "Flights": {
-                    //         "color": '#00FFFF'
-                    //     }
-                    // });
+                    // // flightByDistance.addMetaData({
+                    // //     "Flights": {
+                    // //         "color": '#00FFFF'
+                    // //     }
+                    // // });
 
 
                     configuration = [
@@ -314,7 +317,7 @@
                             "width": 250,
                             "html": "Chart 1",
                             "chart": {
-                                "type": "mscolumn2d",
+                                "type": "column2d",
                                 "width": "100%",
                                 "height": "100%",
                                 "configuration": MultiChartObj.dataAdapter({
@@ -322,7 +325,7 @@
                                     "config": {
                                         "dimension": ["Time"],
                                         "measure": ["Flights"],
-                                        "seriesType": "MS",
+                                        "seriesType": "SS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Time of Day",
@@ -341,7 +344,7 @@
                             "id": "1",
                             "html": "Chart 2",
                             "chart": {
-                                "type": "mscolumn2d",
+                                "type": "column2d",
                                 "width": "100%",
                                 "height": "100%",
                                 "configuration": MultiChartObj.dataAdapter({
@@ -349,7 +352,7 @@
                                     "config": {
                                         "dimension": ["Arrival"],
                                         "measure": ["Flights"],
-                                        "seriesType": "MS",
+                                        "seriesType": "SS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Arrival Delay",
@@ -368,13 +371,13 @@
                             "id": "2",
                             "html": "html3",
                             "chart": {
-                                "type": "mscolumn2d",
+                                "type": "column2d",
                                 "configuration": MultiChartObj.dataAdapter({
                                     "datastore": flightByDistance,
                                     "config": {
                                         "dimension": ["Distance"],
                                         "measure": ["Flights"],
-                                        "seriesType": "MS",
+                                        "seriesType": "SS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Distance",
@@ -394,14 +397,14 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "timeseries",
+                                "type": "column2d",
                                 "configuration": MultiChartObj.dataAdapter({
                                     "datastore": flightByDate,
                                     "config": {
                                         "dimension": ["Date"],
                                         "measure": ["Flights"],
-                                        "seriesType": "ts",
-                                        "config": confTS
+                                        "seriesType": "ss",
+                                        "config": confCol
                                     },
                                     "callback": function (data) {
                                         // console.log('2 ', JSON.stringify(data, null, 4));
@@ -423,8 +426,7 @@
 
 
 
-                }
-            })
+            });
 
         </script>
 
