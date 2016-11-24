@@ -14,6 +14,13 @@
 		filterIdCount = 0,
 		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
+		eventList = {
+            'modelUpdated': 'modelupdated',
+            'modelDeleted': 'modeldeleted',
+            'metaInfoUpdate': 'metainfoupdated',
+            'processorUpdated': 'processorupdated',
+            'processorDeleted': 'processordeleted'
+        },
 		// Constructor class for DataProcessor.
 		DataProcessor = function () {
 	    	var manager = this;
@@ -71,7 +78,7 @@
 			updataFilterProcessor(id);
 		}
 
-		multiChartingProto.raiseEvent('filterAdded', {
+		multiChartingProto.raiseEvent(eventList.processorUpdated, {
 			'id': id,
 			'data' : filterFn
 		}, filter);
@@ -88,7 +95,7 @@
 	};
 
 
-	dataProcessorProto.deleteProcessor = function () {
+	dataProcessorProto.dispose = function () {
 		var filter = this,
 			id = filter.id;
 
@@ -97,7 +104,7 @@
 		delete filterStore[id];
 		delete filterLink[id];
 
-		multiChartingProto.raiseEvent('filterDeleted', {
+		multiChartingProto.raiseEvent(eventList.processorDeleted, {
 			'id': id,
 		}, filter);
 	};
@@ -125,4 +132,32 @@
 			}
 		);
 	};
+
+	dataProcessorProto.getProcessedData = function (JSONData) {
+		var dataProcessor = this,
+			type = dataProcessor.type,
+			filterFn = dataProcessor.getProcessor();
+        switch (type) {
+            case  'sort' : return Array.prototype.sort.call(JSONData, filterFn);
+            case  'filter' : return Array.prototype.filter.call(JSONData, filterFn);
+            case 'map' : return Array.prototype.map.call(JSONData, filterFn);
+            default : return filterFn(JSONData);
+        }
+        
+	};
+
+	// Function to add event listener at dataProcessor level.
+	dataProcessorProto.addEventListener = function (type, listener) {
+		return multiChartingProto.addEventListener(type, listener, this);
+	};
+
+	// Function to remove event listener at dataProcessor level.
+    dataProcessorProto.removeEventListener = function (type, listener) {
+		return multiChartingProto.removeEventListener(type, listener, this);
+	};
+
+    dataProcessorProto.raiseEvent = function (type, dataObj) {
+		return multiChartingProto.raiseEvent(type, dataObj, this);
+	};
+
 });

@@ -79,8 +79,8 @@
         },
 
         eventMap = {
-            hoverin : 'dataplotrollover',
-            hoverout : 'dataplotrollout',
+            hoverin : 'trendRegionRollOver',
+            hoverout : 'trendRegionRollOut',
             clik : 'dataplotclick'
         },
         raiseEvent,
