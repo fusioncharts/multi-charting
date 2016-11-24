@@ -15,7 +15,7 @@
 		dataStorage = lib.dataStorage,
 		parentStore = lib.parentStore,
 		eventList = {
-            'modelUpdate': 'modelupdate',
+            'modelUpdated': 'modelupdated',
             'modelDeleted': 'modeldeleted',
             'metaInfoUpdate': 'metainfoupdated',
             'processorUpdated': 'processorupdated',

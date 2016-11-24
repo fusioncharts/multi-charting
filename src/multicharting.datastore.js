@@ -10,7 +10,7 @@
 	var	multiChartingProto = MultiCharting.prototype,
 		//lib = multiChartingProto.lib,
         eventList = {
-            'modelUpdate': 'modelupdate',
+            'modelUpdated': 'modelupdated',
             'modelDeleted': 'modeldeleted',
             'metaInfoUpdate': 'metainfoupdated',
             'processorUpdated': 'processorupdated',
@@ -103,7 +103,7 @@
     DataModelProto._generateOutputData = function () {
         var ds = this,
         links = ds.links,
-        outputData = links.inputData,
+        outputData = links.inputData.concat([]),
         i,
         l = links.processors.length,
         storeObj;
@@ -120,7 +120,7 @@
         ds.links.outputData = outputData;
 
         // raise the event for OutputData modified event
-        ds.raiseEvent(eventList.modelUpdate, {
+        ds.raiseEvent(eventList.modelUpdated, {
             'data': ds.links.outputData
         }, ds);
     };
@@ -149,10 +149,10 @@
 
         // create listners
         inputStoreListners = newDSLink.inputStoreListners = {};
-        inputStoreListners[eventList.modelUpdate] = function () {
+        inputStoreListners[eventList.modelUpdated] = function () {
             newDs._generateInputData();
         };
-        inputStoreListners[eventList.modelUpdate] = function () {
+        inputStoreListners[eventList.modelDeleted] = function () {
             newDs.dispose();
         };
         inputStoreListners[eventList.metaInfoUpdate] = function () {
@@ -254,7 +254,7 @@
 			dataType = dataSpecs.dataType,
 			dataSource = dataSpecs.dataSource,
 			callbackHelperFn = function (JSONData) {
-				ds.links.inputJSON = JSONData;
+				ds.links.inputJSON = JSONData.concat(ds.links.inputJSON || []);
 				ds._generateInputData();
 				if (typeof callback === 'function') {
 					callback(JSONData);
@@ -275,6 +275,7 @@
 			callbackHelperFn(dataSource);
 		}
 	};
+
     // Function to remove all data (not the data linked from the parent) in the data store
     DataModelProto.clearData = function (){
         var ds = this;
