@@ -397,7 +397,7 @@
             dataType = argument.dataType,
             delimiter = argument.delimiter,
             outputFormat = argument.outputFormat,
-            callback = argument.callback,
+            callback = arguments[1],
             callbackArgs = argument.callbackArgs,
             data;
 
