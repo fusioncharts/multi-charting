@@ -1,0 +1,87 @@
+   <DOCTYPE !html>
+<html>
+    <head>
+
+        <script type='text/javascript' src='../../node_modules/fusioncharts/fusioncharts.js'></script>
+        <script type='text/javascript' src='../../node_modules/fusioncharts/fusioncharts.timeseries.js'></script>
+        <script type='text/javascript' src='../../out/fusioncharts.multicharting.js'></script>
+        <script type='text/javascript' src='../../node_modules/fusioncharts/themes/fusioncharts.theme.ocean.js'></script>
+        <script type='text/javascript' src='data.js'></script>
+
+    </head>
+
+    <body>
+
+        <center style='margin: 10px'>
+            <div id="matrix">
+                <progress id="progress" value="0"></progress>
+            </div>
+        </center>
+
+        <style type="text/css">
+            #matrix div {
+                border: 1px solid #CCCCCC;
+                vertical-align: middle;
+            }
+        
+        </style>
+
+        <script type='text/javascript'>
+
+            var MultiChartObj = new MultiCharting(),
+                dataStore = MultiChartObj.createDataStore(),
+                dataStore2 = MultiChartObj.createDataStore(),
+                progressBar = document.getElementById('progress');
+
+
+            dataStore.setData({
+                dataType: 'json',
+                dataSource: data
+            }, function () {
+                console.log(dataStore.getJSON());
+            });
+
+
+            dataStore2.setDataUrl({
+                dataType: 'json',
+                dataSource: '../airlines.json'
+            }, function () {
+                console.log(dataStore2.getJSON());
+            });
+
+
+
+
+
+
+
+
+            // var xhr = new XMLHttpRequest();
+
+            // xhr.open("GET", "../thads2011.csv?" + Math.floor(Math.random() * 99999), true);
+            // xhr.responseType = "json";
+
+            // xhr.onprogress = function(e) {
+            //     if (e.lengthComputable) {
+            //         progressBar.max = e.total;
+            //         progressBar.value = e.loaded;
+            //     }
+            // };
+            
+            // xhr.onloadstart = function(e) {
+            //     progressBar.value = 0;
+            // };
+            
+            // xhr.onloadend = function(e) {
+            //     progressBar.value = e.loaded;
+            // };
+
+            // xhr.send(null);
+
+
+        </script>
+
+    </body>
+
+
+</html>
