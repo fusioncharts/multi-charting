@@ -8,7 +8,7 @@
     }
 })(function (MultiCharting) {
 
-    var Chart = function () {
+/*    var Chart = function () {
             var chart = this,
                 argument = arguments[0] || {};
 
@@ -69,16 +69,13 @@
 
     chartProto.render = function () {
         var chart = this,
-            argument = arguments[0] || {},
-            dataAdapterObj = argument.configuration || {};
+            argument = arguments[0] || {};
 
         //get fc supported json            
         chart.getJSON(argument);        
         //render FC 
         chart.chartObj = new FusionCharts(chart.chartConfig);
-        chart.chartObj.render();
-
-        dataAdapterObj.chart = chart.chartObj;
+        // chart.chartObj.render();
         
         chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
             var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, 
@@ -117,20 +114,16 @@
         var chart = this,
             argument =arguments[0] || {},
             dataAdapterObj = argument.configuration || {};
+
         chart.getJSON(argument);
-        if(chart.chartObj.chartType() == 'axis') {
-            chart.chartObj.dispose();
-            //render FC 
-            chart.chartObj = new FusionCharts(chart.chartConfig);
-            chart.chartObj.render();
-        } else {
-            chart.chartObj.chartType(chart.chartConfig.type);
-            chart.chartObj.setJSONData(chart.chartConfig.dataSource);
-        }
-        dataAdapterObj.chart = chart.chartObj;
-    };
+        chart.chartObj.chartType(chart.chartConfig.type);
+        chart.chartObj.setJSONData(chart.chartConfig.dataSource);
+        
+        return chart;
+    };*/
+/*
 
     MultiCharting.prototype.createChart = function () {
         return new Chart(arguments[0]);
-    };
+    };*/
 });

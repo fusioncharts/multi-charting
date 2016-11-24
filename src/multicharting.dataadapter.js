@@ -12,19 +12,18 @@
         COLOR = 'color',
         PALETTECOLORS = 'paletteColors';
     //function to convert data, it returns fc supported JSON
-    var DataAdapter = function () {
-        var argument = arguments[0] || {},
-            dataadapter = this;
+    var DataAdapter = function (dataSource, conf, callback) {
+        var dataadapter = this;
 
-        dataadapter.dataStore = argument.datastore;       
+        dataadapter.dataStore = dataSource;       
         dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
-        dataadapter.configuration = argument.config;
-        dataadapter.callback = argument.callback;
-        dataadapter.FCjson = dataadapter.convertData();
+        dataadapter.configuration = conf;
+        dataadapter.callback = callback;
+        dataadapter.FCjson = dataadapter._convertData();
     },
     protoDataadapter = DataAdapter.prototype;
 
-    protoDataadapter.convertData = function() {
+    protoDataadapter._convertData = function() {
         var dataadapter = this,            
             aggregatedData,
             generalData,
@@ -37,19 +36,20 @@
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
-            generalData = dataadapter.generalDataFormat(jsonData, configuration);
-            configuration.categories && (aggregatedData = dataadapter.getSortedData(generalData, 
+            generalData = dataadapter._generalDataFormat(jsonData, configuration);
+            configuration.categories = configuration.categories || dataadapter.dataStore.getUniqueValues(configuration.dimension[0]);
+            configuration.categories && (aggregatedData = dataadapter._getSortedData(generalData, 
                                 configuration.categories, configuration.dimension, configuration.aggregateMode));
             aggregatedData = aggregatedData || generalData;
             dataadapter.aggregatedData = aggregatedData;
-            json = dataadapter.jsonCreator(aggregatedData, configuration);            
+            json = dataadapter._jsonCreator(aggregatedData, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;
         json = (callback && callback(json)) || json;
-        return isMetaData ? dataadapter.setDefaultAttr(json) : json;
+        return isMetaData ? dataadapter._setDefaultAttr(json) : json;
     };
 
-    protoDataadapter.getSortedData = function (data, categoryArr, dimension, aggregateMode) {
+    protoDataadapter._getSortedData = function (data, categoryArr, dimension, aggregateMode) {
         var dataadapter = this,
             indeoxOfKey,
             newData = [],
@@ -80,13 +80,23 @@
                 }     
                 arr[indeoxOfKey] = categories[k][i];
                 (subSetData.length === 0) && (subSetData.push(arr));
-                newData.push(dataadapter.getAggregateData(subSetData, categories[k][i], aggregateMode));
+                newData.push(dataadapter._getAggregateData(subSetData, categories[k][i], aggregateMode));
             }
         }        
         return newData;
     };
 
-    protoDataadapter.setDefaultAttr = function (json) {
+    protoDataadapter.update = function (dataSource, conf, callback){
+        var dataadapter = this;
+
+        dataadapter.dataStore = dataSource;       
+        dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
+        dataadapter.configuration = conf;
+        dataadapter.callback = callback;
+        dataadapter.FCjson = dataadapter._convertData();
+    };
+
+    protoDataadapter._setDefaultAttr = function (json) {
         var dataadapter = this,
             keyExcludedJsonStr = '',
             paletteColors = '',
@@ -151,7 +161,7 @@
         return json;
     };
 
-    protoDataadapter.getAggregateData = function (data, key, aggregateMode) {
+    protoDataadapter._getAggregateData = function (data, key, aggregateMode) {
         var aggregateMethod = {
             'sum' : function(){
                 var i,
@@ -188,7 +198,7 @@
         return aggregateMethod[aggregateMode]();
     };
 
-    protoDataadapter.generalDataFormat = function(jsonData, configuration) {
+    protoDataadapter._generalDataFormat = function(jsonData, configuration) {
         var isArray = Array.isArray(jsonData[0]),
             generalDataArray = [],
             i,
@@ -215,7 +225,7 @@
         return generalDataArray;
     };
 
-    protoDataadapter.jsonCreator = function(jsonData, configuration) {
+    protoDataadapter._jsonCreator = function(jsonData, configuration) {
         var conf = configuration,
             seriesType = conf && conf.seriesType,
             series = {
@@ -326,23 +336,23 @@
         return conf.measure && conf.dimension && series[seriesType](jsonData, conf);
     };
 
-    protoDataadapter.getFCjson = function() {
+    protoDataadapter._getFCjson = function() {
         return this.FCjson;
     };
 
-    protoDataadapter.getDataJson = function() {
+    protoDataadapter._getDataJson = function() {
         return this.dataJSON;
     };
 
-    protoDataadapter.getAggregatedData = function() {
+    protoDataadapter._getAggregatedData = function() {
         return this.aggregatedData;
     };
 
-    protoDataadapter.getDimension = function() {
+    protoDataadapter._getDimension = function() {
         return this.configuration.dimension;
     };
 
-    protoDataadapter.getMeasure = function() {
+    protoDataadapter._getMeasure = function() {
         return this.configuration.measure;
     };
 
@@ -356,7 +366,7 @@
             lenC,
             value,
             data = dataadapter.aggregatedData;
-        for(i = 0, lenR = data.length; i < lenR; i++){
+        for(i = 0, lenR = data && data.length; i < lenR; i++){
             for(j = 0, lenC = data[i].length; j < lenC; j++){
                 value = +data[i][j];
                 value && (max = max < value ? value : max);
@@ -377,7 +387,7 @@
         dataadapter.chart.drawTrendRegion(index);
     };
 
-    MultiCharting.prototype.dataAdapter = function () {
-        return new DataAdapter(arguments[0]);
+    MultiCharting.prototype.dataAdapter = function (dataSource, conf, callback) {
+        return new DataAdapter(dataSource, conf, callback);
     };
 });

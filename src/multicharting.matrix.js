@@ -8,7 +8,7 @@
     }
 })(function (MultiCharting) {
 
-    var createChart = MultiCharting.prototype.createChart,
+    var /*createChart = MultiCharting.prototype.createChart,*/
         document = MultiCharting.prototype.win.document,
         PX = 'px',
         DIV = 'div',
@@ -45,7 +45,7 @@
 
     protoCell.renderChart = function () {
         var cell = this; 
-
+/*
         cell.config.chart.renderAt = cell.config.id;
         cell.config.chart.width = MAX_PERCENT;
         cell.config.chart.height = MAX_PERCENT;
@@ -54,7 +54,10 @@
             cell.chart.update(cell.config.chart);
         } else {
             cell.chart = createChart(cell.config.chart);
-        }
+        }*/
+
+        cell.config.chart.draw(cell.config.id);
+        
         return cell.chart;
     };
 
