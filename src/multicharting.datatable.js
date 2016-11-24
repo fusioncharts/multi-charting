@@ -11,8 +11,17 @@
 
     var DrawData = function () {
         var drawData = this;
-        drawData.container = arguments[1];
-        drawData.data = arguments[0];
+        if (typeof arguments[0] === 'object') {
+        	drawData.container = arguments[0].container;
+        	drawData.data = arguments[0].datastrore;
+        	drawData.hiddenFields = arguments[0].hiddenfields;
+        	drawData.fieldsOrder = arguments[0].fieldsorder;
+        }else{
+        	drawData.container = arguments[1];
+        	drawData.data = arguments[0];
+        	drawData.hiddenFields = arguments[2];
+        	drawData.fieldsOrder = arguments[3];
+        }
 
         if (drawData.data && drawData.data.addEventListener) {
             drawData.data.addEventListener( 'modelUpdated', function () {
@@ -79,16 +88,12 @@
                 id = id.split('-');
                 row = Number(id[0]);
                 property = Number(id[1]);
-                //console.log(data[row][property], inputField.value);
                 data[row][property] = inputField.value;
-                //console.log(data[row][property], inputField.value);
             }else{
                 id = id.split('-');
                 row = Number(id[0]);
                 property = id[1];
-                //console.log(data[row][property], inputField.value);
                 data[row][property] = inputField.value;
-                //console.log(data[row][property], inputField.value);
             }
         });
         inputField.addEventListener("keyup", function(event) {
@@ -117,6 +122,8 @@
     	var drawData = this,
             dataStore = drawData && drawData.data,
     		tableE = drawData && drawData.table,
+    		hiddenFields = drawData && drawData.hiddenFields,
+    		fieldsOrder = drawData && drawData.fieldsOrder,
             data = dataStore.getJSON(),
     		headerLength = data[0] && data[0].length,
     		datalen = data && data.length,
@@ -129,10 +136,12 @@
             headerRow,
     		currentRow,
     		i,
-    		j;
+    		j,
+    		idHiddenField = function (field) {
+    			return hiddenFields.indexOf(field);
+    		};
 
-
-        var a = performance.now()
+        //var a = performance.now()
     	for(i = 0; i < datalen; i++){
             row = data[i];
             if(Array.isArray(row)){
@@ -152,18 +161,20 @@
                     keys = Object.keys(row);
                     len = keys.length;
                     for(j = 0; j < len; j++){
-                        addHeader('th' + j, headerRow, keys[j] === undefined ? '' : keys[j]);
+                    	if(idHiddenField(keys[j])){
+                    		addHeader('th' + j, headerRow, keys[j] === undefined ? '' : keys[j]);
+                    	}          
                     }
                 }
                 currentRow = insertRow(i,tableE);
                 for (var property in row) {
-                    if (row.hasOwnProperty(property)) {
+                    if (row.hasOwnProperty(property) && idHiddenField(property)) {
                         insertCell(i + '-' + property, currentRow, row[property] === undefined ? '' : row[property], drawData, false);
                     }
                 }
             }
         }
-        console.log('Time taken to draw '+datalen+' data : '+(performance.now() - a)+' ms');
+        //console.log('Time taken to draw '+datalen+' data : '+(performance.now() - a)+' ms');
     };
 
     protoDrawData.showVisuals = function () {
@@ -176,6 +187,6 @@
     };
 
     MultiCharting.prototype.dataTable = function () {
-        return new DrawData(arguments[0],arguments[1]);
+        return new DrawData(arguments[0], arguments[1], arguments[2], arguments[3]);
     };
 });
