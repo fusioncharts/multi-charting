@@ -314,7 +314,7 @@
                     // //     }
                     // // });
 
-
+                    TIMESERIES = 1;
                     configuration = [
                         [{
                             "height": 150,
@@ -401,14 +401,17 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "MScolumn2d",
+                                "type": !TIMESERIES ? "MScolumn2d" : "TimeSeries",
+                                // "type": "TimeSeries",
                                 "configuration": MultiChartObj.dataAdapter({
                                     "datastore": flightByDate,
                                     "config": {
                                         "dimension": ["Date"],
                                         "measure": ["Flights"],
-                                        "seriesType": "MS",
-                                        "config": confCol
+                                        "seriesType": !TIMESERIES ? "MS" : "TS",
+                                        // "seriesType": "TS",
+                                        "config": !TIMESERIES ? confCol : confTS
+                                        // "config": confTS
                                     },
                                     "callback": function (data) {
                                         // console.log('2 ', JSON.stringify(data, null, 4));

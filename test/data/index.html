@@ -39,6 +39,14 @@
                     return Number(a.Year) > 16500;
                 };
 
+            // Attach event to show Ajax file load progress bar
+            MultiChartObj.addEventListener('onprogress', function(e, a) {
+                a = a.Event;
+                // progressBar.max = a.total;
+                // progressBar.value = a.loaded;
+                console.log('Loading file: ', Math.round(100 * a.loaded / a.total), '%');
+            });
+
 
             dataStore.setData({
                 dataType: 'json',
@@ -50,9 +58,10 @@
 
             dataStore2.setDataUrl({
                 dataType: 'json',
-                dataSource: '../airlines.json'
+                dataSource: '../airlines.json?adfd=' + Math.random()
             }, function () {
-                console.log(dataStore2.getJSON());
+                sortedData = dataStore2.sort(sortOperator);
+                console.log(sortedData.getJSON());
             });
 
 
