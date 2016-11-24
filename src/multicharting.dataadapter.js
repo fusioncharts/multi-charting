@@ -109,6 +109,9 @@
             series = {
                 'ss' : function() {
                     metaDataMeasure = metaData[measure[0]] && metaData[measure[0]];
+                    if (!metaDataMeasure) {
+                        return;
+                    }
                     metaDataMeasure[COLOR] && (paletteColors = paletteColors + 
                                                         ((metaDataMeasure[COLOR] instanceof Function) ?
                                                                             metaDataMeasure[COLOR]() :
@@ -121,7 +124,7 @@
                     for (i = 0; i < len; i++){
                         metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
 
-                        metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
+                        metaDataMeasure && metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
                                                         ((metaDataMeasure[COLOR] instanceof Function) ?
                                                                                 metaDataMeasure[COLOR]() :
                                                                                 metaDataMeasure[COLOR]));
@@ -134,9 +137,9 @@
 
                     for(i = 0; i < len; i++) {
                         metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
-                        color = metaDataMeasure[COLOR] && ((metaDataMeasure[COLOR] instanceof Function) ?
-                                                                                metaDataMeasure[COLOR]() :
-                                                                                metaDataMeasure[COLOR]);
+                        color = metaDataMeasure &&metaDataMeasure[COLOR] && 
+                            ((metaDataMeasure[COLOR] instanceof Function) ? metaDataMeasure[COLOR]() : 
+                                metaDataMeasure[COLOR]);
                         color && (json.chart.datasets[0].dataset[0].series[i].plot[COLOR] = color);
                     }
                 }

@@ -67,26 +67,7 @@
             }
         };
 
-    chartProto.render = function () {
-        var chart = this,
-            argument = arguments[0] || {};
-
-        //get fc supported json            
-        chart.getJSON(argument);        
-        //render FC 
-        chart.chartObj = new FusionCharts(chart.chartConfig);
-        // chart.chartObj.render();
-        
-        chart.chartObj.addEventListener('dataplotrollover', function (e, d) {
-            var dataObj = getRowData(chart.dataStoreJson, chart.aggregatedData, 
-                                        chart.dimension, chart.measure, d.categoryLabel);
-            MultiCharting.prototype.raiseEvent('hoverin', {
-                data : dataObj,
-                categoryLabel : d.categoryLabel
-            }, chart);
-        });
-    };
-
+ 
     chartProto.getJSON = function () {
         var chart = this,
             argument =arguments[0] || {},
