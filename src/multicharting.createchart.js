@@ -102,9 +102,16 @@
             argument =arguments[0] || {},
             dataAdapterObj,
             chartConfig = {},
-            dataSource = {};
+            dataSource = {},
+            keys = Object.keys(argument);
+
+        for (i = 0; i < keys.length; i++){
+            if (keys[i] !== 'configuration'){
+                chartConfig[keys[i]] = argument[keys[i]]; 
+            }
+        }
         //parse argument into chartConfig 
-        extend2(chartConfig,argument);
+        //extend2(chartConfig, argument);
         
         //dataAdapterObj 
         dataAdapterObj = argument.configuration || {};

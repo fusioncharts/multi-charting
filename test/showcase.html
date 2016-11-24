@@ -13,7 +13,7 @@
 
         <center style='margin: 10px'>
             <div id="matrix">
-                <progress id="progress" value="0"></progress>
+                <!-- <progress id="progress" value="0"></progress> -->
             </div>
         </center>
 
@@ -64,6 +64,7 @@
                     "chart": {
                         "theme": "ocean",
                         "showYAxisValues": 0,
+                        "showLegend": 0,
                         "showValues": 0
                     }
                 },
@@ -106,16 +107,18 @@
             //     progressBar.value = 0;
             // });
 
-            // MultiChartObj.addEventListener('onprogress', function(e, a) {
-            //     a = a.Event;
-            //     progressBar.max = a.total;
-            //     progressBar.value = a.loaded;
-            // });
+            MultiChartObj.addEventListener('onprogress', function(e, a) {
+                a = a.Event;
+                // progressBar.max = a.total;
+                // progressBar.value = a.loaded;
+                console.log('Loading file: ', Math.round(100 * a.loaded / a.total), '%');
+            });
 
-            // MultiChartObj.addEventListener('onloadend', function(e, a) {
-            //     a = a.Event;
-            //     progressBar.value = a.loaded;
-            // });
+            MultiChartObj.addEventListener('onloadend', function(e, a) {
+                a = a.Event;
+                // progressBar.value = a.loaded;
+                // console.log('--- File Loaded --- ', Math.round(100 * a.loaded / a.total));
+            });
 
 
 
@@ -129,30 +132,31 @@
             //     progressBar.value = 0;
             // });
 
-            // MultiChartObj.addEventListener('onParsingProgress', function(e, a) {
-            //     a = a.Event;
-            //     progressBar = document.getElementById("progress");
-            //     progressBar.max = a.total;
-            //     progressBar.value = a.loaded;
-            // });
+            MultiChartObj.addEventListener('onParsingProgress', function(e, a) {
+                a = a.Event;
+                // progressBar = document.getElementById("progress");
+                // progressBar.max = a.total;
+                // progressBar.value = a.loaded;
+                console.log('Parsing csv data: ', Math.round(100 * a.loaded / a.total), '%');
+            });
 
-            // MultiChartObj.addEventListener('onParsingEnd', function(e, a) {
-            //     a = a.Event;
-            //     // progressBar.max = a.total;
-            //     progressBar = document.getElementById("progress");
-            //     progressBar.value = a.loaded;
-            // });
+            MultiChartObj.addEventListener('onParsingEnd', function(e, a) {
+                a = a.Event;
+                // progressBar.max = a.total;
+                // progressBar = document.getElementById("progress");
+                // progressBar.value = a.loaded;
+                console.log('--- Parsing Done --- ', Math.round(100 * a.loaded / a.total), '%');
+            });
 
             dataStore.setDataUrl({
-                dataSource: 'airline-small.csv',
-                // dataSource: 'airline.csv',
+                // dataSource: 'airline-small.csv',
+                dataSource: 'airline.csv',
                 dataType: 'csv',
                 outputFormat: 2
             },
             function (data) {
 
-                    console.log(data);
-                    // return;
+
                     var filterByDate = function (data) {
                             var flights = {
                                 },
@@ -317,7 +321,7 @@
                             "width": 250,
                             "html": "Chart 1",
                             "chart": {
-                                "type": "column2d",
+                                "type": "MScolumn2d",
                                 "width": "100%",
                                 "height": "100%",
                                 "configuration": MultiChartObj.dataAdapter({
@@ -325,7 +329,7 @@
                                     "config": {
                                         "dimension": ["Time"],
                                         "measure": ["Flights"],
-                                        "seriesType": "SS",
+                                        "seriesType": "MS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Time of Day",
@@ -344,7 +348,7 @@
                             "id": "1",
                             "html": "Chart 2",
                             "chart": {
-                                "type": "column2d",
+                                "type": "MScolumn2d",
                                 "width": "100%",
                                 "height": "100%",
                                 "configuration": MultiChartObj.dataAdapter({
@@ -352,7 +356,7 @@
                                     "config": {
                                         "dimension": ["Arrival"],
                                         "measure": ["Flights"],
-                                        "seriesType": "SS",
+                                        "seriesType": "MS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Arrival Delay",
@@ -371,13 +375,13 @@
                             "id": "2",
                             "html": "html3",
                             "chart": {
-                                "type": "column2d",
+                                "type": "MScolumn2d",
                                 "configuration": MultiChartObj.dataAdapter({
                                     "datastore": flightByDistance,
                                     "config": {
                                         "dimension": ["Distance"],
                                         "measure": ["Flights"],
-                                        "seriesType": "SS",
+                                        "seriesType": "MS",
                                         "config": {
                                             "chart": {
                                                 "caption": "Distance",
@@ -397,13 +401,13 @@
                             "id": "4",
                             "html": "html4",
                             "chart": {
-                                "type": "column2d",
+                                "type": "MScolumn2d",
                                 "configuration": MultiChartObj.dataAdapter({
                                     "datastore": flightByDate,
                                     "config": {
                                         "dimension": ["Date"],
                                         "measure": ["Flights"],
-                                        "seriesType": "ss",
+                                        "seriesType": "MS",
                                         "config": confCol
                                     },
                                     "callback": function (data) {
@@ -419,10 +423,12 @@
                         }]
                     ]
 
+                    console.log('Done...');
+
                     matrix = MultiChartObj.createMatrix('matrix', configuration);
                     matrix.draw();
 
-
+                    console.log('Rendered...');
 
 
 

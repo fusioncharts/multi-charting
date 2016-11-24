@@ -1276,40 +1276,40 @@
             seriesType = conf && conf.seriesType,
             series = {
                 'ss' : function() {
-                    metaDataMeasure = metaData[measure[0]] && metaData[measure[0]];
-                    if (!metaDataMeasure) {
-                        return;
-                    }
-                    metaDataMeasure[COLOR] && (paletteColors = paletteColors + 
-                                                        ((metaDataMeasure[COLOR] instanceof Function) ?
-                                                                            metaDataMeasure[COLOR]() :
-                                                                            metaDataMeasure[COLOR]));
+                    // metaDataMeasure = metaData[measure[0]] && metaData[measure[0]];
+                    // if (!metaDataMeasure) {
+                    //     return;
+                    // }
+                    // metaDataMeasure[COLOR] && (paletteColors = paletteColors + 
+                    //                                     ((metaDataMeasure[COLOR] instanceof Function) ?
+                    //                                                         metaDataMeasure[COLOR]() :
+                    //                                                         metaDataMeasure[COLOR]));
                     json.chart[PALETTECOLORS] = paletteColors;
                 },
                 'ms' : function () {
                     var i,
                     len = json.dataset.length;
-                    for (i = 0; i < len; i++){
-                        metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
+                    // for (i = 0; i < len; i++){
+                    //     metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
 
-                        metaDataMeasure && metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
-                                                        ((metaDataMeasure[COLOR] instanceof Function) ?
-                                                                                metaDataMeasure[COLOR]() :
-                                                                                metaDataMeasure[COLOR]));
-                    }
+                    //     metaDataMeasure && metaDataMeasure[COLOR] && (json.dataset[i][COLOR] = 
+                    //                                     ((metaDataMeasure[COLOR] instanceof Function) ?
+                    //                                                             metaDataMeasure[COLOR]() :
+                    //                                                             metaDataMeasure[COLOR]));
+                    // }
                 },
                 'ts' : function () {
                     var i,
                         len = json.chart.datasets[0].dataset[0].series.length,
                         color;
 
-                    for(i = 0; i < len; i++) {
-                        metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
-                        color = metaDataMeasure &&metaDataMeasure[COLOR] && 
-                            ((metaDataMeasure[COLOR] instanceof Function) ? metaDataMeasure[COLOR]() : 
-                                metaDataMeasure[COLOR]);
-                        color && (json.chart.datasets[0].dataset[0].series[i].plot[COLOR] = color);
-                    }
+                    // for(i = 0; i < len; i++) {
+                    //     metaDataMeasure = metaData[measure[i]] && metaData[measure[i]];
+                    //     color = metaDataMeasure &&metaDataMeasure[COLOR] && 
+                    //         ((metaDataMeasure[COLOR] instanceof Function) ? metaDataMeasure[COLOR]() : 
+                    //             metaDataMeasure[COLOR]);
+                    //     color && (json.chart.datasets[0].dataset[0].series[i].plot[COLOR] = color);
+                    // }
                 }
             };
 
@@ -1666,9 +1666,16 @@
             argument =arguments[0] || {},
             dataAdapterObj,
             chartConfig = {},
-            dataSource = {};
+            dataSource = {},
+            keys = Object.keys(argument);
+            debugger
+        for (i = 0; i < keys.length; i++){
+            if (keys[i] !== 'configuration'){
+                chartConfig[keys[i]] = argument[keys[i]]; 
+            }
+        }
         //parse argument into chartConfig 
-        extend2(chartConfig,argument);
+        //extend2(chartConfig, argument);
         
         //dataAdapterObj 
         dataAdapterObj = argument.configuration || {};
