@@ -280,7 +280,7 @@
     DataModelProto.clearData = function (){
         var ds = this;
         // clear inputData store
-        ds.links.inputData && (ds.links.inputData.length = 0);
+        ds.links.inputJSON && (ds.links.inputJSON = undefined);
         // re-generate the store's data
         ds._generateInputData();
     };
