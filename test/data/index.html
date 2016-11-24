@@ -36,17 +36,19 @@
 
             dataStore.setData({
                 dataType: 'json',
-                dataSource: data
-            }, function () {
-                console.log(dataStore.getJSON());
+                dataSource: data,
+                callback: function () {
+                    console.log(dataStore2.getJSON());
+                }
             });
 
 
             dataStore2.setDataUrl({
                 dataType: 'json',
-                dataSource: '../airlines.json'
-            }, function () {
-                console.log(dataStore2.getJSON());
+                dataSource: '../airlines.json',
+                callback: function () {
+                    console.log(dataStore2.getJSON());
+                }
             });
 
 
