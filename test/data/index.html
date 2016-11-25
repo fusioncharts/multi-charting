@@ -52,7 +52,10 @@
                 dataType: 'json',
                 dataSource: data
             }, function () {
-                console.log(dataStore.getJSON());
+                sortProcessor = MultiChartObj.createDataProcessor();
+                sortProcessor.sort(sortOperator);
+                data = dataStore2.getChildModel(sortProcessor);
+                console.log(data.getJSON());
             });
 
 
@@ -60,8 +63,7 @@
                 dataType: 'json',
                 dataSource: '../airlines.json?adfd=' + Math.random()
             }, function () {
-                sortedData = dataStore2.sort(sortOperator);
-                console.log(sortedData.getJSON());
+                
             });
 
 

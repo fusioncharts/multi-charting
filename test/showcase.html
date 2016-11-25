@@ -63,6 +63,8 @@
                 confCol = {
                     "chart": {
                         "theme": "ocean",
+                        "caption": "Date",
+                        "captionAlignment": "left",
                         "showYAxisValues": 0,
                         "showLegend": 0,
                         "showValues": 0
@@ -290,31 +292,32 @@
                     window.di = flightByDistance;
 
 
-                    // // flightByDate.addMetaData({
-                    // //     "Flights": {
-                    // //         "color": '#FFFF00'
-                    // //     }
-                    // // });
+                    // flightByDate.addMetaData({
+                    //     "Flights": {
+                    //         "color": '#0f4d8c'
+                    //     }
+                    // });
 
-                    // // flightByTime.addMetaData({
-                    // //     "Flights": {
-                    // //         "color": '#FFFF00'
-                    // //     }
-                    // // });
+                    // flightByTime.addMetaData({
+                    //     "Flights": {
+                    //         "color": '#0f4d8c'
+                    //     }
+                    // });
 
-                    // // flightByArrival.addMetaData({
-                    // //     "Flights": {
-                    // //         "color": '#FFFF00'
-                    // //     }
-                    // // });
+                    // flightByArrival.addMetaData({
+                    //     "Flights": {
+                    //         "color": '#0f4d8c'
+                    //     }
+                    // });
 
-                    // // flightByDistance.addMetaData({
-                    // //     "Flights": {
-                    // //         "color": '#00FFFF'
-                    // //     }
-                    // // });
+                    // flightByDistance.addMetaData({
+                    //     "Flights": {
+                    //         "color": '#0f4d8c'
+                    //     }
+                    // });
 
-                    TIMESERIES = 1;
+                    TIMESERIES = 0;
+
                     configuration = [
                         [{
                             "height": 150,
@@ -333,6 +336,7 @@
                                         "config": {
                                             "chart": {
                                                 "caption": "Time of Day",
+                                                "captionAlignment": "left",
                                                 "showLegend": 0,
                                                 "showValues": 0,
                                                 "showYAxisValues": 0,
@@ -360,6 +364,7 @@
                                         "config": {
                                             "chart": {
                                                 "caption": "Arrival Delay",
+                                                "captionAlignment": "left",
                                                 "showLegend": 0,
                                                 "showValues": 0,
                                                 "showYAxisValues": 0,
@@ -385,6 +390,7 @@
                                         "config": {
                                             "chart": {
                                                 "caption": "Distance",
+                                                "captionAlignment": "left",
                                                 "showLegend": 0,
                                                 "showValues": 0,
                                                 "showYAxisValues": 0,
