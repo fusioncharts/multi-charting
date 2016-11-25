@@ -9,19 +9,12 @@
     lib = multiChartingProto.lib,
     eventList = lib.eventList;
 
-    var DrawData = function () {
+    var DrawData = function (config) {
         var drawData = this;
-        if (typeof arguments[0][0] === 'object') {
-        	drawData.container = arguments[0][0].container;
-        	drawData.data = arguments[0][0].datastore;
-        	drawData.hiddenFields = arguments[0][0].hiddenfields || [];
-        	drawData.fieldsOrder = arguments[0][0].fieldsorder || [];
-        }else{
-        	drawData.container = arguments[0][0];
-        	drawData.data = arguments[0][1];
-        	drawData.hiddenFields = arguments[0][2] || [];
-        	drawData.fieldsOrder = arguments[0][3] || [];
-        }
+        	drawData.container = config.container;
+        	drawData.data = config.datastore;
+        	drawData.hiddenFields = config.hiddenfields;
+        	drawData.fieldsOrder = config.fieldsorder;
 
         if (drawData.data && drawData.data.addEventListener) {
             drawData.data.addEventListener( 'modelUpdated', function () {
@@ -187,6 +180,33 @@
     };
 
     MultiCharting.prototype.dataTable = function () {
-        return new DrawData(arguments);
+    	try {
+    		var len = arguments.length,
+    			keys,
+    			config = {};
+	      	if(len > 0){
+	      		keys = Object.keys(arguments[0]);
+	      		if(keys.indexOf('datastore') && keys.length > 0){
+	      			config.datastore = arguments[0];
+	      			config.container = arguments[1];
+	      			config.hiddenfields = arguments[2]  || [];
+	      			config.fieldsorder = arguments[3] || [];
+	      		}else{
+	      			if(keys.length === 0){
+	      				throw 'data is not provided!!!';
+	      			}
+	      			config = arguments[0];
+	      		}
+
+	      		return new DrawData(config);
+	    	}else{
+	    		throw 'data is not provided!!!'
+	    	}
+
+		}
+		catch (error) {
+		  console.log("Error: ", error);
+		}
+        //
     };
 });
