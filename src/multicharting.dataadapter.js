@@ -339,7 +339,7 @@
         return conf.measure && conf.dimension && series[seriesType](jsonData, conf);
     };
 
-    protoDataadapter._getFCjson = function() {
+    protoDataadapter.getJSON = function() {
         return this.FCjson;
     };
 
@@ -380,6 +380,10 @@
             'min' : min,
             'max' : max
         };
+    };
+
+    protoDataadapter._getDataStore = function() {
+        return this.dataStore;
     };
 
     protoDataadapter.highlight = function() {

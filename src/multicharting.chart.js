@@ -14,27 +14,35 @@
             var chart = this,
                 dataAdapterConf = {},
                 dataAdapterObj = {},
-                createChartObj = {};
+                createChartObj = {},
+                dataStore;
 
-            chart.conf = conf;
+            chart.conf = {};
+
+            Object.assign(chart.conf, conf);
 
             dataAdapterConf = {
-                'dimension' : conf.dimension,
-                'measure' : conf.measure,
-                'seriesType' : conf.seriesType,
-                'categories' : conf.categories,
-                'aggregateMode' : conf.aggregation,
-                'config' : conf.config
+                'dimension' : chart.conf.dimension,
+                'measure' : chart.conf.measure,
+                'seriesType' : chart.conf.seriesType,
+                'categories' : chart.conf.categories,
+                'aggregateMode' : chart.conf.aggregation,
+                'config' : chart.conf.config
             }
-            dataAdapterObj = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
 
-            chart.dataAdapter = dataAdapterObj;
+            chart.dataAdapter = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
+
+            dataStore = chart.dataAdapter._getDataStore();
+
+            dataStore.addEventListener('dataModified',function() {
+                protoChart.update();
+            })
 
             createChartConf = {
-                'type' : conf.type,
-                'width' : conf.width || MAX_PERCENT,
-                'height' : conf.height || MAX_PERCENT,
-                'dataSource' : dataAdapterObj._getFCjson()
+                'type' : chart.conf.type,
+                'width' : chart.conf.width || MAX_PERCENT,
+                'height' : chart.conf.height || MAX_PERCENT,
+                'dataSource' : dataAdapterObj.getJSON()
             };
 
             chart.chartInstance = chart._createChart(createChartConf);
@@ -60,7 +68,40 @@
         return chartObj;
     };
 
-    protoChart.draw = function(id) {
+    protoChart.update = function(conf){
+        var chart = this,
+            dataAdapterConf = {},
+            dataAdapterObj = {},
+            createChartObj = {};
+
+        Object.assign(chart.conf, conf);
+
+        dataAdapterConf = {
+            'dimension' : chart.conf.dimension,
+            'measure' : chart.conf.measure,
+            'seriesType' : chart.conf.seriesType,
+            'categories' : chart.conf.categories,
+            'aggregateMode' : chart.conf.aggregation,
+            'config' : chart.conf.config
+        }
+
+        chart.dataAdapter.update(conf.dataSource, dataAdapterConf, conf.callback);
+
+        createChartConf = {
+            'type' : chart.conf.type,
+            'width' : chart.conf.width || MAX_PERCENT,
+            'height' : chart.conf.height || MAX_PERCENT,
+            'dataSource' : chart.dataAdapter.getJSON()
+        };
+
+        chart._chartUpdate(createChartConf);
+    };
+
+    protoChart.getChartInstance = function() {
+        return this.chartInstance;
+    }
+
+    protoChart.render = function(id) {
         var chart = this;
 
         id || chart.chartInstance.render();
