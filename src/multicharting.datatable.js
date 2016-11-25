@@ -195,7 +195,10 @@
 	      			if(keys.length === 0){
 	      				throw 'data is not provided!!!';
 	      			}
-	      			config = arguments[0];
+	      			config.datastore = arguments[0].datastore;
+	      			config.container = arguments[0].container;
+	      			config.hiddenfields = arguments[0].hiddenfields || [];
+	      			config.fieldsorder = arguments[0].fieldsorder || [];
 	      		}
 
 	      		return new DrawData(config);
@@ -207,6 +210,5 @@
 		catch (error) {
 		  console.log("Error: ", error);
 		}
-        //
     };
 });
