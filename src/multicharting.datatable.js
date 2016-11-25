@@ -14,8 +14,8 @@
         if (typeof arguments[0][0] === 'object') {
         	drawData.container = arguments[0][0].container;
         	drawData.data = arguments[0][0].datastrore;
-        	drawData.hiddenFields = arguments[0][0].hiddenfields;
-        	drawData.fieldsOrder = arguments[0][0].fieldsorder;
+        	drawData.hiddenFields = arguments[0][0].hiddenfields || [];
+        	drawData.fieldsOrder = arguments[0][0].fieldsorder || [];
         }else{
         	drawData.container = arguments[0][0];
         	drawData.data = arguments[0][1];
