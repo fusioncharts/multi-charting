@@ -11,16 +11,16 @@
 
     var DrawData = function () {
         var drawData = this;
-        if (typeof arguments[0] === 'object') {
-        	drawData.container = arguments[0].container;
-        	drawData.data = arguments[0].datastrore;
-        	drawData.hiddenFields = arguments[0].hiddenfields;
-        	drawData.fieldsOrder = arguments[0].fieldsorder;
+        if (typeof arguments[0][0] === 'object') {
+        	drawData.container = arguments[0][0].container;
+        	drawData.data = arguments[0][0].datastrore;
+        	drawData.hiddenFields = arguments[0][0].hiddenfields;
+        	drawData.fieldsOrder = arguments[0][0].fieldsorder;
         }else{
-        	drawData.container = arguments[1];
-        	drawData.data = arguments[0];
-        	drawData.hiddenFields = arguments[2];
-        	drawData.fieldsOrder = arguments[3];
+        	drawData.container = arguments[0][0];
+        	drawData.data = arguments[0][1];
+        	drawData.hiddenFields = arguments[0][2] || [];
+        	drawData.fieldsOrder = arguments[0][3] || [];
         }
 
         if (drawData.data && drawData.data.addEventListener) {
@@ -187,6 +187,6 @@
     };
 
     MultiCharting.prototype.dataTable = function () {
-        return new DrawData(arguments[0], arguments[1], arguments[2], arguments[3]);
+        return new DrawData(arguments);
     };
 });
