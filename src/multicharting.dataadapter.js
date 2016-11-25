@@ -89,10 +89,10 @@
     protoDataadapter.update = function (dataSource, conf, callback){
         var dataadapter = this;
 
-        dataadapter.dataStore = dataSource;       
+        dataadapter.dataStore = dataSource || dataadapter.dataStore;       
         dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
-        dataadapter.configuration = conf;
-        dataadapter.callback = callback;
+        dataadapter.configuration = conf || dataadapter.configuration;
+        dataadapter.callback = callback || dataadapter.callback;
         dataadapter.FCjson = dataadapter._convertData();
     };
 

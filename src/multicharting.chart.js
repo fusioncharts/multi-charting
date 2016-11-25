@@ -34,23 +34,23 @@
 
             dataStore = chart.dataAdapter._getDataStore();
 
-            dataStore.addEventListener('dataModified',function() {
-                protoChart.update();
-            })
+            MultiCharting.prototype.addEventListener('modelUpdated',function(e) {
+                chart.update();
+            });
 
             createChartConf = {
                 'type' : chart.conf.type,
                 'width' : chart.conf.width || MAX_PERCENT,
                 'height' : chart.conf.height || MAX_PERCENT,
-                'dataSource' : dataAdapterObj.getJSON()
+                'dataSource' : chart.dataAdapter.getJSON()
             };
 
             chart.chartInstance = chart._createChart(createChartConf);
 
         },
-        protoChart = Chart.prototype;
+        ProtoChart = Chart.prototype;
 
-    protoChart._createChart = function (json) {
+    ProtoChart._createChart = function (json) {
         var chart = this,
             chartObj;
 
@@ -68,11 +68,13 @@
         return chartObj;
     };
 
-    protoChart.update = function(conf){
+    ProtoChart.update = function(conf){
         var chart = this,
             dataAdapterConf = {},
             dataAdapterObj = {},
             createChartObj = {};
+
+        conf = conf || {};
 
         Object.assign(chart.conf, conf);
 
@@ -97,18 +99,18 @@
         chart._chartUpdate(createChartConf);
     };
 
-    protoChart.getChartInstance = function() {
+    ProtoChart.getChartInstance = function() {
         return this.chartInstance;
     }
 
-    protoChart.render = function(id) {
+    ProtoChart.render = function(id) {
         var chart = this;
 
         id || chart.chartInstance.render();
         id && chart.chartInstance.render(id);
     };
 
-    protoChart._chartUpdate = function(json){
+    ProtoChart._chartUpdate = function(json){
         var chart = this,
         chartJson = json || {};
 
@@ -121,7 +123,7 @@
         return chart;
     };
 
-    protoChart._getRowData = function(key) {
+    ProtoChart._getRowData = function(key) {
         var chart = this,
             i = 0,
             j = 0,
