@@ -8,13 +8,11 @@
     }
 })(function (MultiCharting) {
 
-    var /*createChart = MultiCharting.prototype.createChart,*/
-        document = MultiCharting.prototype.win.document,
+    var document = MultiCharting.prototype.win.document,
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
         ABSOLUTE = 'absolute',
-        MAX_PERCENT = '100%',
         RELATIVE = 'relative',
         ID = 'id-fc-mc-',
         BORDER_BOX = 'border-box';

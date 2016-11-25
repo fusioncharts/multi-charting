@@ -37,7 +37,8 @@
 
         if (jsonData && configuration) {
             generalData = dataadapter._generalDataFormat(jsonData, configuration);
-            configuration.categories = configuration.categories || dataadapter.dataStore.getUniqueValues(configuration.dimension[0]);
+            configuration.categories = configuration.categories || 
+                                        dataadapter.dataStore.getUniqueValues(configuration.dimension[0]);
             configuration.categories && (aggregatedData = dataadapter._getSortedData(generalData, 
                                 configuration.categories, configuration.dimension, configuration.aggregateMode));
             aggregatedData = aggregatedData || generalData;

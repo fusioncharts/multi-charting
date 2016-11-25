@@ -1,4 +1,4 @@
-
+ /* global FusionCharts: true */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
@@ -13,8 +13,7 @@
         Chart = function(conf) {
             var chart = this,
                 dataAdapterConf = {},
-                dataAdapterObj = {},
-                createChartObj = {},
+                createChartConf = {},
                 dataStore;
 
             chart.conf = {};
@@ -28,13 +27,13 @@
                 'categories' : chart.conf.categories,
                 'aggregateMode' : chart.conf.aggregation,
                 'config' : chart.conf.config
-            }
+            };
 
             chart.dataAdapter = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
 
             dataStore = chart.dataAdapter._getDataStore();
 
-            MultiCharting.prototype.addEventListener('modelUpdated',function(e) {
+            dataStore.addEventListener('modelUpdated',function() {
                 chart.update();
             });
 
@@ -71,8 +70,7 @@
     ProtoChart.update = function(conf){
         var chart = this,
             dataAdapterConf = {},
-            dataAdapterObj = {},
-            createChartObj = {};
+            createChartConf =  {};
 
         conf = conf || {};
 
@@ -85,7 +83,7 @@
             'categories' : chart.conf.categories,
             'aggregateMode' : chart.conf.aggregation,
             'config' : chart.conf.config
-        }
+        };
 
         chart.dataAdapter.update(conf.dataSource, dataAdapterConf, conf.callback);
 
@@ -101,7 +99,7 @@
 
     ProtoChart.getChartInstance = function() {
         return this.chartInstance;
-    }
+    };
 
     ProtoChart.render = function(id) {
         var chart = this;
@@ -132,7 +130,7 @@
             l,
             lenR,
             len,
-            lenC
+            lenC,
             data = chart.dataAdapter._getDataJson(),
             aggregatedData = chart.dataAdapter._getAggregatedData(),
             dimension = chart.dataAdapter._getAggregatedData(),
