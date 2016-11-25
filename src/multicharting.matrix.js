@@ -56,7 +56,7 @@
             cell.chart = createChart(cell.config.chart);
         }*/
 
-        cell.config.chart.draw(cell.config.id);
+        cell.config.chart.render(cell.config.id);
         
         return cell.chart;
     };

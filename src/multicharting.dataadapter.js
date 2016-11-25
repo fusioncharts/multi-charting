@@ -89,10 +89,10 @@
     protoDataadapter.update = function (dataSource, conf, callback){
         var dataadapter = this;
 
-        dataadapter.dataStore = dataSource;       
+        dataadapter.dataStore = dataSource || dataadapter.dataStore;       
         dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
-        dataadapter.configuration = conf;
-        dataadapter.callback = callback;
+        dataadapter.configuration = conf || dataadapter.configuration;
+        dataadapter.callback = callback || dataadapter.callback;
         dataadapter.FCjson = dataadapter._convertData();
     };
 
@@ -339,7 +339,7 @@
         return conf.measure && conf.dimension && series[seriesType](jsonData, conf);
     };
 
-    protoDataadapter._getFCjson = function() {
+    protoDataadapter.getJSON = function() {
         return this.FCjson;
     };
 
@@ -380,6 +380,10 @@
             'min' : min,
             'max' : max
         };
+    };
+
+    protoDataadapter._getDataStore = function() {
+        return this.dataStore;
     };
 
     protoDataadapter.highlight = function() {

@@ -14,42 +14,49 @@
             var chart = this,
                 dataAdapterConf = {},
                 dataAdapterObj = {},
-                createChartObj = {};
+                createChartObj = {},
+                dataStore;
 
-            chart.conf = conf;
+            chart.conf = {};
+
+            Object.assign(chart.conf, conf);
 
             dataAdapterConf = {
-                'dimension' : conf.dimension,
-                'measure' : conf.measure,
-                'seriesType' : conf.seriesType,
-                'categories' : conf.categories,
-                'aggregateMode' : conf.aggregation,
-                'config' : conf.config
+                'dimension' : chart.conf.dimension,
+                'measure' : chart.conf.measure,
+                'seriesType' : chart.conf.seriesType,
+                'categories' : chart.conf.categories,
+                'aggregateMode' : chart.conf.aggregation,
+                'config' : chart.conf.config
             }
-            dataAdapterObj = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
 
-            chart.dataAdapter = dataAdapterObj;
+            chart.dataAdapter = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
+
+            dataStore = chart.dataAdapter._getDataStore();
+
+            MultiCharting.prototype.addEventListener('modelUpdated',function(e) {
+                chart.update();
+            });
 
             createChartConf = {
-                'type' : conf.type,
-                'width' : conf.width || MAX_PERCENT,
-                'height' : conf.height || MAX_PERCENT,
-                'dataSource' : dataAdapterObj._getFCjson()
+                'type' : chart.conf.type,
+                'width' : chart.conf.width || MAX_PERCENT,
+                'height' : chart.conf.height || MAX_PERCENT,
+                'dataSource' : chart.dataAdapter.getJSON()
             };
 
             chart.chartInstance = chart._createChart(createChartConf);
 
         },
-        protoChart = Chart.prototype;
+        ProtoChart = Chart.prototype;
 
-    protoChart._createChart = function (json) {
+    ProtoChart._createChart = function (json) {
         var chart = this,
             chartObj;
 
         //render FC 
         chartObj = new FusionCharts(json);
-        // chart.chartObj.render();
-        
+
         chartObj.addEventListener('dataplotrollover', function (e, d) {
             var dataObj = chart._getRowData(d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
@@ -61,14 +68,49 @@
         return chartObj;
     };
 
-    protoChart.draw = function(id) {
+    ProtoChart.update = function(conf){
+        var chart = this,
+            dataAdapterConf = {},
+            dataAdapterObj = {},
+            createChartObj = {};
+
+        conf = conf || {};
+
+        Object.assign(chart.conf, conf);
+
+        dataAdapterConf = {
+            'dimension' : chart.conf.dimension,
+            'measure' : chart.conf.measure,
+            'seriesType' : chart.conf.seriesType,
+            'categories' : chart.conf.categories,
+            'aggregateMode' : chart.conf.aggregation,
+            'config' : chart.conf.config
+        }
+
+        chart.dataAdapter.update(conf.dataSource, dataAdapterConf, conf.callback);
+
+        createChartConf = {
+            'type' : chart.conf.type,
+            'width' : chart.conf.width || MAX_PERCENT,
+            'height' : chart.conf.height || MAX_PERCENT,
+            'dataSource' : chart.dataAdapter.getJSON()
+        };
+
+        chart._chartUpdate(createChartConf);
+    };
+
+    ProtoChart.getChartInstance = function() {
+        return this.chartInstance;
+    }
+
+    ProtoChart.render = function(id) {
         var chart = this;
 
         id || chart.chartInstance.render();
         id && chart.chartInstance.render(id);
     };
 
-    protoChart._chartUpdate = function(json){
+    ProtoChart._chartUpdate = function(json){
         var chart = this,
         chartJson = json || {};
 
@@ -81,7 +123,7 @@
         return chart;
     };
 
-    protoChart._getRowData = function(key) {
+    ProtoChart._getRowData = function(key) {
         var chart = this,
             i = 0,
             j = 0,
