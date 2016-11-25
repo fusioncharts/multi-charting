@@ -13,7 +13,7 @@
         var drawData = this;
         if (typeof arguments[0][0] === 'object') {
         	drawData.container = arguments[0][0].container;
-        	drawData.data = arguments[0][0].datastrore;
+        	drawData.data = arguments[0][0].datastore;
         	drawData.hiddenFields = arguments[0][0].hiddenfields || [];
         	drawData.fieldsOrder = arguments[0][0].fieldsorder || [];
         }else{
