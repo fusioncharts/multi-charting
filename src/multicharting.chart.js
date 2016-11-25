@@ -48,8 +48,7 @@
 
         //render FC 
         chartObj = new FusionCharts(json);
-        // chart.chartObj.render();
-        
+
         chartObj.addEventListener('dataplotrollover', function (e, d) {
             var dataObj = chart._getRowData(d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
