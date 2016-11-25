@@ -1,4 +1,14 @@
-data = [
+dataArr = [
+    ['Product', 'State', 'Year', 'Sales'],
+    ['Tea', 'TX', '2015', '3000'],
+    ['Coffee', 'NY', '2015', '2000'],
+    ['Espresso', 'WA', '2015', '3400'],
+    ['Tea', 'TX', '2015', '3300'],
+    ['Coffee', 'NY', '2015', '2300'],
+    ['Espresso', 'WA', '2015', '1400']
+]
+
+dataObj = [
     {
         "Product": "Product",
         "State": "State",
@@ -80,7 +90,7 @@ data = [
 ];
 
 
-data2 = [
+dataObj2 = [
     {
         "Product": "Product",
         "State": "State",
@@ -163,12 +173,12 @@ data2 = [
 
 // arr = [];
 // for (i of data2) {
-// 	obj = {
-// 		Product: i[0],
-// 		State: i[1],
-// 		Year: i[2],
-// 		Sales: i[3]
-// 	}
-// 	arr.push(obj);
+//  obj = {
+//      Product: i[0],
+//      State: i[1],
+//      Year: i[2],
+//      Sales: i[3]
+//  }
+//  arr.push(obj);
 // }
-// console.log(JSON.stringify(arr, null, 4))	
+// console.log(JSON.stringify(arr, null, 4))    

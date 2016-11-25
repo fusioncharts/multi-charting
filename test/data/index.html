@@ -36,7 +36,7 @@
                     return Number(a.Sales) - Number(b.Sales);
                 },
                 filterOperator = function (a, b) {
-                    return Number(a.Year) > 16500;
+                    return Number(a.Sales) > 15000;
                 };
 
             // Attach event to show Ajax file load progress bar
@@ -50,28 +50,46 @@
 
             dataStore.setData({
                 dataType: 'json',
-                dataSource: data
+                dataSource: dataArr
             }, function () {
+                
                 sortProcessor = MultiChartObj.createDataProcessor();
                 sortProcessor.sort(sortOperator);
-                data = dataStore2.getChildModel(sortProcessor);
-                console.log(data.getJSON());
+                
+                filterProcessor = MultiChartObj.createDataProcessor();
+                filterProcessor.filter(filterOperator);
+
+                sortedData = dataStore.getChildModel(sortProcessor);
+                filtereddData = dataStore.getChildModel(filterProcessor);
+                
+                fcData = MultiChartObj.dataAdapter(dataStore, {
+                    dimension: ['Year'],
+                    measure: ['Sales'],
+                    seriesType: 'SS'
+                });
+
+                console.log(JSON.stringify(fcData._getFCjson(), null, 2));
+                // console.log(JSON.stringify(filtereddData.getJSON(), null, 2));
+                // console.log(JSON.stringify(dataStore.getJSON(), null, 2));
+                // console.log(JSON.stringify(sortedData.getJSON()));
+
             });
+
+
+
+
+
+
+
+
 
 
             dataStore2.setDataUrl({
-                dataType: 'json',
-                dataSource: '../airlines.json?adfd=' + Math.random()
+                dataType: 'csv',
+                dataSource: '../data.csv?adfd=' + Math.random()
             }, function () {
                 
             });
-
-
-
-
-
-
-
 
 
 
