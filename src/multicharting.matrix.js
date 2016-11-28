@@ -42,13 +42,18 @@
 
     protoCell._renderChart = function () {
         var cell = this,
-            chartContainer;
+            chartContainer,
+            conf = {
+                'height' : cell.config.height,
+                'width' : cell.config.width
+            };
         chartContainer = cell.config.chart.getChartContainer();
+        chartContainer && chartContainer.updateChartContainer(conf);
         chartContainer && (cell.graphics.appendChild(chartContainer.graphics));
         chartContainer || cell.config.chart.render(cell.config.id);
     };
 
-    protoCell.update = function (newConfig) {
+/*    protoCell.update = function (newConfig) {
         var cell = this,
             id = cell.config.id;
 
@@ -71,7 +76,7 @@
             } 
         }  
         return cell;      
-    };
+    };*/
 
     var Matrix = function (selector, configuration) {
             var matrix = this;
@@ -248,12 +253,14 @@
     };
 
     protoMatrix._getRowHeight = function(shadowMatrix) {
-        var i,
+        var matrix = this,
+            i,
             j,
             lenRow = shadowMatrix && shadowMatrix.length,
             lenCol,
             height = [],
             currHeight,
+            defaultH = matrix.defaultH,
             maxHeight;
             
         for (i = 0; i < lenRow; i++) {
@@ -263,19 +270,21 @@
                     maxHeight = maxHeight < currHeight ? currHeight : maxHeight;
                 }
             }
-            height[i] = maxHeight;
+            height[i] = maxHeight || defaultH;
         }
 
         return height;
     };
 
     protoMatrix._getColWidth = function(shadowMatrix) {
-        var i = 0,
+        var matrix = this,
+            i = 0,
             j = 0,
             lenRow = shadowMatrix && shadowMatrix.length,
             lenCol,
             width = [],
             currWidth,
+            defaultW = matrix.defaultW,
             maxWidth;
         for (i = 0, lenCol = shadowMatrix[j].length; i < lenCol; i++){
             for(j = 0, maxWidth = 0; j < lenRow; j++) {
@@ -284,15 +293,14 @@
                     maxWidth = maxWidth < currWidth ? currWidth : maxWidth;
                 }
             }
-            width[i] = maxWidth;
+            width[i] = maxWidth || defaultW;
         }
 
         return width;
     };
 
     protoMatrix._matrixManager = function (configuration) {
-        var matrix = this,
-            shadowMatrix = [],
+        var shadowMatrix = [],
             i,
             j,
             k,
@@ -303,8 +311,6 @@
             colSpan,
             width,
             height,
-            defaultH = matrix.defaultH,
-            defaultW = matrix.defaultW,
             offset;
             
         for (i = 0; i < lenRow; i++) {            
@@ -314,12 +320,12 @@
                 colSpan = (configuration[i][j] && configuration[i][j].colspan) || 1;   
                 
                 width = (configuration[i][j] && configuration[i][j].width);
-                width = (width && (width / colSpan)) || defaultW;
-                width = +width.toFixed(2);
+                width = (width && (width / colSpan)) || undefined;
+                width = width && +width.toFixed(2);
 
                 height = (configuration[i][j] && configuration[i][j].height);
-                height = (height && (height / rowSpan)) || defaultH;                      
-                height = +height.toFixed(2);
+                height = (height && (height / rowSpan)) || undefined;                      
+                height = height && +height.toFixed(2);
 
                 for (k = 0, offset = 0; k < rowSpan; k++) {
                     for (l = 0; l < colSpan; l++) {

@@ -129,6 +129,7 @@
 		chart.container.config.id = id;
 		chart.container.graphics = document.createElement(SPAN);
 		chart.container.graphics.id = id;
+		chart.container.graphics.style.display = 'block';
 		container.appendChild(chart.container.graphics);
 		return id;
 	};
