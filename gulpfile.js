@@ -24,7 +24,6 @@ var gulp = require('gulp'),
 		'src/multicharting.datastore.js',
 		'src/multicharting.dataprocessor.js',
 		'src/multicharting.dataadapter.js',
-		'src/multicharting.createchart.js',
         'src/multicharting.chart.js',
         'src/multicharting.matrix.js',
 		'src/multicharting.event.js'
