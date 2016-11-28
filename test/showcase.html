@@ -137,7 +137,8 @@
                     var filterByDate = function (data) {
                             var flights = {
                                 },
-                                dataArr = [['Date', 'Flights']],
+                                // dataArr = [['Date', 'Flights']],
+                                dataArr = [],
                                 i;
                             data.forEach(function (row) {
                                 if (!flights[row.fulldate]) {
@@ -149,14 +150,16 @@
                                 flights[row.fulldate].v += 1;
                             });
                             for (var i in flights) {
-                                dataArr.push([flights[i].i, flights[i].v]);
+                                // dataArr.push([flights[i].i, flights[i].v]);
+                                dataArr.push({"Date": flights[i].i, "Flights": flights[i].v});
                             }
                             return dataArr;
                         },
                         filterByTime = function (data) {
                             var flights = {
                                 },
-                                dataArr = [['Time', 'Flights']],
+                                // dataArr = [['Time', 'Flights']],
+                                dataArr = [],
                                 i;
                             // debugger;
                             data.forEach(function (row) {
@@ -166,7 +169,7 @@
                                 flights[row.time] += 1;
                             });
                             for (var i in flights) {
-                                dataArr.push([i, flights[i]]);
+                                dataArr.push({"Time": i, "Flights": flights[i]});
                             }
                             return dataArr;
                         },
@@ -194,16 +197,19 @@
                             });
                             for (i in flights) {
                                 dataArr.push([flights[i].v, flights[i].s]);
+                                dataArr.push({"Arrival": flights[i].v, "Flights": flights[i].s});
                             }
                             dataArr.sort(function (a, b) { 
-                                return a[0] < b[0] ? -1 : 1;
+                                return a.Arrival < b.Arrival ? -1 : 1;
+                                // return a[0] < b[0] ? -1 : 1;
                             });
-                            dataArr.unshift(['Arrival', 'Flights']);
+                            // dataArr.unshift(['Arrival', 'Flights']);
                             return dataArr;
                         },
                         filterByDistance = function (data) {
                             var flights = {},
-                                dataArr = [['Distance', 'Flights']],
+                                dataArr = [],
+                                // dataArr = [['Distance', 'Flights']],
                                 i,
                                 c;
                             for (i = 50, c = 0; i <= 2000; i += 50, c++) {
@@ -222,7 +228,8 @@
                             });
 
                             for (var i in flights) {
-                                dataArr.push([flights[i].v, flights[i].s]);
+                                // dataArr.push([flights[i].v, flights[i].s]);
+                                dataArr.push({"Distance": flights[i].v, "Flights": flights[i].s});
                             }
                             return dataArr;
                         },
@@ -273,107 +280,89 @@
                             "height": 150,
                             "width": 250,
                             "html": "Chart 1",
-                            "chart": {
+                            "chart": MultiChartObj.chart({
+                            // "chart": {
                                 "type": "MScolumn2d",
                                 "width": "100%",
                                 "height": "100%",
-                                "configuration": MultiChartObj.dataAdapter({
-                                    "datastore": flightByTime,
-                                    "config": {
-                                        "dimension": ["Time"],
-                                        "measure": ["Flights"],
-                                        "seriesType": "MS",
-                                        "config": {
-                                            "chart": {
-                                                "caption": "Time of Day",
-                                                "captionAlignment": "left",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
-                                            }
-                                        }
+                                "dataSource": flightByTime,
+                                "dimension": ["Time"],
+                                "measure": ["Flights"],
+                                "seriesType": "MS",
+                                "config": {
+                                    "chart": {
+                                        "caption": "Time of Day",
+                                        "captionAlignment": "left",
+                                        "showLegend": 0,
+                                        "showValues": 0,
+                                        "showYAxisValues": 0,
+                                        "theme": "ocean"
                                     }
-                                })
-                            }
+                                }
+                            })
                         }, {
                             "height": 120,
                             "width": 250,
                             "id": "1",
                             "html": "Chart 2",
-                            "chart": {
+                            "chart": MultiChartObj.chart({
                                 "type": "MScolumn2d",
                                 "width": "100%",
                                 "height": "100%",
-                                "configuration": MultiChartObj.dataAdapter({
-                                    "datastore": flightByArrival,
-                                    "config": {
-                                        "dimension": ["Arrival"],
-                                        "measure": ["Flights"],
-                                        "seriesType": "MS",
-                                        "config": {
-                                            "chart": {
-                                                "caption": "Arrival Delay",
-                                                "captionAlignment": "left",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
-                                            }
-                                        }                    
+                                "dataSource": flightByArrival,
+                                "dimension": ["Arrival"],
+                                "measure": ["Flights"],
+                                "seriesType": "MS",
+                                "config": {
+                                    "chart": {
+                                        "caption": "Arrival Delay",
+                                        "captionAlignment": "left",
+                                        "showLegend": 0,
+                                        "showValues": 0,
+                                        "showYAxisValues": 0,
+                                        "theme": "ocean"
                                     }
-                                })
-                            }
+                                }                    
+                            })
                         }, {
                             "height": 120,
                             "width": 400,
                             "id": "2",
                             "html": "html3",
-                            "chart": {
+                            "chart": MultiChartObj.chart({
                                 "type": "MScolumn2d",
-                                "configuration": MultiChartObj.dataAdapter({
-                                    "datastore": flightByDistance,
-                                    "config": {
-                                        "dimension": ["Distance"],
-                                        "measure": ["Flights"],
-                                        "seriesType": "MS",
-                                        "config": {
-                                            "chart": {
-                                                "caption": "Distance",
-                                                "captionAlignment": "left",
-                                                "showLegend": 0,
-                                                "showValues": 0,
-                                                "showYAxisValues": 0,
-                                                "theme": "ocean"
-                                            }
-                                        }                    
+                                "dataSource": flightByDistance,
+                                "dimension": ["Distance"],
+                                "measure": ["Flights"],
+                                "seriesType": "MS",
+                                "config": {
+                                    "chart": {
+                                        "caption": "Distance",
+                                        "captionAlignment": "left",
+                                        "showLegend": 0,
+                                        "showValues": 0,
+                                        "showYAxisValues": 0,
+                                        "theme": "ocean"
                                     }
-                                })
-                            }
+                                }                    
+                            })
                         }], [{
                             "height": 200,
                             "width": 900,
                             "colspan": 3,
                             "id": "4",
                             "html": "html4",
-                            "chart": {
+                            "chart": MultiChartObj.chart({
                                 "type": !TIMESERIES ? "MScolumn2d" : "TimeSeries",
-                                // "type": "TimeSeries",
-                                "configuration": MultiChartObj.dataAdapter({
-                                    "datastore": flightByDate,
-                                    "config": {
-                                        "dimension": ["Date"],
-                                        "measure": ["Flights"],
-                                        "seriesType": !TIMESERIES ? "MS" : "TS",
-                                        // "seriesType": "TS",
-                                        "config": !TIMESERIES ? confCol : confTS
-                                        // "config": confTS
-                                    },
-                                    "callback": function (data) {
-                                        return data;
-                                    }
-                                })
-                            }
+                                "dataSource": flightByDate,
+                                "dimension": ["Date"],
+                                "measure": ["Flights"],
+                                "seriesType": !TIMESERIES ? "MS" : "TS",
+                                "config": !TIMESERIES ? confCol : confTS,
+                                "callback": function (data) {
+                                    return data;
+                                }
+                            })
                         }]
                     ]
 
