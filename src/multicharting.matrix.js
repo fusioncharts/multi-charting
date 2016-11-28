@@ -1,5 +1,4 @@
 
-
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;

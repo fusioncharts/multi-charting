@@ -56,13 +56,20 @@
         //render FC 
         chartObj = new FusionCharts(json);
 
-        chartObj.addEventListener('dataplotrollover', function (e, d) {
+        chartObj.addEventListener('trendRegionRollOver', function (e, d) {
             var dataObj = chart._getRowData(d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
                 data : dataObj,
                 categoryLabel : d.categoryLabel
             }, chart);
         });
+
+       chartObj.addEventListener('trendRegionRollOut', function (e, d) {
+           MultiCharting.prototype.raiseEvent('hoverout', {
+               categoryLabel : d.categoryLabel
+           }, chart);
+       });
+
 
         return chartObj;
     };
