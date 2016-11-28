@@ -159,8 +159,7 @@
 
                 if (i < len - 1) {
                     //call update manager
-                    // setTimeout(updateManager, 0);
-                    updateManager();
+                    setTimeout(updateManager, 0);
                 } else {
                     MultiChartingProto.raiseEvent('onParsingEnd', {
                         Event: {

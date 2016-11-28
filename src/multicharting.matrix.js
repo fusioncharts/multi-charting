@@ -1,5 +1,4 @@
 
-
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports !== 'undefined') {
         module.exports = factory;
@@ -8,13 +7,11 @@
     }
 })(function (MultiCharting) {
 
-    var createChart = MultiCharting.prototype.createChart,
-        document = MultiCharting.prototype.win.document,
+    var document = MultiCharting.prototype.win.document,
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
         ABSOLUTE = 'absolute',
-        MAX_PERCENT = '100%',
         RELATIVE = 'relative',
         ID = 'id-fc-mc-',
         BORDER_BOX = 'border-box';
@@ -45,7 +42,7 @@
 
     protoCell.renderChart = function () {
         var cell = this; 
-
+/*
         cell.config.chart.renderAt = cell.config.id;
         cell.config.chart.width = MAX_PERCENT;
         cell.config.chart.height = MAX_PERCENT;
@@ -54,7 +51,10 @@
             cell.chart.update(cell.config.chart);
         } else {
             cell.chart = createChart(cell.config.chart);
-        }
+        }*/
+
+        cell.config.chart.render(cell.config.id);
+        
         return cell.chart;
     };
 
