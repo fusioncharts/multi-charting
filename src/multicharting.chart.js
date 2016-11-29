@@ -37,9 +37,9 @@
 
             chart.dataAdapter = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
 
-            dataStore = chart.dataAdapter._getDataStore();
+            dataStore = chart.dataAdapter.getDataStore();
 
-            dataStore.addEventListener('modelUpdated',function() {
+            dataStore && dataStore.addEventListener('modelUpdated',function() {
                 chart.update();
             });
 

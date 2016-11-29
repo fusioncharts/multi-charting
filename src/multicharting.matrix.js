@@ -8,6 +8,7 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
+        //chartCtrl = MultiCharting.prototype.chart, 
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
@@ -159,7 +160,7 @@
             shadowMatrix = matrix.__matrixManager__(configuration),            
             heightArr = matrix.__getRowHeight__(shadowMatrix),
             widthArr = matrix.__getColWidth__(shadowMatrix),
-            _drawManagerObjArr = [],
+            drawManagerObjArr = [],
             lenCell,
             matrixPosX = matrix.__getPos__(widthArr),
             matrixPosY = matrix.__getPos__(heightArr),
@@ -181,7 +182,7 @@
         matrix.__setContainerResolution__(heightArr, widthArr);
         //calculate cell position and heiht and 
         for (i = 0; i < lenRow; i++) {  
-            _drawManagerObjArr[i] = [];          
+            drawManagerObjArr[i] = [];          
             for (j = 0, lenCell = configuration[i].length; j < lenCell; j++) {
                 rowspan = parseInt(configuration[i][j] && configuration[i][j].rowspan || 1);
                 colspan = parseInt(configuration[i][j] && configuration[i][j].colspan || 1);                
@@ -195,7 +196,7 @@
                 height = matrixPosY[row + rowspan] - top;
                 id = (configuration[i][j] && configuration[i][j].id) || matrix.__idCreator__(row,col);
                 className = configuration[i][j] && configuration[i][j].className || '';
-                _drawManagerObjArr[i].push({
+                drawManagerObjArr[i].push({
                     top       : top,
                     left      : left,
                     height    : height,
@@ -210,7 +211,7 @@
             }
         }
 
-        return _drawManagerObjArr;
+        return drawManagerObjArr;
     };
 
     protoMatrix.__idCreator__ = function(){
@@ -369,11 +370,20 @@
 
     protoMatrix.update = function (configuration) {
         var matrix = this,
-            container = matrix && matrix.matrixContainer;
+            container = matrix && matrix.matrixContainer/*,
+            placeHolder = matrix && matrix.placeHolder,
+            i,
+            j*/;
 
         while(container.hasChildNodes()) {
             container.removeChild(container.lastChild);
         }
+        /*for (i = placeHolder.length - 1; i >= 0; i--) {
+            for (j = placeHolder[i].length - 1; j >= 0; j--) {
+                //placeHolder[i][j].config && placeHolder[i][j].config.chart && 
+
+            }
+        }*/
         matrix.configuration = configuration || matrix.configuration;
         matrix.configManager = matrix.__drawManager__(matrix.configuration);
         matrix.draw();

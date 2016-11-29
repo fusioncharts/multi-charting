@@ -19,11 +19,11 @@
         dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
         dataadapter.configuration = conf;
         dataadapter.callback = callback;
-        dataadapter.FCjson = dataadapter._convertData();
+        dataadapter.FCjson = dataadapter.__convertData__();
     },
     protoDataadapter = DataAdapter.prototype;
 
-    protoDataadapter._convertData = function() {
+    protoDataadapter.__convertData__ = function() {
         var dataadapter = this,            
             aggregatedData,
             generalData,
@@ -36,21 +36,21 @@
             predefinedJson = configuration && configuration.config;
 
         if (jsonData && configuration) {
-            generalData = dataadapter._generalDataFormat(jsonData, configuration);
+            generalData = dataadapter.__generalDataFormat__(jsonData, configuration);
             configuration.categories = configuration.categories || 
                                         dataadapter.dataStore.getUniqueValues(configuration.dimension[0]);
-            configuration.categories && (aggregatedData = dataadapter._getSortedData(generalData, 
+            configuration.categories && (aggregatedData = dataadapter.__getSortedData__(generalData, 
                                 configuration.categories, configuration.dimension, configuration.aggregateMode));
             aggregatedData = aggregatedData || generalData;
             dataadapter.aggregatedData = aggregatedData;
-            json = dataadapter._jsonCreator(aggregatedData, configuration);            
+            json = dataadapter.__jsonCreator__(aggregatedData, configuration);            
         }
         json = (predefinedJson && extend2(json,predefinedJson)) || json;
         json = (callback && callback(json)) || json;
-        return isMetaData ? dataadapter._setDefaultAttr(json) : json;
+        return isMetaData ? dataadapter.__setDefaultAttr__(json) : json;
     };
 
-    protoDataadapter._getSortedData = function (data, categoryArr, dimension, aggregateMode) {
+    protoDataadapter.__getSortedData__ = function (data, categoryArr, dimension, aggregateMode) {
         var dataadapter = this,
             indeoxOfKey,
             newData = [],
@@ -81,7 +81,7 @@
                 }     
                 arr[indeoxOfKey] = categories[k][i];
                 (subSetData.length === 0) && (subSetData.push(arr));
-                newData.push(dataadapter._getAggregateData(subSetData, categories[k][i], aggregateMode));
+                newData.push(dataadapter.__getAggregateData__(subSetData, categories[k][i], aggregateMode));
             }
         }        
         return newData;
@@ -94,10 +94,10 @@
         dataadapter.dataJSON = dataadapter.dataStore && dataadapter.dataStore.getJSON();
         dataadapter.configuration = conf || dataadapter.configuration;
         dataadapter.callback = callback || dataadapter.callback;
-        dataadapter.FCjson = dataadapter._convertData();
+        dataadapter.FCjson = dataadapter.__convertData__();
     };
 
-    protoDataadapter._setDefaultAttr = function (json) {
+    protoDataadapter.__setDefaultAttr__ = function (json) {
         var dataadapter = this,
             keyExcludedJsonStr = '',
             paletteColors = '',
@@ -165,7 +165,7 @@
         return json;
     };
 
-    protoDataadapter._getAggregateData = function (data, key, aggregateMode) {
+    protoDataadapter.__getAggregateData__ = function (data, key, aggregateMode) {
         var aggregateMethod = {
             'sum' : function(){
                 var i,
@@ -202,7 +202,7 @@
         return aggregateMethod[aggregateMode]();
     };
 
-    protoDataadapter._generalDataFormat = function(jsonData, configuration) {
+    protoDataadapter.__generalDataFormat__ = function(jsonData, configuration) {
         var isArray = Array.isArray(jsonData[0]),
             generalDataArray = [],
             i,
@@ -229,7 +229,7 @@
         return generalDataArray;
     };
 
-    protoDataadapter._jsonCreator = function(jsonData, configuration) {
+    protoDataadapter.__jsonCreator__ = function(jsonData, configuration) {
         var conf = configuration,
             seriesType = conf && conf.seriesType,
             series = {
@@ -344,19 +344,19 @@
         return this.FCjson;
     };
 
-    protoDataadapter._getDataJson = function() {
+    protoDataadapter.__getDataJson__ = function() {
         return this.dataJSON;
     };
 
-    protoDataadapter._getAggregatedData = function() {
+    protoDataadapter.__getAggregatedData__ = function() {
         return this.aggregatedData;
     };
 
-    protoDataadapter._getDimension = function() {
+    protoDataadapter.__getDimension__ = function() {
         return this.configuration.dimension;
     };
 
-    protoDataadapter._getMeasure = function() {
+    protoDataadapter.__getDimension__ = function() {
         return this.configuration.measure;
     };
 
@@ -383,7 +383,7 @@
         };
     };
 
-    protoDataadapter._getDataStore = function() {
+    protoDataadapter.getDataStore = function() {
         return this.dataStore;
     };
 
