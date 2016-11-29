@@ -348,15 +348,15 @@
         return this.dataJSON;
     };
 
-    protoDataadapter.__getAggregatedData__ = function() {
+    protoDataadapter.getAggregatedData = function() {
         return this.aggregatedData;
     };
 
-    protoDataadapter.__getDimension__ = function() {
+    protoDataadapter.getDimension = function() {
         return this.configuration.dimension;
     };
 
-    protoDataadapter.__getDimension__ = function() {
+    protoDataadapter.getMeasure = function() {
         return this.configuration.measure;
     };
 
@@ -387,9 +387,9 @@
         return this.dataStore;
     };
 
-    protoDataadapter.highlight = function() {
+    protoDataadapter.highlight = function(id) {
         var dataadapter = this,
-            categoryLabel = arguments[0] && arguments[0].toString(),
+            categoryLabel = id && id.toString(),
             categoryArr = dataadapter.configuration.categories,
             index = categoryLabel && categoryArr.indexOf(categoryLabel);
         dataadapter.chart.drawTrendRegion(index);

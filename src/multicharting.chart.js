@@ -178,10 +178,10 @@
             lenR,
             len,
             lenC,
-            data = chart.dataAdapter._getDataJson(),
-            aggregatedData = chart.dataAdapter._getAggregatedData(),
-            dimension = chart.dataAdapter._getAggregatedData(),
-            measure = chart.dataAdapter._getMeasure(),
+            data = chart.dataAdapter.getDataJson(),
+            aggregatedData = chart.dataAdapter.getAggregatedData(),
+            dimension = chart.dataAdapter.getDimension(),
+            measure = chart.dataAdapter.getMeasure(),
             isArray = Array.isArray(data[0]),
             index = -1,
             matchObj = {},
@@ -220,6 +220,10 @@
         }
     };
 
+    ProtoChart.highlight = function () {
+    	this.dataAdapter.highlight();
+    };
+    
     MultiCharting.prototype.chart = function (config) {
         return new Chart(config);
     };

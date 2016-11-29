@@ -8,7 +8,7 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
-        /*chartCtrlr = MultiCharting.prototype.chart,*/
+        chartCtrlr = MultiCharting.prototype.chart,
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
@@ -48,25 +48,27 @@
             conf = {
                 'height' : cell.config.height,
                 'width' : cell.config.width
-            }/*,
+            },
             disposalBox = cell.disposalBox,
-            chartConfig*/;
+            chartConfig,
+            isRecycled = false;
 
-/*        cell.config.chart.isChart || (chartConfig = cell.config.chart);
+        cell.config.chart.isChart || (chartConfig = cell.config.chart);
         if(chartConfig) {
             if(disposalBox && disposalBox.length){
                 delete cell.config.chart;
                 cell.config.chart = disposalBox.pop();
-                cell.config.chart.update(chartConfig);
+                isRecycled = true;
             } else {
                 cell.config.chart = chartCtrlr(chartConfig);
             }
-        }*/
+        }
 
         chartContainer = cell.config.chart.getChartContainer();
         chartContainer && cell.config.chart.updateChartContainer(conf);
         chartContainer && (cell.graphics.appendChild(chartContainer.graphics));
         chartContainer || cell.config.chart.render(cell.config.id);
+        isRecycled && cell.config.chart.update(chartConfig);
     };
 
     var Matrix = function (selector, configuration) {
@@ -358,22 +360,22 @@
 
     protoMatrix.update = function (configuration) {
         var matrix = this,
-            container = matrix && matrix.matrixContainer/*,
+            container = matrix && matrix.matrixContainer,
             placeHolder = matrix && matrix.placeHolder,
             disposalBox = [],
             i,
-            j*/;
+            j;
 
         while(container.hasChildNodes()) {
             container.removeChild(container.lastChild);
         }
-/*        for (i = placeHolder.length - 1; i >= 0; i--) {
+        for (i = placeHolder.length - 1; i >= 0; i--) {
             for (j = placeHolder[i].length - 1; j >= 0; j--) {
                 placeHolder[i][j].config && placeHolder[i][j].config.chart && 
                                 (disposalBox.push(placeHolder[i][j].config.chart));
             }
         }
-        protoCell.disposalBox = disposalBox;*/
+        protoCell.disposalBox = disposalBox;
         matrix.configuration = configuration || matrix.configuration;
         matrix.configManager = matrix.__drawManager__(matrix.configuration);
         matrix.draw();
