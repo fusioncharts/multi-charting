@@ -154,6 +154,10 @@
         return ID + chartId;
     };
 
+    ProtoChart.getLimit = function(){
+    	return this.dataAdapter && this.dataAdapter.getLimit();
+    };
+
     ProtoChart.__chartUpdate__ = function(json){
         var chart = this,
         chartJson = json || {};
