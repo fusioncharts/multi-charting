@@ -20,6 +20,8 @@
                 createChartConf = {},
                 dataStore;
 
+            
+            
             chart.conf = {};
 
             Object.assign(chart.conf, conf);

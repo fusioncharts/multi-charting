@@ -8,7 +8,6 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
-        //chartCtrl = MultiCharting.prototype.chart, 
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
@@ -47,9 +46,11 @@
             conf = {
                 'height' : cell.config.height,
                 'width' : cell.config.width
-            };
+            }/*,
+            disposalBox = cell.disposalBox*/;
+
         chartContainer = cell.config.chart.getChartContainer();
-        chartContainer && chartContainer.updateChartContainer(conf);
+        chartContainer && cell.config.chart.updateChartContainer(conf);
         chartContainer && (cell.graphics.appendChild(chartContainer.graphics));
         chartContainer || cell.config.chart.render(cell.config.id);
     };
@@ -370,20 +371,22 @@
 
     protoMatrix.update = function (configuration) {
         var matrix = this,
-            container = matrix && matrix.matrixContainer/*,
+            container = matrix && matrix.matrixContainer,
             placeHolder = matrix && matrix.placeHolder,
+            disposalBox = [],
             i,
-            j*/;
+            j;
 
         while(container.hasChildNodes()) {
             container.removeChild(container.lastChild);
         }
-        /*for (i = placeHolder.length - 1; i >= 0; i--) {
+        for (i = placeHolder.length - 1; i >= 0; i--) {
             for (j = placeHolder[i].length - 1; j >= 0; j--) {
-                //placeHolder[i][j].config && placeHolder[i][j].config.chart && 
-
+                placeHolder[i][j].config && placeHolder[i][j].config.chart && 
+                                (disposalBox.push(placeHolder[i][j].config.chart));
             }
-        }*/
+        }
+        protoCell.disposalBox = disposalBox;
         matrix.configuration = configuration || matrix.configuration;
         matrix.configManager = matrix.__drawManager__(matrix.configuration);
         matrix.draw();
