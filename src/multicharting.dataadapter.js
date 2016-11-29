@@ -344,7 +344,7 @@
         return this.FCjson;
     };
 
-    protoDataadapter.__getDataJson__ = function() {
+    protoDataadapter.getDataJson = function() {
         return this.dataJSON;
     };
 

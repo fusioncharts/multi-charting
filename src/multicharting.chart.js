@@ -220,10 +220,10 @@
         }
     };
 
-    ProtoChart.highlight = function () {
-    	this.dataAdapter.highlight();
+    ProtoChart.highlight = function (id) {
+    	this.dataAdapter.highlight(id);
     };
-    
+
     MultiCharting.prototype.chart = function (config) {
         return new Chart(config);
     };
