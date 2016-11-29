@@ -7,9 +7,13 @@
     }
 })(function (MultiCharting) {
 
-    var MAX_PERCENT = '100%',
-        /*createChart = MultiCharting.prototype.createChart,*/
+    var document = MultiCharting.prototype.win.document,
+    	MAX_PERCENT = '100%',
         dataAdapter = MultiCharting.prototype.dataAdapter,
+        ID = 'chart-container-',
+        chartId = 0,
+        PX = 'px',
+        SPAN = 'span',
         Chart = function(conf) {
             var chart = this,
                 dataAdapterConf = {},
@@ -19,6 +23,8 @@
             chart.conf = {};
 
             Object.assign(chart.conf, conf);
+
+            chart.autoUpdate = chart.conf.autoUpdate || 1;
 
             dataAdapterConf = {
                 'dimension' : chart.conf.dimension,
@@ -31,9 +37,9 @@
 
             chart.dataAdapter = dataAdapter(conf.dataSource, dataAdapterConf, conf.callback);
 
-            dataStore = chart.dataAdapter._getDataStore();
+            dataStore = chart.dataAdapter.getDataStore();
 
-            dataStore.addEventListener('modelUpdated',function() {
+            dataStore && dataStore.addEventListener('modelUpdated',function() {
                 chart.update();
             });
 
@@ -44,12 +50,11 @@
                 'dataSource' : chart.dataAdapter.getJSON()
             };
 
-            chart.chartInstance = chart._createChart(createChartConf);
-
+            chart.chartInstance = chart.__createChart__(createChartConf);
         },
         ProtoChart = Chart.prototype;
 
-    ProtoChart._createChart = function (json) {
+    ProtoChart.__createChart__ = function (json) {
         var chart = this,
             chartObj;
 
@@ -57,7 +62,7 @@
         chartObj = new FusionCharts(json);
 
         chartObj.addEventListener('trendRegionRollOver', function (e, d) {
-            var dataObj = chart._getRowData(d.categoryLabel);
+            var dataObj = chart.__getRowData__(d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
                 data : dataObj,
                 categoryLabel : d.categoryLabel
@@ -101,7 +106,7 @@
             'dataSource' : chart.dataAdapter.getJSON()
         };
 
-        chart._chartUpdate(createChartConf);
+        chart.__chartUpdate__(createChartConf);
     };
 
     ProtoChart.getChartInstance = function() {
@@ -109,13 +114,46 @@
     };
 
     ProtoChart.render = function(id) {
-        var chart = this;
+        var chart = this,
+        	container = document.getElementById(id);
 
-        id || chart.chartInstance.render();
-        id && chart.chartInstance.render(id);
+		id && chart.chartInstance.render(chart.__chartContainer__(container));
     };
 
-    ProtoChart._chartUpdate = function(json){
+	ProtoChart.__chartContainer__ = function(container) {
+		var chart = this,
+			id = chart.__idCreator__();
+
+		chart.container = {};
+		chart.container.config = {};
+		chart.container.config.id = id;
+		chart.container.graphics = document.createElement(SPAN);
+		chart.container.graphics.id = id;
+		chart.container.graphics.style.display = 'block';
+		container.appendChild(chart.container.graphics);
+		return id;
+	};
+
+	ProtoChart.getChartContainer = function() {
+		return this.container;
+	};
+
+	ProtoChart.updateChartContainer = function(config) {
+		var chart = this;
+
+		config || (config = {});
+		Object.assign(chart.container.config, config);
+
+		chart.container.graphics.height = chart.container.height + PX;
+		chart.container.graphics.width = chart.container.width + PX;
+	};
+
+	ProtoChart.__idCreator__ = function(){
+        chartId++;       
+        return ID + chartId;
+    };
+
+    ProtoChart.__chartUpdate__ = function(json){
         var chart = this,
         chartJson = json || {};
 
@@ -128,7 +166,7 @@
         return chart;
     };
 
-    ProtoChart._getRowData = function(key) {
+    ProtoChart.__getRowData__ = function(key) {
         var chart = this,
             i = 0,
             j = 0,
