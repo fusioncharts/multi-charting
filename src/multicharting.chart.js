@@ -50,11 +50,11 @@
                 'dataSource' : chart.dataAdapter.getJSON()
             };
 
-            chart.chartInstance = chart._createChart(createChartConf);
+            chart.chartInstance = chart.__createChart__(createChartConf);
         },
         ProtoChart = Chart.prototype;
 
-    ProtoChart._createChart = function (json) {
+    ProtoChart.__createChart__ = function (json) {
         var chart = this,
             chartObj;
 
@@ -62,7 +62,7 @@
         chartObj = new FusionCharts(json);
 
         chartObj.addEventListener('trendRegionRollOver', function (e, d) {
-            var dataObj = chart._getRowData(d.categoryLabel);
+            var dataObj = chart.__getRowData__(d.categoryLabel);
             MultiCharting.prototype.raiseEvent('hoverin', {
                 data : dataObj,
                 categoryLabel : d.categoryLabel
@@ -106,7 +106,7 @@
             'dataSource' : chart.dataAdapter.getJSON()
         };
 
-        chart._chartUpdate(createChartConf);
+        chart.__chartUpdate__(createChartConf);
     };
 
     ProtoChart.getChartInstance = function() {
@@ -117,12 +117,12 @@
         var chart = this,
         	container = document.getElementById(id);
 
-		id && chart.chartInstance.render(chart._chartContainer(container));
+		id && chart.chartInstance.render(chart.__chartContainer__(container));
     };
 
-	ProtoChart._chartContainer = function(container) {
+	ProtoChart.__chartContainer__ = function(container) {
 		var chart = this,
-			id = chart._idCreator();
+			id = chart.__idCreator__();
 
 		chart.container = {};
 		chart.container.config = {};
@@ -148,12 +148,12 @@
 		chart.container.graphics.width = chart.container.width + PX;
 	};
 
-	ProtoChart._idCreator = function(){
+	ProtoChart.__idCreator__ = function(){
         chartId++;       
         return ID + chartId;
     };
 
-    ProtoChart._chartUpdate = function(json){
+    ProtoChart.__chartUpdate__ = function(json){
         var chart = this,
         chartJson = json || {};
 
@@ -166,7 +166,7 @@
         return chart;
     };
 
-    ProtoChart._getRowData = function(key) {
+    ProtoChart.__getRowData__ = function(key) {
         var chart = this,
             i = 0,
             j = 0,
