@@ -8,6 +8,7 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
+        /*chartCtrlr = MultiCharting.prototype.chart,*/
         PX = 'px',
         DIV = 'div',
         EMPTY_STRING = '',
@@ -18,6 +19,7 @@
 
     var Cell = function (config, container) {
             var cell = this;
+
             cell.container = container;
             cell.config = config;
             cell.__draw__();
@@ -47,38 +49,25 @@
                 'height' : cell.config.height,
                 'width' : cell.config.width
             }/*,
-            disposalBox = cell.disposalBox*/;
+            disposalBox = cell.disposalBox,
+            chartConfig*/;
+
+/*        cell.config.chart.isChart || (chartConfig = cell.config.chart);
+        if(chartConfig) {
+            if(disposalBox && disposalBox.length){
+                delete cell.config.chart;
+                cell.config.chart = disposalBox.pop();
+                cell.config.chart.update(chartConfig);
+            } else {
+                cell.config.chart = chartCtrlr(chartConfig);
+            }
+        }*/
 
         chartContainer = cell.config.chart.getChartContainer();
         chartContainer && cell.config.chart.updateChartContainer(conf);
         chartContainer && (cell.graphics.appendChild(chartContainer.graphics));
         chartContainer || cell.config.chart.render(cell.config.id);
     };
-
-/*    protoCell.update = function (newConfig) {
-        var cell = this,
-            id = cell.config.id;
-
-        if(newConfig){
-            cell.config = newConfig;
-            cell.config.id = id;
-            cell.graphics.id = cell.config.id || EMPTY_STRING;        
-            cell.graphics.className = cell.config.className;
-            cell.graphics.style.height = cell.config.height + PX;
-            cell.graphics.style.width = cell.config.width + PX;
-            cell.graphics.style.top = cell.config.top + PX;
-            cell.graphics.style.left = cell.config.left + PX;
-            cell.graphics.style.position = ABSOLUTE;
-            !cell.config.chart && (cell.graphics.innerHTML = cell.config.html || EMPTY_STRING);
-            cell.container.appendChild(cell.graphics);
-            if(cell.config.chart) {
-                cell.chart = cell.renderChart();             
-            } else {
-                delete cell.chart;
-            } 
-        }  
-        return cell;      
-    };*/
 
     var Matrix = function (selector, configuration) {
             var matrix = this;
@@ -121,9 +110,8 @@
         for(i = 0, len = widthArr.length; i < len; i++) {
             width += widthArr[i];
         }
-
         container.style.height = height + PX;
-        container.style.width = width + PX;
+        container.style.width = width + PX;        
     };
 
     //function to draw matrix
@@ -136,8 +124,7 @@
             lenC,
             i,
             j;
-
-        matrix.dispose();
+        
         for(i = 0; i < len; i++) {
             placeHolder[i] = [];
             for(j = 0, lenC = configManager[i].length; j < lenC; j++){
@@ -371,22 +358,22 @@
 
     protoMatrix.update = function (configuration) {
         var matrix = this,
-            container = matrix && matrix.matrixContainer,
+            container = matrix && matrix.matrixContainer/*,
             placeHolder = matrix && matrix.placeHolder,
             disposalBox = [],
             i,
-            j;
+            j*/;
 
         while(container.hasChildNodes()) {
             container.removeChild(container.lastChild);
         }
-        for (i = placeHolder.length - 1; i >= 0; i--) {
+/*        for (i = placeHolder.length - 1; i >= 0; i--) {
             for (j = placeHolder[i].length - 1; j >= 0; j--) {
                 placeHolder[i][j].config && placeHolder[i][j].config.chart && 
                                 (disposalBox.push(placeHolder[i][j].config.chart));
             }
         }
-        protoCell.disposalBox = disposalBox;
+        protoCell.disposalBox = disposalBox;*/
         matrix.configuration = configuration || matrix.configuration;
         matrix.configManager = matrix.__drawManager__(matrix.configuration);
         matrix.draw();

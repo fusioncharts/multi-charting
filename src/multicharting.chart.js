@@ -20,7 +20,7 @@
                 createChartConf = {},
                 dataStore;
 
-            
+            chart.isChart = true;
             
             chart.conf = {};
 
@@ -98,7 +98,6 @@
             'aggregateMode' : chart.conf.aggregation,
             'config' : chart.conf.config
         };
-
         chart.dataAdapter.update(conf.dataSource, dataAdapterConf, conf.callback);
 
         createChartConf = {
@@ -107,8 +106,8 @@
             'height' : chart.conf.height || MAX_PERCENT,
             'dataSource' : chart.dataAdapter.getJSON()
         };
-
         chart.__chartUpdate__(createChartConf);
+        return chart;
     };
 
     ProtoChart.getChartInstance = function() {
@@ -155,6 +154,10 @@
         return ID + chartId;
     };
 
+    ProtoChart.getLimit = function(){
+    	return this.dataAdapter && this.dataAdapter.getLimit();
+    };
+
     ProtoChart.__chartUpdate__ = function(json){
         var chart = this,
         chartJson = json || {};
@@ -162,11 +165,8 @@
         if(chart.chartInstance.chartType() != chartJson.type) {
             chart.chartInstance.chartType(chartJson.type);
         }
-
         chart.chartInstance.setJSONData(chartJson.dataSource);
-        
-        return chart;
-    };
+     };
 
     ProtoChart.__getRowData__ = function(key) {
         var chart = this,
