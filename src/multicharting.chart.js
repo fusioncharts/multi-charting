@@ -221,7 +221,11 @@
     };
 
     ProtoChart.highlight = function (id) {
-    	this.dataAdapter.highlight(id);
+        var chart = this,
+            categoryLabel = id && id.toString(),
+            categoryArr = chart.dataAdapter.getCategories(),
+            index = categoryLabel && categoryArr.indexOf(categoryLabel);
+        chart.chartInstance.drawTrendRegion(index);
     };
 
     MultiCharting.prototype.chart = function (config) {

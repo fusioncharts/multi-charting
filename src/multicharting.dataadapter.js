@@ -387,12 +387,8 @@
         return this.dataStore;
     };
 
-    protoDataadapter.highlight = function(id) {
-        var dataadapter = this,
-            categoryLabel = id && id.toString(),
-            categoryArr = dataadapter.configuration.categories,
-            index = categoryLabel && categoryArr.indexOf(categoryLabel);
-        dataadapter.chart.drawTrendRegion(index);
+    protoDataadapter.getCategories = function () {
+        return this.configuration.categories;
     };
 
     MultiCharting.prototype.dataAdapter = function (dataSource, conf, callback) {
