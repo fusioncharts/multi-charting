@@ -171,9 +171,11 @@
                     j,
                     lenR,
                     lenC,
-                    aggregatedData = data[0];
-                for(i = 1, lenR = data.length; i < lenR; i++) {
+                    aggregatedData = [];
+                for(i = 0, lenR = data.length; i < lenR; i++) {
                     for(j = 0, lenC = data[i].length; j < lenC; j++) {
+                        (data[i][j] == key) && (aggregatedData[j] = key); 
+                        aggregatedData[j] || (aggregatedData[j] = 0);
                         (data[i][j] != key) && (aggregatedData[j] = Number(aggregatedData[j]) + Number(data[i][j]));
                     }
                 }
