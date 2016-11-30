@@ -114,6 +114,12 @@
         return this.chartInstance;
     };
 
+    ProtoChart.getConf = function () {
+    	var conf = {};
+    	Object.assign(conf, this.conf);
+    	return conf;
+    };
+
     ProtoChart.render = function(id) {
         var chart = this,
         	container = document.getElementById(id);
