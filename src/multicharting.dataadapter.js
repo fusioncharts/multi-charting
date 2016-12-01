@@ -67,7 +67,7 @@
   
         (Array.isArray(dimension) && (key = dimension)) || (key = [dimension]);
 
-        (categoryArr && !categoryArr.length) || (categoryArr = dataStore.getUniqueValues(key[0]));
+        (categoryArr && categoryArr.length) || (categoryArr = dataStore.getUniqueValues(key[0]));
         (Array.isArray(categoryArr[0]) && (categories = categoryArr)) || (categories = [categoryArr]);
 
         newData.push(data[0]);
