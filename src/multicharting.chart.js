@@ -8,6 +8,7 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
+        deepCopy = MultiCharting.prototype.lib.deepCopy,
     	MAX_PERCENT = '100%',
         dataAdapter = MultiCharting.prototype.dataAdapter,
         ID = 'chart-container-',
@@ -184,8 +185,8 @@
             lenR,
             len,
             lenC,
-            data = chart.dataAdapter.getDataJson(),
-            aggregatedData = chart.dataAdapter.getAggregatedData(),
+            data = deepCopy(chart.dataAdapter.getDataJson()),
+            aggregatedData = deepCopy(chart.dataAdapter.getAggregatedData()),
             dimension = chart.dataAdapter.getDimension(),
             measure = chart.dataAdapter.getMeasure(),
             isArray = Array.isArray(data[0]),
