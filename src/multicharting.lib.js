@@ -141,9 +141,30 @@
             merge(obj1, obj2, skipUndef);
             return obj1;
         },
+        deepCopy = function (obj) {
+            var out,
+                i,
+                len = obj.length;
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                out = [];
+                for ( i = 0 ; i < len; i++ ) {
+                    out[i] = deepCopy(obj[i]);
+                }
+                return out;
+            }
+            if (typeof obj === 'object') {
+                out = {};
+                for ( i in obj ) {
+                    out[i] = deepCopy(obj[i]);
+                }
+                return out;
+            }
+            return obj;
+        },
         lib = {
             extend2: extend2,
-            merge: merge
+            merge: merge,
+            deepCopy : deepCopy
         };
 
 	MultiCharting.prototype.lib = (MultiCharting.prototype.lib || lib);

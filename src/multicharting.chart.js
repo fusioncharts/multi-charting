@@ -8,6 +8,7 @@
 })(function (MultiCharting) {
 
     var document = MultiCharting.prototype.win.document,
+        deepCopy = MultiCharting.prototype.lib.deepCopy,
     	MAX_PERCENT = '100%',
         dataAdapter = MultiCharting.prototype.dataAdapter,
         ID = 'chart-container-',
@@ -114,6 +115,12 @@
         return this.chartInstance;
     };
 
+    ProtoChart.getConf = function () {
+    	var conf = {};
+    	Object.assign(conf, this.conf);
+    	return conf;
+    };
+
     ProtoChart.render = function(id) {
         var chart = this,
         	container = document.getElementById(id);
@@ -178,10 +185,10 @@
             lenR,
             len,
             lenC,
-            data = chart.dataAdapter._getDataJson(),
-            aggregatedData = chart.dataAdapter._getAggregatedData(),
-            dimension = chart.dataAdapter._getAggregatedData(),
-            measure = chart.dataAdapter._getMeasure(),
+            data = deepCopy(chart.dataAdapter.getDataJson()),
+            aggregatedData = deepCopy(chart.dataAdapter.getAggregatedData()),
+            dimension = chart.dataAdapter.getDimension(),
+            measure = chart.dataAdapter.getMeasure(),
             isArray = Array.isArray(data[0]),
             index = -1,
             matchObj = {},
@@ -218,6 +225,14 @@
                 return matchObj;
             }
         }
+    };
+
+    ProtoChart.highlight = function (id) {
+        var chart = this,
+            categoryLabel = id && id.toString(),
+            categoryArr = chart.dataAdapter.getCategories(),
+            index = categoryLabel && categoryArr.indexOf(categoryLabel);
+        chart.chartInstance.drawTrendRegion(index);
     };
 
     MultiCharting.prototype.chart = function (config) {
