@@ -52,6 +52,15 @@
                 }
             }
         },
+
+        callbackHelperFn = function (ds, JSONData, callback) {
+            ds.links.inputJSON = JSONData.concat(ds.links.inputJSON || []);
+            ds._generateInputData();
+            if (typeof callback === 'function') {
+                callback(JSONData);
+            }
+        },
+
 		// Constructor class for DataModel.
 		DataModel = function () {
 	    	var ds = this;
@@ -76,30 +85,37 @@
     DataModelProto.getId = function () {
         return this.id;
     };
+
+    // Function to generate input data of dataStore depending upon its parentData and its own data
     DataModelProto._generateInputData = function() {
-        var ds = this;
+        var ds = this,
+            dsLinks = ds.links,
+            rawCSV;
         // remove all old data
         ds.links.inputData.length = 0;
 
+        if (rawCSV = dsLinks.rawCSV) {
+            delete dsLinks.rawCSV;
+            rawCSV.synchronousParse = true;
+            ds.parseToJSON(rawCSV);
+        }
         // get the data from the input Store
-        if (ds.links.inputStore && ds.links.inputStore.getJSON) {
-        	ds.links.inputData = ds.links.inputData.concat(ds.links.inputStore.getJSON());
-            // ds.links.inputData.push.apply(ds.links.inputData, ds.links.inputStore.getJSON());
+        if (dsLinks.inputStore && dsLinks.inputStore.getJSON) {
+        	dsLinks.inputData = dsLinks.inputData.concat(dsLinks.inputStore.getJSON());
+            // dsLinks.inputData.push.apply(dsLinks.inputData, dsLinks.inputStore.getJSON());
         }
 
         // add the input JSON (seperately added)
-        if (ds.links.inputJSON && ds.links.inputJSON.length) {
-        	ds.links.inputData = ds.links.inputData.concat(ds.links.inputJSON);
-        	// ds.links.inputData.push.apply(ds.links.inputData, ds.links.inputJSON);
+        if (dsLinks.inputJSON && dsLinks.inputJSON.length) {
+        	dsLinks.inputData = dsLinks.inputData.concat(dsLinks.inputJSON);
+        	// dsLinks.inputData.push.apply(dsLinks.inputData, ds.links.inputJSON);
         }
 
-
-        // for simplecity call the output JSON creation method as well
+        // for simplicity call the output JSON creation method as well
         ds._generateOutputData();
-
     };
 
-
+    // Function to generate output data of a dataStore
     DataModelProto._generateOutputData = function () {
         var ds = this,
         links = ds.links,
@@ -125,11 +141,18 @@
         }, ds);
     };
 
-
     // Function to get the jsondata of the data object
 	DataModelProto.getJSON = function () {
-		var ds = this;
-		return (ds.links.outputData || ds.links.inputData);
+		var ds = this,
+            dsLinks = ds.links,
+            rawCSV;
+        // If raw CSV data is present, parse the csv data synchronously and return the json data
+        if (rawCSV = dsLinks.rawCSV) {
+            delete dsLinks.rawCSV;
+            rawCSV.synchronousParse = true;
+            ds.parseToJSON(rawCSV);
+        }
+        return (dsLinks.outputData || dsLinks.inputData);
 	};
 
     // Function to get child data Store object after applying filter on the parent data.
@@ -252,29 +275,43 @@
 	DataModelProto.setData = function (dataSpecs, callback) {
 		var ds = this,
 			dataType = dataSpecs.dataType,
-			dataSource = dataSpecs.dataSource,
-			callbackHelperFn = function (JSONData) {
-				ds.links.inputJSON = JSONData.concat(ds.links.inputJSON || []);
-				ds._generateInputData();
-				if (typeof callback === 'function') {
-					callback(JSONData);
-				}
-			};
+			dataSource = dataSpecs.dataSource;
 
 		if (dataType === 'csv') {
-			multiChartingProto.convertToArray({
-				string : dataSpecs.dataSource,
-				delimiter : dataSpecs.delimiter,
-				outputFormat : dataSpecs.outputFormat,
-				callback : function (data) {
-					callbackHelperFn(data);
-				}
-			});
+			if (dataSpecs.parseToJSON === 0) {
+                ds.links.rawCSV = dataSpecs;
+                if (typeof callback === 'function') {
+                    callback(dataSource);
+                }
+            }
+            else {
+                ds.parseToJSON(dataSpecs, callback);
+            }
 		}
 		else {
-			callbackHelperFn(dataSource);
+			callbackHelperFn(ds, dataSource, callback);
 		}
 	};
+
+    // Function to convert csv data to json data
+    DataModelProto.parseToJSON = function (dataSpecs, callback) {
+        var dataSource = this;
+        // When only callback is given buy the user.
+        if (typeof dataSpecs === 'function') {
+            callback = dataSpecs;
+            dataSpecs = dataSource.links.rawCSV;
+        }
+
+        multiChartingProto.convertToArray({
+            synchronousParse : dataSpecs.synchronousParse,
+            string : dataSpecs.dataSource,
+            delimiter : dataSpecs.delimiter,
+            outputFormat : dataSpecs.outputFormat || 2,
+            callback : function (data) {
+                callbackHelperFn(dataSource, data, callback);
+            }
+        });
+    };
 
     // Function to remove all data (not the data linked from the parent) in the data store
     DataModelProto.clearData = function (){
@@ -372,15 +409,16 @@
         }
         ds.raiseEvent(eventList.metaInfoUpdate, {});
 	};
-    // Function to add metadata
-    // Not required
-	// DataModelProto.deleteMetaData = function (fieldName, metaInfoKey) {
-    //     var ds = this,
-    //     metaObj = ds.links.metaObj;
-    //     if (metaObj[fieldName]) {
-    //         metaObj[fieldName][metaInfoKey] = undefined;
-    //     }
-	// };
+
+    /*Function to add metadata
+        Not required
+    	DataModelProto.deleteMetaData = function (fieldName, metaInfoKey) {
+            var ds = this,
+            metaObj = ds.links.metaObj;
+            if (metaObj[fieldName]) {
+                metaObj[fieldName][metaInfoKey] = undefined;
+            }
+	};*/
 
 	// Function to get the added metaData
 	DataModelProto.getMetaData = function (fieldName) {
@@ -395,8 +433,6 @@
             argument = arguments[0],
             dataSource = argument.dataSource,
             dataType = argument.dataType,
-            delimiter = argument.delimiter,
-            outputFormat = argument.outputFormat,
             callback = arguments[1],
             callbackArgs = argument.callbackArgs,
             data;
@@ -405,12 +441,8 @@
             url : dataSource,
             success : function(string) {
                 data = dataType === 'json' ? JSON.parse(string) : string;
-                dataStore.setData({
-                    dataSource : data,
-                    dataType : dataType,
-                    delimiter : delimiter,
-                    outputFormat : outputFormat,
-                }, callback);
+                argument.dataSource = data;
+                dataStore.setData(argument, callback);
             },
 
             error : function(){

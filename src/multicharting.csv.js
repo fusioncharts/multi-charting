@@ -80,12 +80,13 @@
     /* jshint ignore:end */
     var MultiChartingProto = MultiCharting.prototype;
 
-    MultiChartingProto.convertToArray = function (data, delimiter, outputFormat, callback) {
+    MultiChartingProto.convertToArray = function (data, delimiter, outputFormat, synchronousParse, callback) {
         var csvToArr = this;
         if (typeof data === 'object') {
             delimiter = data.delimiter;
             outputFormat = data.outputFormat;
             callback = data.callback;
+            synchronousParse = data.synchronousParse;
             data = data.string;
         }
 
@@ -159,7 +160,7 @@
 
                 if (i < len - 1) {
                     //call update manager
-                    setTimeout(updateManager, 0);
+                    synchronousParse ? updateManager() : setTimeout(updateManager, 0);
                 } else {
                     MultiChartingProto.raiseEvent('onParsingEnd', {
                         Event: {
