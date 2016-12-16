@@ -276,6 +276,56 @@
                     }
                     return json;
                 },
+                'xy' : function(jsonData, configuration) {
+                    var json = {},
+                        indexMatch = {},
+                        lenDimension,
+                        lenData,
+                        i,
+                        j;
+                    json.categories = [{
+                        'category': [
+                        ]
+                    }];
+                    json.dataset = [];
+
+                    for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
+                        indexMatch = jsonData[0].indexOf(configuration.dimension[i]);
+                        if (indexMatch != -1) {
+                            for (j = 1, lenData = jsonData.length; j < lenData; j++) {
+                                json.categories[0].category.push({
+                                    'label' : jsonData[j][indexMatch]
+                                });
+                            }
+                        }
+                    }
+
+                    json.dataset = [];
+
+                    json.dataset[0] = {
+                        'data': []
+                    };
+
+                    if (configuration.measure instanceof Array) {
+                        indexMatch.x = jsonData[0].indexOf(configuration.measure[0]);
+                        indexMatch.y = jsonData[0].indexOf(configuration.measure[1]);
+                        indexMatch.z = jsonData[0].indexOf(configuration.measure[2]);
+                    } else {
+                        indexMatch.x = jsonData[0].indexOf(configuration.measure.x);
+                        indexMatch.y = jsonData[0].indexOf(configuration.measure.y);
+                        indexMatch.z = jsonData[0].indexOf(configuration.measure.z);
+                    }
+
+                    for (j = 1, lenData = jsonData.length; j < lenData; j++) {
+                        json.dataset[0].data.push({
+                            'x' : jsonData[j][indexMatch.x],
+                            'y' : jsonData[j][indexMatch.y],
+                            'z' : jsonData[j][indexMatch.z]
+                        });
+                    }
+
+                    return json;
+                },
                 'ss' : function(jsonData, configuration) {
                     var json = {},
                         indexMatchLabel,
