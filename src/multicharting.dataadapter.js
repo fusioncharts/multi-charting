@@ -279,6 +279,7 @@
                 'xy' : function(jsonData, configuration) {
                     var json = {},
                         indexMatch = {},
+                        matched,
                         lenDimension,
                         lenData,
                         i,
@@ -290,11 +291,12 @@
                     json.dataset = [];
 
                     for (i = 0, lenDimension =  configuration.dimension.length; i < lenDimension; i++) {
-                        indexMatch = jsonData[0].indexOf(configuration.dimension[i]);
-                        if (indexMatch != -1) {
+                        matched = jsonData[0].indexOf(configuration.dimension[i]);
+                        if (matched != -1) {
                             for (j = 1, lenData = jsonData.length; j < lenData; j++) {
                                 json.categories[0].category.push({
-                                    'label' : jsonData[j][indexMatch]
+                                    'label' : jsonData[j][matched],
+                                    'x': jsonData[j][matched]
                                 });
                             }
                         }
@@ -323,7 +325,6 @@
                             'z' : jsonData[j][indexMatch.z]
                         });
                     }
-
                     return json;
                 },
                 'ss' : function(jsonData, configuration) {
