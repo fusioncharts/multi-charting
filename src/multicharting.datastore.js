@@ -164,7 +164,6 @@
             key,
             newDSLink,
             MetaConstructor,
-			metaConstractor,
             inputStoreListners;
         newDs = new DataModel();
         newDSLink = newDs.links;
@@ -185,8 +184,8 @@
         // inherit metaInfos
         for (key in metaInfo) {
             MetaConstructor = function () {};
-            metaConstractor.prototype = metaInfo[key];
-            metaConstractor.prototype.constructor = MetaConstructor;
+            MetaConstructor.prototype = metaInfo[key];
+            MetaConstructor.prototype.constructor = MetaConstructor;
             newDSLink.metaObj[key] = new MetaConstructor();
         }
 
@@ -402,10 +401,14 @@
         var ds = this,
         metaObj = ds.links.metaObj,
         fieldMetaInfo, key;
-		if (fieldMetaInfo = metaObj[fieldName]) {
-            for (key in metaInfo) {
-                fieldMetaInfo[key] = metaInfo[key];
+        if (metaObj[fieldName]) {
+    		if (fieldMetaInfo = metaObj[fieldName]) {
+                for (key in metaInfo) {
+                    fieldMetaInfo[key] = metaInfo[key];
+                }
             }
+        } else {
+            metaObj[fieldName] = metaInfo;
         }
         ds.raiseEvent(eventList.metaInfoUpdate, {});
 	};
